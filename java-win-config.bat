@@ -13,5 +13,7 @@ set PATH=%JAVA_PATH%\bin\
 set SDK_HOME=%JAVA_PATH%
 set _JAVA_OPTIONS="-XX:-UseSplitVerifier"
 
+set CLASSPATH=C:\Users\%USERNAME%\Documents\GitHub\cnv1819;C:\Users\%USERNAME%\Documents\GitHub\cnv1819\BIT\samples;.
+
 rem Open WSL on hyper using the environment variables declared above
 C:\Users\%USERNAME%\AppData\Local\hyper\hyper.exe %cd%
