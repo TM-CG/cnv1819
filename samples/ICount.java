@@ -19,7 +19,7 @@ import java.util.*;
 
 public class ICount {
     private static PrintStream out = null;
-    private static int i_count = 0, b_count = 0, m_count = 0;
+    private static double i_count = 0, b_count = 0, m_count = 0;
     
     /* main reads in all the files class files present in the input directory,
      * instruments them, and outputs them to the specified output directory.
