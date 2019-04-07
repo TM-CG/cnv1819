@@ -7,29 +7,6 @@
 
 --------
 
-## Configurations
-In order to run a prepared shell for **Windows Systems** you should run **java-win-config.bat** which will open Hyper
-shell using WSL with Java JDK 7.
-
-You have to have JDK 7 installed on **C:\Java\jdk1.7.0_80** without need to add any environment variable!
-
-In WSL on file **.zshrc** or **.bashrc** you should have the following alias in order to make your life easy :)
-
-	alias java=java.exe
-	alias javac=javac.exe
-
-## Compile
-To compile the project you shoud run the following command on the project's root folder:
-
-	javac @sources.txt
-
-If for some reasons, like adding new files to the project then it is necessary to update the sources file.
-To do this, on the project's root folder run the following command:
-
-	find . -name '*.java' -print > sources.txt
-
-## Introduction
-
 The Java code developed by the faculty targets Java version 7.
 We provide the compiled ***.class*** files and the corresponding ***.java*** files in this archive in:
 
