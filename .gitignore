@@ -1,13 +1,8 @@
 *.iml
 *.class
 .idea/
-HDSNotary-Client/target/
-HDSNotary-Server/target/
-HDSNotaryLib/target/
 target/
 .classpath
 .project
 .settings/
 bin/
-HDSNotary-Server/Transaction.bin
-HDSNotary-Server/UsersGoods.bin

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)http://groups.tecnico.ulisboa.pt/meic-cnv/cnv-project/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+
+  <title>Cloud Computing and Virtualization Course</title>
+  <meta name="description" content="Cloud Computing and Virtualization Course">
+  <meta name="author" content="Miguel Coimbra">
+
+  <link rel="stylesheet" href="./Visualizing Hill Navigation_files/styles.css">
+  <link href="./Visualizing Hill Navigation_files/css" rel="stylesheet"> 
+
+</head>
+
+<body>
+	<div id="main-block" class="center">
+
+		<div>
+			<a href="https://fenix.tecnico.ulisboa.pt/disciplinas/AVExe/2018-2019/2-semestre"><h1>Cloud Computing and Virtualization Course - 2018/19</h1></a>
+
+			<h2>Visualizing Hill Navigation</h2>
+
+			<img id="istLogo" class="ist-logo" alt="IST logo" src="./Visualizing Hill Navigation_files/IST_A_RGB_POS.png" decoding="async" srcset="img/IST_A_RGB_POS.png" width="180" height="127">
+
+
+		</div>
+		 <!-- Tab links -->
+		<div class="tab">
+		  <button id="processBtn" class="tablinks active" onclick="openTab(event, &#39;Process&#39;)">Process</button>
+		  <button id="aboutBtn" class="tablinks" onclick="openTab(event, &#39;About&#39;)">About</button>
+		</div>
+
+		<!-- Tab content -->
+		<div id="Process" class="tabcontent" style="display: block;">
+			<h3>Submit processing request.</h3>
+
+			<p>Remote web server address:</p>
+			<input id="targetAddress" type="string" value="127.0.0.1"><br>
+			<p>Remote web server port:</p>
+			<input id="targetPort" type="integer" value="8000"><br>
+
+
+			<p>Calculate a hill navigation path for a given map.</p>
+
+		  
+				<div class="dropdown">
+					<button id="surfaceButton" onclick="surfaceFunction()" class="dropbtn">RANDOM_HILL_512x512_2019-02-27_09-46-42</button>
+						<div id="surfaceDropdown" class="dropdown-content" data-img="datasets/RANDOM_HILL_512x512_2019-02-27_09-46-42.png">
+							<button class="dropbtn chosen">RANDOM_HILL_512x512_2019-02-27_09-46-42</button>
+							<button class="dropbtn">RANDOM_HILL_512x512_2019-02-27_09-56-18</button>
+							<button class="dropbtn">RANDOM_HILL_512x512_2019-03-01_10-28-31</button>
+							<button class="dropbtn">RANDOM_HILL_512x512_2019-03-01_10-28-39</button>
+							<button class="dropbtn">RANDOM_HILL_512x512_2019-03-01_10-28-59</button>
+							<button class="dropbtn">RANDOM_HILL_512x512_2019-03-01_10-29-31</button>
+
+							<button class="dropbtn">RANDOM_HILL_1024x1024_2019-03-08_16-57-28</button>
+							<button class="dropbtn">RANDOM_HILL_1024x1024_2019-03-08_16-57-37</button>
+							<button class="dropbtn">RANDOM_HILL_1024x1024_2019-03-08_16-58-44</button>
+							<button class="dropbtn">RANDOM_HILL_1024x1024_2019-03-08_16-59-31</button>
+							<button class="dropbtn">RANDOM_HILL_1024x1024_2019-03-08_17-00-23</button>
+							<button class="dropbtn">RANDOM_HILL_1024x1024_2019-03-08_17-04-10</button>
+						</div>
+				</div> 
+				
+				<div>
+					<canvas id="currentCanvas" class="center-img" src="datasets/RANDOM_HILL_512x512_2019-02-27_09-46-42.png" decoding="async" srcset="datasets/RANDOM_HILL_512x512_2019-02-27_09-46-42.png" data-file-width="512" data-file-height="512" width="512" height="512"></canvas>
+
+				</div>
+				<br>
+
+				<div class="dropdown">
+					<button id="strategyButton" onclick="searchStrategyFunction()" class="dropbtn">Choose navigation strategy</button>
+						<div id="searchStrategyDropdown" class="dropdown-content" data-strategy="BFS">
+							<button class="dropbtn chosen" id="bfs">Breadth-first Search (BFS)</button>
+							<button class="dropbtn" id="dfs">Depth-first Search (DFS)</button>
+							<button class="dropbtn" id="astar">A*</button>
+						</div>
+				</div>
+				
+				<p>Starting point - default (0, 0):</p>
+				
+				<input id="xS" type="number" step="1" placeholder="0">Xs<br>
+				<input id="yS" type="number" step="1" placeholder="0">Ys<br>
+
+				<p>Upper-left corner - default (0, 0):</p>
+				
+				<input id="x0" type="number" step="1" placeholder="0">X0<br>
+				<input id="y0" type="number" step="1" placeholder="0">Y0<br>
+
+				<p>Lower-right corner - default (map width, map height):</p>
+				
+				<input id="x1" type="number" step="1" placeholder="0">X1<br>
+				<input id="y1" type="number" step="1" placeholder="0">Y1<br>
+
+			
+			<button id="executeButton" onclick="" class="executebtn">Execute</button>
+		</div>
+
+		<div id="About" class="tabcontent" style="display: none;">
+		  
+			<a href="https://en.wikipedia.org/wiki/Search_algorithm"><h3>Search algorithms - <i>Wikipedia</i></h3></a>
+		  
+			<p>In this project you are given different 3D maps ploted in 2D, with the height mapped to a color space. To gain practical knowledge of the topics discussed in the theoretical classes, you will evaluate the behavior of different search algorithms in the cloud using Amazon Web Services. These algorithms are already implemented so it is not required to look into them.</p>
+			
+			<p><b>The focus is NOT to study search algorithms themselves.</b></p>
+			
+			<p>These are the three strategies you will experiment with:</p>
+			<ul>
+				<li>
+				<a href="https://en.wikipedia.org/wiki/Breadth-first_search">Breadth-first Search (BFS):</a>
+				<p>An algorithm for traversing or searching tree or graph data structures. It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key'), and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level. It uses the opposite strategy as depth-first search, which instead explores the highest-depth nodes first before being forced to backtrack and expand shallower nodes. </p>
+				<img class="center-img" alt="Node access order under breadth-first search." src="./Visualizing Hill Navigation_files/Breadth-first-tree.svg" decoding="async" srcset="img/Breadth-first-tree.svg" data-file-width="730" data-file-height="726" width="350" height="348">
+				</li>
+				<li>
+				<a href="https://en.wikipedia.org/wiki/Depth-first_search">Depth-first Search (DFS):</a>
+				<p>Depth-first search (DFS) is an algorithm for traversing or searching tree or graph data structures. The algorithm starts at the root node (selecting some arbitrary node as the root node in the case of a graph) and explores as far as possible along each branch before backtracking. A version of depth-first search was investigated in the 19th century by French mathematician Charles Pierre Trémaux as a strategy for solving mazes.</p>
+				<img class="center-img" alt="Node access order under depth-first search." src="./Visualizing Hill Navigation_files/Depth-first-tree.svg" decoding="async" srcset="img/Depth-first-tree.svg 2x" data-file-width="730" data-file-height="726" width="350" height="348">
+				</li>
+				<li>
+				<a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* algorithm:</a>
+				<p>In computer science, A* (pronounced "A star") is a computer algorithm that is widely used in pathfinding and graph traversal, which is the process of finding a path between multiple points, called "nodes". It enjoys widespread use due to its performance and accuracy. However, in practical travel-routing systems, it is generally outperformed by algorithms which can pre-process the graph to attain better performance, although other work has found A* to be superior to other approaches.</p>
+				<img class="center-img" alt="Node access order under A* search." src="./Visualizing Hill Navigation_files/SRI_Shakey_with_callouts.jpg" decoding="async" srcset="img/SRI_Shakey_with_callouts.jpg 1.5x, img/SRI_Shakey_with_callouts.jpg" data-file-width="730" data-file-height="726" width="350" height="348">
+				</li>
+			</ul>
+			
+			<p>Here is an example map that is 512x512 pixels. The top-left corner of the map is coordinate (0, 0) and the bottom-right is (512, 512).</p>
+			<img class="center-img" alt="Sample generated 512x512 map." src="./Visualizing Hill Navigation_files/RANDOM_HILL_512x512_2019-03-01_10-28-59.png" decoding="async" srcset="datasets/RANDOM_HILL_512x512_2019-03-01_10-28-59.png" data-file-width="730" data-file-height="512" width="512" height="512">
+			
+			
+			
+			<p>Different algorithms produce different exploration paths with varying impact in performance. Suppose we test the three strategies on this map, starting at coordinate (25, 25). Below we show the results of BFS, DFS and A* algorithms respectively. The circle with an outer white layer is the starting point (25, 25) and the circle with the outer black layer is the finishing point (511, 281).</p>
+
+			<p>The algorithms try to find the highest point in the map (colored red).</p>
+			
+			<ul>
+				<hr>
+				<li>Breadth-first Search (BFS):
+				<br>
+				<img class="center-img" alt="Solution using a BFS algorithm." src="./Visualizing Hill Navigation_files/BFS_512x512_2019-03-06_14-27-30.png" decoding="async" srcset="img/BFS_512x512_2019-03-06_14-27-30.png" data-file-width="730" data-file-height="512" width="512" height="512">
+				</li>
+				<hr>
+				<li>Depth-first Search (DFS):
+				<br>
+				<img class="center-img" alt="Solution using a DFS algorithm." src="./Visualizing Hill Navigation_files/DFS_512x512_2019-03-06_14-29-42.png" decoding="async" srcset="img/DFS_512x512_2019-03-06_14-29-42.png" data-file-width="730" data-file-height="512" width="512" height="512">
+				</li>
+				<hr>
+				<li>A* algorithm:
+				<br>
+				<img class="center-img" alt="Solution using an A* algorithm." src="./Visualizing Hill Navigation_files/ASTAR_512x512_2019-03-06_14-23-45.png" decoding="async" srcset="img/ASTAR_512x512_2019-03-06_14-23-45.png" data-file-width="730" data-file-height="512" width="512" height="512">
+				</li>
+			</ul>
+		</div> 
+		
+		
+		<div id="visualization-block" class="center">
+			<div id="msg"></div>
+			<canvas data-processing-sources="processing/placeholder.pde"></canvas>
+		</div>
+	
+		<footer id="copyright" class="center">
+		  <span id="copyright-text">Ⓒ 2018-2019</span>, <a href="https://fenix.tecnico.ulisboa.pt/disciplinas/AVExe/2018-2019/2-semestre">Cloud Computing and Virtualization Course - 2018/19</a>
+		  <br>
+		  <a href="https://tecnico.ulisboa.pt/en">Instituto Superior Técnico</a>, <a href="https://www.ulisboa.pt/en">Universidade de Lisboa</a>
+		  <br>
+		  All rights reserved.
+		 
+		</footer> 
+	
+	</div>
+	
+	<script src="./Visualizing Hill Navigation_files/manager.js.transferir"></script>
+
+<div id="gtx-trans" style="position: absolute; left: 481px; top: 58.1563px;"><div class="gtx-trans-icon"></div></div></body></html>

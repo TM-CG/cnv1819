@@ -1,0 +1,370 @@
+
+
+/******* Tab management code. *******/
+
+function openTab(evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+
+  if(tabName == "Process") {
+    var canvas = document.getElementById("currentCanvas");
+
+    document.getElementById("x1").value = canvas.width;
+    document.getElementById("y1").value = canvas.height;
+
+  }
+};
+
+
+/******* Processing dropdown management code. *******/
+
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content. */
+function surfaceFunction() {
+  document.getElementById("surfaceDropdown").classList.toggle("show");
+  document.getElementById("searchStrategyDropdown").classList.remove('show');
+}
+
+function searchStrategyFunction() {
+  document.getElementById("searchStrategyDropdown").classList.toggle("show");
+  document.getElementById("surfaceDropdown").classList.remove('show');
+}
+
+function execute() {
+
+  console.log("> Running execute().");
+
+  var x0, y0, x1, y1, xS, yS, datFilePath, strategy, queryParams, TARGET_IP, TARGET_PORT, imgNode, urlNode, targetAddress, targetPort, url, canvas, procDiv, brNode;
+
+  x0 = document.getElementById("x0").value;
+  y0 = document.getElementById("y0").value;
+
+  x1 = document.getElementById("x1").value;
+  y1 = document.getElementById("y1").value;
+
+  xS = document.getElementById("xS").value;
+  yS = document.getElementById("yS").value;
+
+  targetAddress = document.getElementById("targetAddress").value;
+  targetPort = document.getElementById("targetPort").value;
+
+  datFilePath = "datasets/" + document.getElementById("surfaceButton").innerText + ".dat";
+
+  strategy = document.getElementById("searchStrategyDropdown").dataset.strategy;
+
+  var canvas = document.getElementById("currentCanvas");
+
+
+  queryParams = "w=" + canvas.width + "&h=" + canvas.height + "&x0=" + x0 + "&x1=" + x1 + "&y0=" + y0 + "&y1=" + y1 + "&xS=" + xS + "&yS=" + yS + "&s=" + strategy + "&i=" + datFilePath;
+
+  console.log("> Parameters: " + queryParams);
+
+  TARGET_IP = targetAddress;
+  TARGET_PORT = targetPort;
+  //TARGET_IP = "127.0.0.1";
+  //TARGET_PORT = "8000";
+
+  url = "http://" + TARGET_IP + ":" + TARGET_PORT + "/climb?" + queryParams;
+
+  // (Re)create result image HTML node.
+  imgNode = document.getElementById("resultImg");
+  if (imgNode != null) {
+    imgNode.remove();
+  }
+  imgNode = document.createElement("IMG");
+  imgNode.id = "resultImg";
+
+  // (Re)create target query HTML node.
+  urlNode = document.getElementById("resultURL");
+  if (urlNode != null) {
+    urlNode.remove();
+  }
+  urlNode = document.createElement("SPAN");
+  urlNode.innerText = "Query: " + url;
+  urlNode.id = "resultURL";
+
+  procDiv = document.getElementById("Process");
+
+
+
+  procDiv.appendChild(urlNode);
+
+  procDiv.appendChild(imgNode);
+
+
+  canvas = document.getElementById("currentCanvas");
+  imgNode.width = canvas.width;
+  imgNode.height = canvas.height;
+  imgNode.classList.add("center-img");
+  imgNode.src = url;
+}
+
+function closeDropdowns() {
+  var i, dropdowns = document.getElementsByClassName("dropdown-content");
+  for (i = 0; i < dropdowns.length; i++) {
+    var openDropdown = dropdowns[i];
+    if (openDropdown.classList.contains('show')) {
+      openDropdown.classList.remove('show');
+    }
+  }
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+
+  // Check if a link dropdown button was clicked.
+  if(event.target.matches('button')) {
+
+    event.preventDefault();
+
+    // Check if we clicked on an <a> of <div> 'surfaceDropdown'.
+    if(event.target.parentNode.id == "surfaceDropdown") {
+
+      var surfaceOptions = event.target.parentNode.children;
+
+      // Remove the color class of the other <a> entries in the <div> 'surfaceDropdown'.
+      for(var i = 0; i < surfaceOptions.length; i++) {
+        surfaceOptions[i].classList.remove("chosen");
+      }
+
+      // Give it a color class different than other entries in the <div> 'surfaceDropdown'.
+      event.target.classList.add("chosen");
+      
+
+      var targetImageFileName = event.target.innerText;
+      
+      var whSeparatorParts = targetImageFileName.split("x");
+      var strLeftSide = whSeparatorParts[0].split("_");
+      var imgWidth = strLeftSide[strLeftSide.length - 1];
+      var strRightSide = whSeparatorParts[1].split("_");
+      var imgHeight = strRightSide[0];
+
+      var canvas = document.getElementById("currentCanvas");
+
+      console.log("> Canvas new width: " + imgWidth);
+      console.log("> Canvas new height: " + imgHeight);
+
+      canvas.width = imgWidth;
+      canvas.height = imgHeight;
+
+      newImage = new Image();
+
+      var canvasContext = canvas.getContext("2d");
+      // Helpful resource: https://stackoverflow.com/questions/26186381/why-doesnt-context-drawimage-work-in-html-canvas
+      newImage.onload = function() {
+        canvasContext.drawImage(newImage, 0, 0);
+      };  
+
+      // Set image properties.
+      newImage.id = "currentMap";
+      newImage.src = "datasets/" + targetImageFileName + ".png";
+      newImage.srcset = newImage.src;
+      newImage.width = canvas.width;
+      newImage.dataset.fileWidth = canvas.width;
+      newImage.height = canvas.height;
+      newImage.dataset.fileHeight = canvas.height;
+      
+      // When changing to a new image, set the boundaries of the search
+      // rectangle to the as large as the map itself.
+      document.getElementById("x1").value = canvas.width;
+      document.getElementById("y1").value = canvas.height;
+
+      document.getElementById("x0").value = 0;
+      document.getElementById("y0").value = 0;
+
+      document.getElementById("xS").value = 0;
+      document.getElementById("yS").value = 0;
+
+      document.getElementById("surfaceButton").innerText = targetImageFileName;
+
+      closeDropdowns();
+    }
+
+    else if(event.target.parentNode.id == "searchStrategyDropdown") {
+
+      var strategyOptions = event.target.parentNode.children;
+
+      // Remove the color class of the other <a> entries in the <div> 'surfaceDropdown'.
+      for(var i = 0; i < strategyOptions.length; i++) {
+        strategyOptions[i].classList.remove("chosen");
+      }
+
+      // Give it a color class different than other entries in the <div> 'surfaceDropdown'.
+      event.target.classList.add("chosen");
+
+      // Then, set an html5 data-property which is either "DFS", "BFS" or "ASTAR"
+      document.getElementById("strategyButton").innerText = event.target.innerText;
+      event.target.parentNode.dataset.strategy = event.target.id.toUpperCase();
+
+      closeDropdowns();
+    }
+    else if(event.target.id == "executeButton") {
+
+      event.preventDefault();
+
+      console.log("> Clicked execute.");
+
+      var x0, x1, y0, y1, xS, yS, targetAddress, targetPort, errorSpan, errorNotice = "", brNode;
+
+      errorSpan = document.getElementById("errorSpan");
+      if (errorSpan != null) {
+        errorSpan.remove();
+      }
+
+
+      // Parameter sanity checks.
+      x1 = parseInt(document.getElementById("x1").value, 10);
+      y1 = parseInt(document.getElementById("y1").value, 10);
+
+      x0 = parseInt(document.getElementById("x0").value, 10);
+      y0 = parseInt(document.getElementById("y0").value, 10);
+
+      xS = parseInt(document.getElementById("xS").value, 10);
+      yS = parseInt(document.getElementById("yS").value, 10);
+
+      targetAddress = document.getElementById("targetAddress").value;
+      targetPort = document.getElementById("targetPort").value;
+
+
+      if (x0 >= x1) {
+        errorNotice += "x0 must be smaller than x1. ";
+        console.log("x0: " + x0 + " x1: " + x1);
+      }
+      if (y0 >= y1) {
+        errorNotice += "y0 must be smaller than y1. ";
+        console.log("y0: " + y0 + " y1: " + y1);
+      }
+      if ( ! (xS >= x0 && xS <= x1)) {
+        console.log("xS: " + xS + " x0: " + x0 + " x1: " + x1);
+        errorNotice += "xS must be between x0 and x1. ";
+      }
+      if ( ! (yS >= y0 && yS <= y1)) {
+        console.log("yS: " + yS + " y0: " + y0 + " y1: " + y1);
+        errorNotice += "yS must be between y0 and y1. ";
+      }
+
+      if( targetAddress.length == 0) {
+        errorNotice += "Remote web server address is missing. "
+      }
+
+      if( targetPort.length == 0) {
+        errorNotice += "Remote web server port is missing. "
+      }
+
+      if (errorNotice.length > 0) {
+
+        brNode = document.getElementById("brNode");
+        if (brNode != null) {
+          brNode.remove();
+        }
+
+        brNode = document.createElement("BR");
+        brNode.id = "brNode";
+        //procDiv.appendChild(brNode);
+
+
+        errorSpan = document.createElement("SPAN");
+        errorSpan.id = "errorSpan";
+        errorSpan.innerText = errorNotice;
+        errorSpan.classList.add("error-msg");
+
+        var procDiv = document.getElementById("Process");
+        procDiv.appendChild(errorSpan);
+
+        var imgNode = document.getElementById("resultImg");
+
+        if (imgNode != null) {
+          imgNode.remove();
+        }
+
+        console.log("> Detected query parameter error. Not running execute()...");
+
+        return;
+      }
+      else {
+
+        // Trigger the request to the Java Web Server.
+        execute();
+      }
+
+    }
+  }
+
+
+  if ( ! event.target.matches('.dropbtn')) {
+    // Small check to close dropdowns if a click was done in neither of them.
+    closeDropdowns();
+  }
+}
+
+document.addEventListener("DOMContentLoaded", (event) => {
+  
+  // Initialize copyright text.
+  document.getElementById("copyright-text").textContent = document.getElementById("copyright-text").textContent.replace("CURR", (new Date()).getFullYear());
+
+  // Initialize drawing canvas.
+  var canvas = document.getElementById("currentCanvas");
+  startingMapImage = new Image();
+  var canvasContext = canvas.getContext("2d");
+
+  // Helpful resource: https://stackoverflow.com/questions/26186381/why-doesnt-context-drawimage-work-in-html-canvas
+  startingMapImage.onload = function() {
+    canvasContext.drawImage(startingMapImage, 0, 0);
+  };  
+
+  var initialMapText = "RANDOM_HILL_512x512_2019-02-27_09-46-42";
+
+  //  Set image properties.
+  startingMapImage.id = "currentMap";
+  startingMapImage.src = "datasets/" + initialMapText + ".png";
+  startingMapImage.srcset = startingMapImage.src;
+  startingMapImage.width = canvas.width;
+  startingMapImage.dataset.fileWidth = canvas.width;
+  startingMapImage.height = canvas.height;
+  startingMapImage.dataset.fileHeight = canvas.height;
+
+
+  document.getElementById("x1").value = canvas.width;
+  document.getElementById("y1").value = canvas.height;
+
+  document.getElementById("x0").value = 0;
+  document.getElementById("y0").value = 0;
+
+  document.getElementById("xS").value = 0;
+  document.getElementById("yS").value = 0;
+
+  var surfaceDropdown = document.getElementById("surfaceDropdown");
+
+  var surfaceOptions = surfaceDropdown.children;
+
+  // Remove the color class of the other <a> entries in the <div> 'surfaceDropdown'.
+  for(var i = 0; i < surfaceOptions.length; i++) {
+
+    if(surfaceOptions[i].innerText != initialMapText) {
+      surfaceOptions[i].classList.remove("chosen");
+    }
+    else {
+      surfaceOptions[i].classList.add("chosen");
+    }
+    
+  }
+
+  document.getElementById("surfaceButton").innerText = initialMapText;
+  document.getElementById("processBtn").click();
+
+});
