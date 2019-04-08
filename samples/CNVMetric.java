@@ -18,44 +18,48 @@ public class CNVMetric {
         
         for (int i = 0; i < infilenames.length; i++) {
             String infilename = infilenames[i];
-            if (infilename.endsWith(".class")) {
-				// create class info object
-				ClassInfo ci = new ClassInfo(argv[0] + System.getProperty("file.separator") + infilename);
+            System.out.println("Found file: " + infilename);
+	    if (infilename.endsWith(".class")) {
+		// create class info object
+		ClassInfo ci = new ClassInfo(argv[0] + System.getProperty("file.separator") + infilename);
 				
                 for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements(); ) {
-                    Routine routine = (Routine) e.nextElement();
+                	Routine routine = (Routine) e.nextElement();
 
-                    /** Add reference to mcount before all methods */
-					routine.addBefore("CNVMetric", "mcount", new Integer(1));
-                    
+                    	/** Add reference to mcount before all methods */
+			routine.addBefore("CNVMetric", "mcount", new Integer(1));
 
-                    for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements(); ) {
-                        BasicBlock bb = (BasicBlock) b.nextElement();
+                    	for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements(); ) {
+                        	BasicBlock bb = (BasicBlock) b.nextElement();
 
-                        /** Count how many basic blocks exists */
-                        bb.addBefore("CNVMetric", "count", new Integer(bb.size()));
-                    }
+                        	/** Count how many basic blocks exists */
+                        	bb.addBefore("CNVMetric", "count", new Integer(bb.size()));
+                   	 }
 
-                    //Check how many conditional jumps exists
-                    InstructionArray instructions = routine.getInstructionArray();
+                    	//Check how many conditional jumps exists
+                    	InstructionArray instructions = routine.getInstructionArray();
 
-                    for (Enumeration instrs = instructions.elements(); instrs.hasMoreElements(); ) {
-                        Instruction instr = (Instruction) instrs.nextElement();
-                        int opcode=instr.getOpcode();
+                    	for (Enumeration instrs = instructions.elements(); instrs.hasMoreElements(); ) {
+                        	Instruction instr = (Instruction) instrs.nextElement();
+                        	int opcode=instr.getOpcode();
 
-                        if ((opcode==InstructionTable.CONDITIONAL_INSTRUCTION) || 
-                            (opcode==InstructionTable.ARITHMETIC_INSTRUCTION) ||
-                            (opcode==InstructionTable.LOAD_INSTRUCTION) ||
-                            (opcode==InstructionTable.STORE_INSTRUCTION) ||
-                            (opcode==InstructionTable.STACK_INSTRUCTION)
-                            ){
-                            instr.addBefore("CNVMetric", "dynamicCount", new Integer(opcode));
+                        	if ((opcode==InstructionTable.CONDITIONAL_INSTRUCTION) || 
+                        		(opcode==InstructionTable.ARITHMETIC_INSTRUCTION) ||
+                            		(opcode==InstructionTable.LOAD_INSTRUCTION) ||
+                            		(opcode==InstructionTable.STORE_INSTRUCTION) ||
+                            		(opcode==InstructionTable.STACK_INSTRUCTION)
+                            		){
+                            		instr.addBefore("CNVMetric", "dynamicCount", new Integer(opcode));
                         }
                     }
-                    
+			
+			//vitor: only print the statistics after solve function finish
+			if (routine.getMethodName().equals("solve")) {
+				routine.addAfter("CNVMetric", "printStats", "bah");
+			}
 
                 }
-                ci.addAfter("CNVMetric", "printStats", ci.getClassName());
+                /*ci.addAfter("CNVMetric", "printStats", ci.getClassName());*/
                 ci.write(argv[1] + System.getProperty("file.separator") + infilename);
             }
         }
