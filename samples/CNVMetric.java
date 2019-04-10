@@ -73,6 +73,30 @@ public class CNVMetric {
         System.out.printf("%1.0f load instructions\n", load_count);
         System.out.printf("%1.0f store instructions\n", store_count);
         System.out.printf("%1.0f stack instructions\n", stack_count);
+        String fileName = Thread.currentThread().getId() + "-" + new Date().getTime();
+
+        System.out.println("Writing " + fileName + "...");
+        try {
+            File file = new File("Logs"+File.separator + fileName + ".bin");
+            file.createNewFile();
+            FileOutputStream f = new FileOutputStream(file, false);
+            ObjectOutputStream o = new ObjectOutputStream(f);
+            o.writeObject(i_count);
+            o.writeObject(b_count);
+            o.writeObject(m_count);
+            o.writeObject(cond_count);
+            o.writeObject(arit_count);
+            o.writeObject(load_count);
+            o.writeObject(store_count);
+            o.writeObject(stack_count);
+
+            o.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error initializing stream");
+        }
+        System.out.println(fileName);
     }
     
 

@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 # Hill@Climb config files for Linux based Environments
 
-export CNV_ROOT=$HOME/cnv-project
+export CNV_ROOT=C:/Users/mbele/OneDrive/Documentos/GitHub/cnv1819
+
 export CNV_GEN=$CNV_ROOT/pt/ulisboa/tecnico/cnv/generator
+
 export CNV_SERVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/server
+
 export CNV_SOLVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/solver
+
 export CNV_UTIL=$CNV_ROOT/pt/ulisboa/tecnico/cnv/util
 
+
 export CNV_EXAMPLES=$CNV_ROOT/examples
+
 export CNV_SAMPLES=$CNV_ROOT/samples
+
 export CNV_TMP=$HOME/compiled_cnv
+
 
 # Color codes
 export BLINK_ENABLE="\e[5m"
@@ -66,6 +74,8 @@ compile() {
 	javac $CNV_EXAMPLES/*.java
 	javac $CNV_SAMPLES/*.java
 	check Compilation
+	cp -r pt/ $CNV_TMP
+	check Backup
 }
 
 inst() {
@@ -79,7 +89,7 @@ inst() {
 
 	echo "Compiling CNVMetric ..."
 	javac $CNV_SAMPLES/CNVMetric.java
-	Check Compilation
+	check Compilation
 
 	echo "Instrumenting solver folder with CNVMetric ..."
 	java CNVMetric $CNV_SOLVER $CNV_SOLVER
@@ -93,6 +103,11 @@ check_inst() {
 
 wsvc() {
 	java pt.ulisboa.tecnico.cnv.server.WebServer	
+}
+
+readLog() {
+	javac $CNV_UTIL/LogReader.java
+	java pt.ulisboa.tecnico.cnv.util.LogReader $1
 }
 
 
