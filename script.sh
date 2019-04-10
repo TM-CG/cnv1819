@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Hill@Climb config files for Linux based Environments
 
-export CNV_ROOT=C:/Users/mbele/OneDrive/Documentos/GitHub/cnv1819
+export CNV_ROOT=~/git/cnv1819
 
 export CNV_GEN=$CNV_ROOT/pt/ulisboa/tecnico/cnv/generator
 
@@ -18,6 +18,7 @@ export CNV_SAMPLES=$CNV_ROOT/samples
 
 export CNV_TMP=$HOME/compiled_cnv
 
+export CLASSPATH=$CNV_ROOT:$CNV_SAMPLES:.
 
 # Color codes
 export BLINK_ENABLE="\e[5m"
@@ -74,7 +75,7 @@ compile() {
 	javac $CNV_EXAMPLES/*.java
 	javac $CNV_SAMPLES/*.java
 	check Compilation
-	cp -r pt/ $CNV_TMP
+	cp -r pt/ $CNV_TMP/pt/
 	check Backup
 }
 
