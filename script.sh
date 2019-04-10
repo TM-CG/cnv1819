@@ -1,21 +1,14 @@
 #!/usr/bin/env bash
 # Hill@Climb config files for Linux based Environments
 
-export CNV_ROOT=~/git/cnv1819
-
+export CNV_ROOT=$HOME/cnv-project
 export CNV_GEN=$CNV_ROOT/pt/ulisboa/tecnico/cnv/generator
-
 export CNV_SERVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/server
-
 export CNV_SOLVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/solver
-
 export CNV_UTIL=$CNV_ROOT/pt/ulisboa/tecnico/cnv/util
 
-
 export CNV_EXAMPLES=$CNV_ROOT/examples
-
 export CNV_SAMPLES=$CNV_ROOT/samples
-
 export CNV_TMP=$HOME/compiled_cnv
 
 export CLASSPATH=$CNV_ROOT:$CNV_SAMPLES:.
