@@ -5,9 +5,9 @@ import java.util.*;
 
 public class CNVMetric {
     private static PrintStream out = null;
-    private static double i_count = 0, b_count = 0, m_count = 0, cond_count = 0;
+    private static double i_count = 0, b_count = 0, m_count = 0, unCond_count = 0;
     private static double arit_count = 0;
-    private static double load_count = 0, store_count = 0, stack_count = 0;
+    private static double cond_count = 0, store_count = 0, stack_count = 0;
     
     /* main reads in all the files class files present in the input directory,
      * instruments them, and outputs them to the specified output directory.
@@ -27,7 +27,7 @@ public class CNVMetric {
                 	Routine routine = (Routine) e.nextElement();
 
                     	/** Add reference to mcount before all methods */
-			routine.addBefore("CNVMetric", "mcount", new Integer(1));
+			            routine.addBefore("CNVMetric", "mcount", new Integer(1));
 
                     	for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements(); ) {
                         	BasicBlock bb = (BasicBlock) b.nextElement();
@@ -41,13 +41,10 @@ public class CNVMetric {
 
                     	for (Enumeration instrs = instructions.elements(); instrs.hasMoreElements(); ) {
                         	Instruction instr = (Instruction) instrs.nextElement();
-                        	int opcode=instr.getOpcode();
+                        	int opcode = instr.getOpcode();
 
-                        	if ((opcode==InstructionTable.CONDITIONAL_INSTRUCTION) || 
-                        		(opcode==InstructionTable.ARITHMETIC_INSTRUCTION) ||
-                            		(opcode==InstructionTable.LOAD_INSTRUCTION) ||
-                            		(opcode==InstructionTable.STORE_INSTRUCTION) ||
-                            		(opcode==InstructionTable.STACK_INSTRUCTION)
+                            if ((opcode == InstructionTable.UNCONDITIONAL_INSTRUCTION) ||
+                                (opcode == InstructionTable.CONDITIONAL_INSTRUCTION)
                             		){
                             		instr.addBefore("CNVMetric", "dynamicCount", new Integer(opcode));
                         }
@@ -67,12 +64,16 @@ public class CNVMetric {
     
     public static synchronized void printStats(String foo) {
         System.out.println("=============== RESULTS ===============");
-        System.out.printf("%1.0f instructions in %1.0f basic blocks were executed in %1.0f methods\n", i_count, b_count, m_count);
-        System.out.printf("%1.0f conditional instructions\n", cond_count);
+        System.out.printf("%1.0f instructions\n", i_count);
+        System.out.printf("%1.0f basic blocks\n", b_count);
+        System.out.printf("%1.0f methods called\n", m_count);
+        System.out.printf("%1.0f conditional instructions (IFs)\n", cond_count);
+        System.out.printf("%1.0f unconditional instructions\n", unCond_count);
+        /*System.out.printf("%1.0f conditional instructions (IFs)\n", cond_count);
+        System.out.printf("%1.0f compararison instructions\n", comp_count);
         System.out.printf("%1.0f aritmetic instructions\n", arit_count);
-        System.out.printf("%1.0f load instructions\n", load_count);
         System.out.printf("%1.0f store instructions\n", store_count);
-        System.out.printf("%1.0f stack instructions\n", stack_count);
+        System.out.printf("%1.0f stack instructions\n", stack_count);*/
         String fileName = Thread.currentThread().getId() + "-" + new Date().getTime();
 
         System.out.println("Writing " + fileName + "...");
@@ -84,11 +85,12 @@ public class CNVMetric {
             o.writeObject(i_count);
             o.writeObject(b_count);
             o.writeObject(m_count);
-            o.writeObject(cond_count);
+            o.writeObject(unCond_count);
+            /*o.writeObject(cond_count);
+            o.writeObject(comp_count);
             o.writeObject(arit_count);
-            o.writeObject(load_count);
             o.writeObject(store_count);
-            o.writeObject(stack_count);
+            o.writeObject(stack_count);*/
 
             o.close();
         }
@@ -111,11 +113,8 @@ public class CNVMetric {
 
     public static synchronized void dynamicCount(int type) {
         switch(type) {
-            case InstructionTable.CONDITIONAL_INSTRUCTION: cond_count++; break;
-            case InstructionTable.ARITHMETIC_INSTRUCTION : arit_count++; break;
-            case InstructionTable.LOAD_INSTRUCTION       : load_count++; break;
-            case InstructionTable.STORE_INSTRUCTION      : store_count++; break;
-            case InstructionTable.STACK_INSTRUCTION      : stack_count++; break;
+            case InstructionTable.UNCONDITIONAL_INSTRUCTION: unCond_count++;   break;
+            case InstructionTable.CONDITIONAL_INSTRUCTION:   cond_count++;   break;
         }
     }
 }

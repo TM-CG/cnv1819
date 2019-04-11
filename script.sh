@@ -11,6 +11,8 @@ export CNV_EXAMPLES=$CNV_ROOT/examples
 export CNV_SAMPLES=$CNV_ROOT/samples
 export CNV_TMP=$HOME/compiled_cnv
 
+export CNV_LOGS=$CNV_ROOT/Logs
+
 export CLASSPATH=$CNV_ROOT:$CNV_SAMPLES:.
 
 # Color codes
@@ -33,7 +35,7 @@ echo -e ""
 echo -e "Project loaded"
 
 mkdir -p $CNV_TMP
-
+mkdir -p $CNV_LOGS
 
 #################################################################
 #                          FUNCTIONS                            #
@@ -61,14 +63,25 @@ clean() {
 }
 
 compile() {
+	echo "Compiling CNV_GEN ..."
 	javac $CNV_GEN/*.java
+	check Compilation
+	echo "Compiling CNV_SERVER..."
 	javac $CNV_SERVER/*.java
+	check Compilation
+	echo "Compiling CNV_SOLVER ..."
 	javac $CNV_SOLVER/*.java
+	check Compilation
+	echo "Compiling CNV_UTIL ..."
 	javac $CNV_UTIL/*.java
+	check Compilation
+	echo "Compiling CNV_EXAMPLES ..."
 	javac $CNV_EXAMPLES/*.java
+	check Compilation
+	echo "Compiling CNV_SAMPLES ..."
 	javac $CNV_SAMPLES/*.java
 	check Compilation
-	cp -r pt/ $CNV_TMP/pt/
+	cp -r pt/ $CNV_TMP/
 	check Backup
 }
 
@@ -100,7 +113,6 @@ wsvc() {
 }
 
 readLog() {
-	javac $CNV_UTIL/LogReader.java
 	java pt.ulisboa.tecnico.cnv.util.LogReader $1
 }
 

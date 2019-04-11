@@ -19,10 +19,10 @@ public class LogReader {
             System.out.printf("%1.0f instructions in %1.0f basic blocks were executed in %1.0f methods\n", i_count, b_count, m_count);
             double cond_count = (double) oi.readObject();
             System.out.printf("%1.0f conditional instructions\n", cond_count);
+            double comp_count = (double) oi.readObject();
+            System.out.printf("%1.0f comparison instructions\n", comp_count);
             double arit_count = (double) oi.readObject();
             System.out.printf("%1.0f aritmetic instructions\n", arit_count);
-            double load_count = (double) oi.readObject();
-            System.out.printf("%1.0f load instructions\n", load_count);
             double store_count = (double) oi.readObject();
             System.out.printf("%1.0f store instructions\n", store_count);
             double stack_count = (double) oi.readObject();
