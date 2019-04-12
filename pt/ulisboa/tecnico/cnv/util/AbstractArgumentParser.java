@@ -72,11 +72,14 @@ public abstract class AbstractArgumentParser implements ArgumentParser {
         // Prepare program-specific options provided in a subclass of this one.
         setupCLIOptions();
 
+        System.out.println("> [AbstractArgumentParser]: setupCLIOptions() DONE.");
+
         // Set values
         try {
             this.cmd = this.parser.parse(this.options, args);
         } catch (ParseException e) {
-            System.err.println(e.getMessage());
+            System.out.println("> [AbstractArgumentParser]: ParseException.");
+            System.out.println(e.getMessage());
             this.formatter.printHelp("utility-name", this.options);
             System.exit(1);
         }
@@ -92,7 +95,7 @@ public abstract class AbstractArgumentParser implements ArgumentParser {
                     result = outDirHandle.mkdir();
                 }
                 catch(SecurityException se){
-                    System.err.println("Error creating output directory:" + outDirPath);
+                    System.out.println("Error creating output directory:" + outDirPath);
                     se.printStackTrace();
                     System.exit(1);
                 }

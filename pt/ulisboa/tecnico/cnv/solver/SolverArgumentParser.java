@@ -209,7 +209,7 @@ public class SolverArgumentParser extends AbstractArgumentParser {
     }
 
     public SolverArgumentParser(final String[] args) {
-        this.setup(args);
+        super.setup(args);
     }
 
 
