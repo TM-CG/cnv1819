@@ -20,19 +20,11 @@
 %------------------------------------------------------------------------- 
 \begin{document}
 
-\title{HillClimb@Cloud \\Cloud Computing and Virtualization \\Project 2018-2019 \\MEIC - IST - ULisboa }
+\title{HillClimb@Cloud \\ Cloud Computing and Virtualization \\MEIC-IST }
 
-\author{Miguel Belém\\
-83531\\
-miguelbelem@tecnico.ulisboa.pt
-\and
-Tiago Gonçalves\\
-83567\\
-tiago.miguel.c.g@tecnico.ulisboa.pt\\
-\and 
-Vítor Nunes\\
-83576\\
-vitor.sobrinho.nunes@tecnico.ulisboa.pt
+\author{83531 -Miguel Belém - miguelbelem@tecnico.ulisboa.pt\\
+83567 - Tiago Gonçalves - tiago.miguel.c.g@tecnico.ulisboa.pt\\
+83576 - Vítor Nunes - vitor.sobrinho.nunes@tecnico.ulisboa.pt
 }
 
 \maketitle
@@ -43,22 +35,50 @@ vitor.sobrinho.nunes@tecnico.ulisboa.pt
    a program running on Amazon Web Services that searches for the maximum value 
    of a map using different search strategies (A*, BFS, DFS). It's objective is to 
    produce metrics from running replics and adapt the system to get the maximum value
-   of the instaces in AWS.
+   of the instaces runinng in AWS.
 \end{abstract}
 
+%------------------------------------------------------------------------- 
+\Section{Metrics}
 
+We used BIT (Bytecode Instrumenting Tool) to allow us to alter the Web Server 
+Java Class Byte Code so it could measure the metrics that we wanted in a way 
+that would help us decice de the cost of replying to a request.\\
+This metrics need to be heavily weighted as they might give an overhead to the 
+the original program. For exampe: the metric instructions executed is a bad metric
+as it will had extra intructions to count every instruction which will lead to a 
+big overhead.
+%-------------------------------------------------------------------------
+\SubSection{Metrics Used}
+
+
+%-------------------------------------------------------------------------
+\SubSection{Storing the metrics}
+We stored the metrics objects obtained by the instrumentation in a binary
+file so that we could later retrive and use them on our Load Balancer. Each 
+request has its own file with its metrics and it's named by its thread id 
+and the UNIX time of the request.
 
 %------------------------------------------------------------------------- 
-\Section{Introduction}
+\Section{Load Balancer and Auto Scaler}
 
-Please follow the steps outlined below when submitting your 
-manuscript to the IEEE Computer Society Press. Note there have 
-been some changes to the measurements from previous instructions. 
+For this checkpoint we made use of a classic Load Balancer of Amazon Web
+Services along with a Auto Scaling Group to manage the running instances and
+to allow a scale mechanism while we don't implement our own Load Balancer and 
+Auto Scaler.  
 
-%------------------------------------------------------------------------- 
-\Section{Instructions}
+%-------------------------------------------------------------------------
+\SubSection{Load Balancer}
 
-Please read the following carefully.
+
+%-------------------------------------------------------------------------
+\SubSection{Auto Scaling Group}
+We created an Auto Scaling Group that increases the number of intances by
+1 if the average CPU utilization is over 60 \% in a period of 5 minutes and
+decreases the number of instances by 1 (to a minimum of 1 instance) if the average CPU 
+utilization of all instances is under 40\% for a period of 5 minutes. This allows
+to scale up in a situation of continuous heavy load while not scaling down instantly
+if we get a slight pause of incoming requests. 
 
 %------------------------------------------------------------------------- 
 \SubSection{Language}
