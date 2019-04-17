@@ -53,84 +53,92 @@ public class WebServer {
 						// Get the query.
 						final String query = t.getRequestURI().getQuery();
 
-						System.out.println("> Query:\t" + query);
+						if (query == null){
+							String response = "Ping test";
+		 					t.sendResponseHeaders(200, response.length());
+							OutputStream os = t.getResponseBody();
+		 					os.write(response.getBytes());
+		 					os.close();
+						}else{		
 
-						// Break it down into String[].
-						final String[] params = query.split("&");
+							System.out.println("> Query:\t" + query);
 
-						// Store as if it was a direct call to SolverMain.
-						final ArrayList<String> newArgs = new ArrayList<>();
-						for (final String p : params) {
-							final String[] splitParam = p.split("=");
-							newArgs.add("-" + splitParam[0]);
-							newArgs.add(splitParam[1]);
-						}
+							// Break it down into String[].
+							final String[] params = query.split("&");
 
-						newArgs.add("-d");
-
-						// Store from ArrayList into regular String[].
-						final String[] args = new String[newArgs.size()];
-						int i = 0;
-						for(String arg: newArgs) {
-							args[i] = arg;
-							i++;
-						}
-
-						// Get user-provided flags.
-						final SolverArgumentParser ap = new SolverArgumentParser(args);
-
-						// Create solver instance from factory.
-						final Solver s = SolverFactory.getInstance().makeSolver(ap);
-
-						// Write figure file to disk.
-						File responseFile = null;
-						try {
-
-							final BufferedImage outputImg = s.solveImage();
-
-							final String outPath = ap.getOutputDirectory();
-
-							final String imageName = s.toString();
-
-							if(ap.isDebugging()) {
-								System.out.println("> Image name: " + imageName);
+							// Store as if it was a direct call to SolverMain.
+							final ArrayList<String> newArgs = new ArrayList<>();
+							for (final String p : params) {
+								final String[] splitParam = p.split("=");
+								newArgs.add("-" + splitParam[0]);
+								newArgs.add(splitParam[1]);
 							}
 
-							final Path imagePathPNG = Paths.get(outPath, imageName);
-							ImageIO.write(outputImg, "png", imagePathPNG.toFile());
+							newArgs.add("-d");
 
-							responseFile = imagePathPNG.toFile();
+							// Store from ArrayList into regular String[].
+							final String[] args = new String[newArgs.size()];
+							int i = 0;
+							for(String arg: newArgs) {
+								args[i] = arg;
+								i++;
+							}
 
-						} catch (final FileNotFoundException e) {
-							e.printStackTrace();
-						} catch (final IOException e) {
-							e.printStackTrace();
-						} catch (ClassNotFoundException e) {
-							e.printStackTrace();
+							// Get user-provided flags.
+							final SolverArgumentParser ap = new SolverArgumentParser(args);
+
+							// Create solver instance from factory.
+							final Solver s = SolverFactory.getInstance().makeSolver(ap);
+
+							// Write figure file to disk.
+							File responseFile = null;
+							try {
+
+								final BufferedImage outputImg = s.solveImage();
+
+								final String outPath = ap.getOutputDirectory();
+
+								final String imageName = s.toString();
+
+								if(ap.isDebugging()) {
+									System.out.println("> Image name: " + imageName);
+								}
+
+								final Path imagePathPNG = Paths.get(outPath, imageName);
+								ImageIO.write(outputImg, "png", imagePathPNG.toFile());
+
+								responseFile = imagePathPNG.toFile();
+
+							} catch (final FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (final IOException e) {
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
+							}
+
+
+
+							// Send response to browser.
+							final Headers hdrs = t.getResponseHeaders();
+
+							t.sendResponseHeaders(200, responseFile.length());
+
+							hdrs.add("Content-Type", "image/png");
+
+							hdrs.add("Access-Control-Allow-Origin", "*");
+							hdrs.add("Access-Control-Allow-Credentials", "true");
+							hdrs.add("Access-Control-Allow-Methods", "POST, GET, HEAD, OPTIONS");
+							hdrs.add("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+							final OutputStream os = t.getResponseBody();
+							Files.copy(responseFile.toPath(), os);
+
+
+							os.close();
+
+							System.out.println("> Sent response to " + t.getRemoteAddress().toString());
 						}
-
-
-
-						// Send response to browser.
-						final Headers hdrs = t.getResponseHeaders();
-
-						t.sendResponseHeaders(200, responseFile.length());
-
-						hdrs.add("Content-Type", "image/png");
-
-						hdrs.add("Access-Control-Allow-Origin", "*");
-						hdrs.add("Access-Control-Allow-Credentials", "true");
-						hdrs.add("Access-Control-Allow-Methods", "POST, GET, HEAD, OPTIONS");
-						hdrs.add("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-
-						final OutputStream os = t.getResponseBody();
-						Files.copy(responseFile.toPath(), os);
-
-
-						os.close();
-
-						System.out.println("> Sent response to " + t.getRemoteAddress().toString());
-						
 				} catch (IOException e) {
 					System.err.println("IOException! Returning thread");
 					return;
