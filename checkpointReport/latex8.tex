@@ -82,7 +82,9 @@
    we get a temporary decrease and terminate them and then we might get back to a state
    where we can't deal with all requests that turns to a higher response time to those 
    requests. To avoid this we wait to see if the decrease of requests (lower CPU usage)
-   is not temporary (hence the 5 minutes under 40\% CPU load).
+   is not temporary (hence the 5 minutes under 40\% CPU load). Also if for some reason
+   an instance becomes unhealthy (unresponsive or the WebServer crashed for some reason)
+   then the auto-scaler will terminate that instance and start another.
 
 %------------------------------------------------------------------------- 
 \Section{Instrumentation}
@@ -112,8 +114,13 @@
 %------------------------------------------------------------------------- 
 
 \Section{Future Work}
-\SubSection{Load Balancer}
+\SubSection{Metrics}
+   At this point of the project the Web Server at the end of every request 
+   it writes to a binary file the metrics so they can later be used. These files
+   are local to the instances. So in next phase of the project we want to make use
+   of Dynamo-DB to store all the metrics so they can be easily accessible.
 
+\SubSection{Load Balancer}
 \SubSection{Auto Scaler}
 
 %-------------------------------------------------------------------------
