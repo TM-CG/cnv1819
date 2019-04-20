@@ -8,3 +8,4 @@ target/
 bin/
 Logs/
 .directory
+.DS_Store

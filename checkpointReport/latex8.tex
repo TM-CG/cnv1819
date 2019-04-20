@@ -63,9 +63,10 @@
    protocol but on port 8000. For the security group we allowed every communication
    coming to port 22 that uses SSH protocol (to allow remote access) and every
    message that uses HTTP to port 80 and 8000. The instances verification is made 
-   by pinging climb of the Web Server running in instances using HTTP protocol on
-   the port 8000. An instance is flagged as unhealthy after 2 failed pings from the 
-   LB and deemed as healthy if pinged successfully 10 consecutive times.\\
+   by pinging in a 30 seconds intervalthe Web Server running in the instances 
+   using HTTP protocol on the port 8000. An instance is flagged as unhealthy after
+   2 failed pings from the LB and deemed as healthy if pinged successfully 10 consecutive 
+   times.\\
    To fulfill the ping requests we modified the Web Server to awnser to null queries
    so the LB can simply make an HTTP to http://instanceip/climb.
    
