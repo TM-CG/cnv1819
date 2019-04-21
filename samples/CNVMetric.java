@@ -32,7 +32,7 @@ public class CNVMetric {
                         	BasicBlock bb = (BasicBlock) b.nextElement();
 
                         	/** Count how many basic blocks exists */
-                        	bb.addBefore("CNVMetric", "countInstrunctionsAndBB", new Integer(bb.size()));
+                        	bb.addBefore("CNVMetric", "countInstBB", new Integer(bb.size()));
                    	 }
                 }
                 /*ci.addAfter("CNVMetric", "printStats", ci.getClassName());*/
