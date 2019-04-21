@@ -24,7 +24,7 @@ public class Metrics implements Serializable{
     }
 
     public void incInstructionsRunned(int instrunctions){
-        instructionsRunned++;
+        instructionsRunned+= instrunctions;
     }
 
     public int methodsCalled(){
