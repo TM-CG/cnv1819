@@ -62,7 +62,7 @@ public class CNVMetric {
         metrics.incMethods();
     }
 
-    public static synchronized void saveMetric(string foo) {
+    public static synchronized void saveMetric(String foo) {
         Metrics metrics = metricsMap.get(Thread.currentThread().getId());
         try{
             File file = new File("Logs" + File.separator + sequenceID + ".bin");
