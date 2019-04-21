@@ -17,7 +17,7 @@ public class Metrics{
         basicBlocks++;
     }
 
-    public void incInstructionsRunned(){
+    public void incInstructionsRunned(int instrunctions){
         instructionsRunned++;
     }
 
