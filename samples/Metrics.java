@@ -1,4 +1,4 @@
-public class Metrics{
+public class Metrics implements Serializable{
     private int methodsCalled;
     private int basicBlocks;
     private int instructionsRunned;
