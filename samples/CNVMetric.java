@@ -26,7 +26,7 @@ public class CNVMetric {
                 	Routine routine = (Routine) e.nextElement();
 
                     	/** Add reference to mcount before all methods */
-			            routine.addBefore("CNVMetric", "methodCount", null);
+			            routine.addBefore("CNVMetric", "countMethod", new Integer(1));
 
                     	for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements(); ) {
                         	BasicBlock bb = (BasicBlock) b.nextElement();
@@ -51,7 +51,7 @@ public class CNVMetric {
         
     }
 
-    public static synchronized void countMethod() {
+    public static synchronized void countMethod(int i) {
         Metrics metrics =  metricsMap.get(Thread.currentThread().getId());
         if(metrics == null){
             metricsMap.put(Thread.currentThread().getId(), new Metrics());
