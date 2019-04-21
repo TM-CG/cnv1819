@@ -18,29 +18,24 @@ public class CNVMetric {
         for (int i = 0; i < infilenames.length; i++) {
             String infilename = infilenames[i];
             System.out.println("Found file: " + infilename);
-	    if (infilename.endsWith(".class")) {
-		// create class info object
-		ClassInfo ci = new ClassInfo(argv[0] + System.getProperty("file.separator") + infilename);        
-        
-                for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements(); ) {
+	        if (infilename.endsWith(".class")) {
+                // create class info object
+                ClassInfo ci = new ClassInfo(argv[0] + System.getProperty("file.separator") + infilename);   
+                    
+                for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements();) {
                 	Routine routine = (Routine) e.nextElement();
-
-                    /** Add reference to mcount before all methods */
                     routine.addBefore("CNVMetric", "countMethod", new Integer(1));
 
-                    for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements(); ) {
+                    for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements();) {
                         BasicBlock bb = (BasicBlock) b.nextElement();
-
-                        /** Count how many basic blocks exists */
                         bb.addBefore("CNVMetric", "countInstBB", new Integer(bb.size()));
                     }
 
                     if(routine.getMethodName().equals("solve")){
                         routine.addAfter("CNVMetric", "saveMetric", "null");
-                    }
-                        
-                    
+                    }  
                 }
+                ci.write(argv[1] + System.getProperty("file.separator") + infilename);
             }
         }
     }
@@ -66,13 +61,12 @@ public class CNVMetric {
         Metrics metrics = metricsMap.get(Thread.currentThread().getId());
         try{
             File file = new File("Logs" + File.separator + sequenceID + ".bin");
-            if(file.createNewFile()){
-                FileOutputStream f = new FileOutputStream(file, false);
-                ObjectOutputStream o = new ObjectOutputStream(f);
-                o.writeObject(metrics);
-                o.close();
-                sequenceID++;
-            }
+            file.createNewFile();
+            FileOutputStream f = new FileOutputStream(file, false);
+            ObjectOutputStream o = new ObjectOutputStream(f);
+            o.writeObject(metrics);
+            o.close();
+            sequenceID++;
         }catch (IOException e ){
             e.printStackTrace();
             System.out.println("Error initializing stream");
