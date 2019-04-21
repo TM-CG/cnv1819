@@ -1,12 +1,13 @@
 import BIT.highBIT.*;
 import java.io.*;
 import java.util.*;
+import java.lang.Thread;
 
 
 public class CNVMetric {
     private static PrintStream out = null;
     private static HashMap<Long, Metrics>  metricsMap = new HashMap<>();
-        
+
     /* main reads in all the files class files present in the input directory,
      * instruments them, and outputs them to the specified output directory.
      */
