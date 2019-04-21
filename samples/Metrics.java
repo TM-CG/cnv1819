@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 public class Metrics implements Serializable{
     private int methodsCalled;
     private int basicBlocks;
