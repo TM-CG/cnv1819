@@ -43,7 +43,7 @@ public class CNVMetric {
     public static synchronized void countInstBB(int instructions) {
         Metrics metrics =  metricsMap.get(Thread.currentThread().getId());
         if(metrics == null){
-            metricsMap.put(Thread.currentThread().getId(), new Metrics());
+            metrics = metricsMap.put(Thread.currentThread().getId(), new Metrics());
         }
         metrics.incInstructionsRunned(instructions);
         metrics.incBasicBlocks();
@@ -52,7 +52,7 @@ public class CNVMetric {
     public static synchronized void countMethod(int i) {
         Metrics metrics =  metricsMap.get(Thread.currentThread().getId());
         if(metrics == null){
-            metricsMap.put(Thread.currentThread().getId(), new Metrics());
+            metrics = metricsMap.put(Thread.currentThread().getId(), new Metrics());   
         }
         metrics.incMethods();
     }

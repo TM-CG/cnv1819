@@ -1,6 +1,8 @@
 import java.io.Serializable;
 
 public class Metrics implements Serializable{
+
+    static final long serialVersionUID = 1;
     private int methodsCalled;
     private int basicBlocks;
     private int instructionsRunned;
