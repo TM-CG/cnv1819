@@ -71,11 +71,13 @@ public class CNVMetric {
                 ObjectOutputStream o = new ObjectOutputStream(f);
                 o.writeObject(metrics);
                 o.close();
+                sequenceID++;
             }
         }catch (IOException e ){
             e.printStackTrace();
             System.out.println("Error initializing stream");
         }
+
     }
 }
 
