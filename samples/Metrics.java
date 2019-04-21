@@ -25,15 +25,15 @@ public class Metrics implements Serializable{
         instructionsRunned++;
     }
 
-    public int MethodsCalled(){
+    public int methodsCalled(){
         return methodsCalled;
     }
 
-    public int BasicBlocks(){
+    public int basicBlocks(){
         return basicBlocks;
     }
 
-    public int InstructionsRunned(){
+    public int instructionsRunned(){
         return instructionsRunned;
     }
 }

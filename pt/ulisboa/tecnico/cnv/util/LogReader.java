@@ -7,26 +7,17 @@ public class LogReader {
         String fileName = argv[0];
         System.out.println("Reading " + fileName + "...");
         try {
-            File file = new File("Logs"+File.separator + fileName + ".bin");
+            File file = new File(filename);
             if(!file.exists()){
                 System.out.println("File " + fileName + " does not exists");
             }
             FileInputStream fi = new FileInputStream(file);
             ObjectInputStream oi = new ObjectInputStream(fi);
-            double i_count = (double) oi.readObject();
-            double b_count = (double) oi.readObject();
-            double m_count = (double) oi.readObject();
-            System.out.printf("%1.0f instructions in %1.0f basic blocks were executed in %1.0f methods\n", i_count, b_count, m_count);
-            double cond_count = (double) oi.readObject();
-            System.out.printf("%1.0f conditional instructions\n", cond_count);
-            double comp_count = (double) oi.readObject();
-            System.out.printf("%1.0f comparison instructions\n", comp_count);
-            double arit_count = (double) oi.readObject();
-            System.out.printf("%1.0f aritmetic instructions\n", arit_count);
-            double store_count = (double) oi.readObject();
-            System.out.printf("%1.0f store instructions\n", store_count);
-            double stack_count = (double) oi.readObject();
-            System.out.printf("%1.0f stack instructions\n", stack_count);
+            Metric metrics = (Metrics) oi.readObject();
+            System.out.println("Number of instrunctions: " + metrics.instructionsRunned());
+            System.out.println("Number of basic blocks: " + metrics.basicBlocks());
+            System.out.println("Number of methods: " + metrics.methodsCalled());
+        
 
             oi.close();
         }
