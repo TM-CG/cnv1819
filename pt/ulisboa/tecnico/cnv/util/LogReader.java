@@ -13,7 +13,7 @@ public class LogReader {
             }
             FileInputStream fi = new FileInputStream(file);
             ObjectInputStream oi = new ObjectInputStream(fi);
-            Metric metrics = (Metrics) oi.readObject();
+            Metrics metrics = (Metrics) oi.readObject();
             System.out.println("Number of instrunctions: " + metrics.instructionsRunned());
             System.out.println("Number of basic blocks: " + metrics.basicBlocks());
             System.out.println("Number of methods: " + metrics.methodsCalled());
