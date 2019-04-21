@@ -7,7 +7,7 @@ public class LogReader {
         String fileName = argv[0];
         System.out.println("Reading " + fileName + "...");
         try {
-            File file = new File(filename);
+            File file = new File(fileName);
             if(!file.exists()){
                 System.out.println("File " + fileName + " does not exists");
             }

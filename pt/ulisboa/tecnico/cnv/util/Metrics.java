@@ -1,8 +1,10 @@
+package pt.ulisboa.tecnico.cnv.util;
+
 import java.io.Serializable;
 
 public class Metrics implements Serializable{
 
-    static final long serialVersionUID = 1;
+    static final long serialVersionUID = 2;
     private int methodsCalled;
     private int basicBlocks;
     private int instructionsRunned;

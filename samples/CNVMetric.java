@@ -2,6 +2,7 @@ import BIT.highBIT.*;
 import java.io.*;
 import java.util.*;
 import java.lang.Thread;
+import pt.ulisboa.tecnico.cnv.util.Metrics;
 
 
 public class CNVMetric {
