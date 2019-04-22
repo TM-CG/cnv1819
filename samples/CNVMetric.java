@@ -47,7 +47,7 @@ public class CNVMetric {
             metrics = new Metrics();
             metricsMap.put(Thread.currentThread().getId(), metrics);   
         }
-        metrics.incInstructionsRunned(instructions);
+        metrics.incInstructionsRun(instructions);
         metrics.incBasicBlocks();
     }
 

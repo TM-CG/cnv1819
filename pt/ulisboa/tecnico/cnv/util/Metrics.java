@@ -7,12 +7,12 @@ public class Metrics implements Serializable{
     static final long serialVersionUID = 2;
     private long methodsCalled;
     private long basicBlocks;
-    private long instructionsRunned;
+    private long instructionsRun;
 
     public Metrics(){
         methodsCalled = 0;
         basicBlocks = 0;
-        instructionsRunned = 0;
+        instructionsRun = 0;
     }
 
     public void incMethods(){
@@ -23,8 +23,8 @@ public class Metrics implements Serializable{
         basicBlocks++;
     }
 
-    public void incInstructionsRunned(int instrunctions){
-        instructionsRunned+= instrunctions;
+    public void incInstructionsRun(int instructions){
+        instructionsRun+= instructions;
     }
 
     public long methodsCalled(){
@@ -35,7 +35,7 @@ public class Metrics implements Serializable{
         return basicBlocks;
     }
 
-    public long instructionsRunned(){
-        return instructionsRunned;
+    public long instructionsRun(){
+        return instructionsRun;
     }
 }
