@@ -9,3 +9,4 @@ bin/
 Logs/
 .directory
 .DS_Store
+.vscode/settings.json

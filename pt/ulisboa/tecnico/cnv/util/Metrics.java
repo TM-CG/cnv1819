@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class Metrics implements Serializable{
 
     static final long serialVersionUID = 2;
-    private int methodsCalled;
-    private int basicBlocks;
-    private int instructionsRunned;
+    private long methodsCalled;
+    private long basicBlocks;
+    private long instructionsRunned;
 
     public Metrics(){
         methodsCalled = 0;
@@ -27,15 +27,15 @@ public class Metrics implements Serializable{
         instructionsRunned+= instrunctions;
     }
 
-    public int methodsCalled(){
+    public long methodsCalled(){
         return methodsCalled;
     }
 
-    public int basicBlocks(){
+    public long basicBlocks(){
         return basicBlocks;
     }
 
-    public int instructionsRunned(){
+    public long instructionsRunned(){
         return instructionsRunned;
     }
 }
