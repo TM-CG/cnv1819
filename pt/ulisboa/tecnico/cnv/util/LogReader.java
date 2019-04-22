@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cnv.util;
 
 import java.io.*;
+import pt.ulisboa.tecnico.cnv.util.Metrics.BranchType;
 
 public class LogReader {
     public static void main(String argv[]) {
@@ -17,7 +18,9 @@ public class LogReader {
             System.out.println("Number of instrunctions: " + metrics.instructionsRunned());
             System.out.println("Number of basic blocks: " + metrics.basicBlocks());
             System.out.println("Number of methods: " + metrics.methodsCalled());
-        
+	    System.out.println("Number of branches: " + metrics.branches());
+	    System.out.println("Number of branches TAKEN: " + metrics.branches(BranchType.TAKEN));
+	    System.out.println("Number of branches NOT TAKEN: " + metrics.branches(BranchType.NOT_TAKEN));
 
             oi.close();
         }

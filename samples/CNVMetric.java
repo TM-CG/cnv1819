@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.*;
 import java.lang.Thread;
 import pt.ulisboa.tecnico.cnv.util.Metrics;
-
+import pt.ulisboa.tecnico.cnv.util.Metrics.BranchType;
 
 public class CNVMetric {
     private static HashMap<Long, Metrics>  metricsMap = new HashMap<>();
@@ -15,7 +15,9 @@ public class CNVMetric {
     public static void main(String argv[]) {
         File file_in = new File(argv[0]);
         String infilenames[] = file_in.list();
-        
+        int branches = 0;
+
+
         for (int i = 0; i < infilenames.length; i++) {
             String infilename = infilenames[i];
             System.out.println("Found file: " + infilename);
@@ -24,12 +26,21 @@ public class CNVMetric {
                 ClassInfo ci = new ClassInfo(argv[0] + System.getProperty("file.separator") + infilename);   
                     
                 for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements();) {
-                	Routine routine = (Routine) e.nextElement();
+                    Routine routine = (Routine) e.nextElement();
                     routine.addBefore("CNVMetric", "countMethod", new Integer(1));
-
-                    for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements();) {
+		    
+                    InstructionArray instructions = routine.getInstructionArray();
+		    for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements();) {
                         BasicBlock bb = (BasicBlock) b.nextElement();
                         bb.addBefore("CNVMetric", "countInstBB", new Integer(bb.size()));
+
+			Instruction instr = (Instruction) instructions.elementAt(bb.getEndAddress());
+			short instr_type = InstructionTable.InstructionTypeTable[instr.getOpcode()];
+			/* Branch taken and not taken counts */
+			if (instr_type == InstructionTable.CONDITIONAL_INSTRUCTION) {
+				instr.addBefore("CNVMetric", "countBranchOutcome", "BranchOutcome");
+				branches++;
+			}
                     }
 
                     if(routine.getMethodName().equals("solve")){
@@ -58,6 +69,22 @@ public class CNVMetric {
             metricsMap.put(Thread.currentThread().getId(), metrics);   
         }
         metrics.incMethods();
+    }
+
+    public static synchronized void countBranchOutcome(int br_outcome) {
+	Metrics metrics = metricsMap.get(Thread.currentThread().getId());
+	if (metrics == null){
+		metrics = new Metrics();
+		metricsMap.put(Thread.currentThread().getId(), metrics);
+	}
+
+	/* Increment the global counter of branches */
+	metrics.incBranches();
+
+	if (br_outcome == 0)
+		metrics.incBranches(BranchType.NOT_TAKEN);
+	else	
+		metrics.incBranches(BranchType.TAKEN);
     }
 
     public static synchronized void saveMetric(String foo) {
