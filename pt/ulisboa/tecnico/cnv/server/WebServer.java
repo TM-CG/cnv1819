@@ -70,9 +70,9 @@ public class WebServer {
 							// Break it down into String[].
 							final String[] params = query.split("&");
 							
-							Metrics metrics = CNVMetric.metricsMap.get(Thread.getCurrentThread().getId());
+							Metrics metrics = CNVMetric.metricsMap.get(Thread.currentThread().getId());
 							if(metrics == null){
-								CNVMetric.metricsMap.put(Thread.getCurrentThread().getId(), new Metrics());
+								CNVMetric.metricsMap.put(Thread.currentThread().getId(), new Metrics());
 							}
 							metrics.insertParams(params);
 
