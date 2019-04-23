@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cnv.solver;
 
-import pt.ulisboa.tecnico.cnv.util.*;
 import java.util.*;
 
 public class AStarStrategy extends AbstractSolverStrategy {

@@ -1,5 +1,4 @@
 package pt.ulisboa.tecnico.cnv.solver;
-import pt.ulisboa.tecnico.cnv.util.*;
 
 public class SampleParserMain {
     public static void main(final String[] args) {

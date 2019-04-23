@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cnv.solver;
 
-import pt.ulisboa.tecnico.cnv.util.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
