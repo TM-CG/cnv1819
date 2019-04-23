@@ -65,6 +65,12 @@ public class WebServer {
 
 							// Break it down into String[].
 							final String[] params = query.split("&");
+							
+							Metrics metrics = CNVMetric.metricsMap.get(Thread.getCurrentThread);
+							if(metrics == null){
+								CNVMetric.metricsMap.put(Thread.getCurrentThread().getId(), new Metrics());
+							}
+							metrics.insertParams(params);
 
 							// Store as if it was a direct call to SolverMain.
 							final ArrayList<String> newArgs = new ArrayList<>();

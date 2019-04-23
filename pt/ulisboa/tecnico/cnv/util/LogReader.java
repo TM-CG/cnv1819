@@ -18,9 +18,11 @@ public class LogReader {
             System.out.println("Number of instructions: " + metrics.instructionsRun());
             System.out.println("Number of basic blocks: " + metrics.basicBlocks());
             System.out.println("Number of methods: " + metrics.methodsCalled());
-	    System.out.println("Number of branches: " + metrics.branches());
-	    System.out.println("Number of branches TAKEN: " + metrics.branches(BranchType.TAKEN));
-	    System.out.println("Number of branches NOT TAKEN: " + metrics.branches(BranchType.NOT_TAKEN));
+	        System.out.println("Number of branches: " + metrics.branches());
+	        System.out.println("Number of branches TAKEN: " + metrics.branches(BranchType.TAKEN));
+            System.out.println("Number of branches NOT TAKEN: " + metrics.branches(BranchType.NOT_TAKEN));
+            System.out.println("Params given:" + metrics.getParams());
+        
 
             oi.close();
         }

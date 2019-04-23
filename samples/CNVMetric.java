@@ -6,7 +6,7 @@ import pt.ulisboa.tecnico.cnv.util.Metrics;
 import pt.ulisboa.tecnico.cnv.util.Metrics.BranchType;
 
 public class CNVMetric {
-    private static HashMap<Long, Metrics>  metricsMap = new HashMap<>();
+    public static HashMap<Long, Metrics>  metricsMap = new HashMap<>();
     private static int sequenceID = 0;
 
     /* main reads in all the files class files present in the input directory,
