@@ -98,7 +98,7 @@ public class Metrics implements Serializable{
     public String[] getParams(){
         return this.params;
     }
-    
+
     public void insertArgs(int width, int height, int x0, int x1, int y0, int y1, int xS, int yS, String search, String name){
         this.width = width;
         this.height = height;
@@ -109,6 +109,6 @@ public class Metrics implements Serializable{
         this.xS = xS;
         this.yS = yS;
         this.search = search;
-        this.name = name;
+        this.map = name;
     }
 }
