@@ -23,7 +23,7 @@ import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
 
 import javax.imageio.ImageIO;
 
-import CNVMetric;
+import pt.ulisboa.tecnico.cnv.util.CNVMetric;
 import pt.ulisboa.tecnico.cnv.util.Metrics;
 
 public class WebServer {
