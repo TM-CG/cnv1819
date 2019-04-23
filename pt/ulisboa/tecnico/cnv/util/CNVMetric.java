@@ -29,24 +29,24 @@ public class CNVMetric {
                     
                 for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements();) {
                     Routine routine = (Routine) e.nextElement();
-                    routine.addBefore("pt.ulisboa.tecnico.cnv.util.CNVMetric", "countMethod", new Integer(1));
+                    routine.addBefore("CNVMetric", "countMethod", new Integer(1));
 		    
                     InstructionArray instructions = routine.getInstructionArray();
 		    for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements();) {
                         BasicBlock bb = (BasicBlock) b.nextElement();
-                        bb.addBefore("pt.ulisboa.tecnico.cnv.util.CNVMetric", "countInstBB", new Integer(bb.size()));
+                        bb.addBefore("CNVMetric", "countInstBB", new Integer(bb.size()));
 
 			Instruction instr = (Instruction) instructions.elementAt(bb.getEndAddress());
 			short instr_type = InstructionTable.InstructionTypeTable[instr.getOpcode()];
 			/* Branch taken and not taken counts */
 			if (instr_type == InstructionTable.CONDITIONAL_INSTRUCTION) {
-				instr.addBefore("pt.ulisboa.tecnico.cnv.util.CNVMetric", "countBranchOutcome", "BranchOutcome");
+				instr.addBefore("CNVMetric", "countBranchOutcome", "BranchOutcome");
 				branches++;
 			}
                     }
 
                     if(routine.getMethodName().equals("solve")){
-                        routine.addAfter("pt.ulisboa.tecnico.cnv.util.CNVMetric", "saveMetric", "null");
+                        routine.addAfter("CNVMetric", "saveMetric", "null");
                     }  
                 }
                 ci.write(argv[1] + System.getProperty("file.separator") + infilename);
