@@ -21,7 +21,7 @@ public class LogReader {
 	        System.out.println("Number of branches: " + metrics.branches());
 	        System.out.println("Number of branches TAKEN: " + metrics.branches(BranchType.TAKEN));
             System.out.println("Number of branches NOT TAKEN: " + metrics.branches(BranchType.NOT_TAKEN));
-            foreach(String s : metric.getParams()){
+            for(String s : metrics.getParams()){
                 System.out.println(s);
             }        
 
