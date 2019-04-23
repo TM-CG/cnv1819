@@ -5,7 +5,6 @@ import pt.ulisboa.tecnico.cnv.util.AbstractArgumentParser;
 
 import java.io.File;
 
-
 public class SolverArgumentParser extends AbstractArgumentParser {
     public enum SolverParameters {
         /**

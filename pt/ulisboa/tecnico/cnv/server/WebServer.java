@@ -24,10 +24,10 @@ import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
 import javax.imageio.ImageIO;
 import java.lang.Thread;
 
-import pt.ulisboa.tecnico.cnv.util.CNVMetric;
 import pt.ulisboa.tecnico.cnv.util.Metrics;
 
 public class WebServer {
+    public static HashMap<Long, Metrics>  metricsMap = new HashMap<>();
 
 	public static void main(final String[] args) throws Exception {
 
