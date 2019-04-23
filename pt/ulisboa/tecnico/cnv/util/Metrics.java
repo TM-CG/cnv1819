@@ -91,7 +91,7 @@ public class Metrics implements Serializable{
 	return -1;
     }
 
-    public void insertParam(String[] params){
+    public void insertParams(String[] params){
         this.params = params;
     }
 
