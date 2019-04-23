@@ -97,6 +97,7 @@ public class CNVMetric {
             o.writeObject(metrics);
             o.close();
             sequenceID++;
+            WebServer.metricsMap.remove(Thread.currentThread().getId());
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error initializing stream");
