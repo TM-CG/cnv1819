@@ -1,6 +1,6 @@
 package pt.ulisboa.tecnico.cnv.solver;
 
-import java.pt.ulisboa.tecnico.cnv.util.*;
+import pt.ulisboa.tecnico.cnv.util.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;

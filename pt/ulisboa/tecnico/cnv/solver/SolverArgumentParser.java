@@ -2,7 +2,7 @@ package pt.ulisboa.tecnico.cnv.solver;
 
 import org.apache.commons.cli.Option;
 import pt.ulisboa.tecnico.cnv.util.AbstractArgumentParser;
-import java.pt.ulisboa.tecnico.cnv.util.*;
+import pt.ulisboa.tecnico.cnv.util.*;
 
 import java.io.File;
 
