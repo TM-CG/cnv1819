@@ -1,4 +1,5 @@
 package pt.ulisboa.tecnico.cnv.solver;
+import java.pt.ulisboa.tecnico.cnv.util.*;
 
 public interface SolverStrategy {
 

@@ -1,4 +1,5 @@
 package pt.ulisboa.tecnico.cnv.solver;
+import java.pt.ulisboa.tecnico.cnv.util.*;
 
 public abstract class AbstractSolverStrategy implements SolverStrategy {
     public abstract void solve(final Solver sol);
