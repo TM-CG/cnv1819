@@ -22,6 +22,7 @@ import pt.ulisboa.tecnico.cnv.solver.SolverArgumentParser;
 import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
 
 import javax.imageio.ImageIO;
+import java.lang.Thread;
 
 import pt.ulisboa.tecnico.cnv.util.CNVMetric;
 import pt.ulisboa.tecnico.cnv.util.Metrics;
@@ -69,7 +70,7 @@ public class WebServer {
 							// Break it down into String[].
 							final String[] params = query.split("&");
 							
-							Metrics metrics = CNVMetric.metricsMap.get(Thread.getCurrentThread);
+							Metrics metrics = CNVMetric.metricsMap.get(Thread.getCurrentThread().getId());
 							if(metrics == null){
 								CNVMetric.metricsMap.put(Thread.getCurrentThread().getId(), new Metrics());
 							}
