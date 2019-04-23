@@ -99,7 +99,7 @@ inst() {
 	check Compilation
 
 	echo "Instrumenting solver folder with CNVMetric ..."
-	java CNVMetric $CNV_SOLVER $CNV_SOLVER
+	java pt.ulisboa.tecnico.cnv.util.CNVMetric $CNV_SOLVER $CNV_SOLVER
 	check Instrumentation
 
 }
