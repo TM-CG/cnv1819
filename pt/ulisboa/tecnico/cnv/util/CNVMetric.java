@@ -1,3 +1,5 @@
+package pt.ulisboa.tecnico.cnv.util;
+
 import BIT.highBIT.*;
 import java.io.*;
 import java.util.*;
