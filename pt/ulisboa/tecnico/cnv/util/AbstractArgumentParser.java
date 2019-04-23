@@ -5,6 +5,7 @@ import org.apache.commons.cli.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import pt.ulisboa.tecnico.cnv.util.CNVMetric;
 
 public abstract class AbstractArgumentParser implements ArgumentParser {
     protected final Options options = new Options();
