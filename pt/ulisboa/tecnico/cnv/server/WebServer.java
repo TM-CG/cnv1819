@@ -72,7 +72,8 @@ public class WebServer {
 							
 							Metrics metrics = CNVMetric.metricsMap.get(Thread.currentThread().getId());
 							if(metrics == null){
-								CNVMetric.metricsMap.put(Thread.currentThread().getId(), new Metrics());
+								metrics = new Metrics();
+								CNVMetric.metricsMap.put(Thread.currentThread().getId(), metrics);
 							}
 							metrics.insertParams(params);
 
