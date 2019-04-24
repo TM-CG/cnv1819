@@ -40,10 +40,8 @@ public class Metrics implements Serializable{
     }
 
     public void incBranches(BranchType type) {
-	if (type == BranchType.TAKEN)
-		branches_taken++;
-	else if (type == BranchType.NOT_TAKEN)
-		branches_notTaken++;
+	    if (type == BranchType.NOT_TAKEN)
+	    	branches_notTaken++;
     }
 
     public long basicBlocks(){
@@ -51,12 +49,9 @@ public class Metrics implements Serializable{
     }
 
     public long branches(BranchType type) {
-	if (type == BranchType.TAKEN)
-		return branches_taken;
-	else if (type == BranchType.NOT_TAKEN)
-		return branches_notTaken;
-
-	return -1;
+	    if (type == BranchType.NOT_TAKEN)
+		    return branches_notTaken;
+	    return -1;
     }
 
     public void insertParams(String[] params){
