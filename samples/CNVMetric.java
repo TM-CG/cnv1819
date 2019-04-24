@@ -51,7 +51,7 @@ public class CNVMetric {
         }
     }
 
-    public static synchronized void countInstBB(int instructions) {
+    public static void countInstBB(int instructions) {
         Metrics metrics = WebServer.metricsMap.get(Thread.currentThread().getId());
         if (metrics == null) {
             metrics = new Metrics();
@@ -60,7 +60,7 @@ public class CNVMetric {
         metrics.incBasicBlocks();
     }
 
-    public static synchronized void countBranchOutcome(int br_outcome) {
+    public static void countBranchOutcome(int br_outcome) {
         Metrics metrics = WebServer.metricsMap.get(Thread.currentThread().getId());
         if (metrics == null) {
             metrics = new Metrics();
