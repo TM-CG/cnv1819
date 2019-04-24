@@ -95,11 +95,11 @@ inst() {
 	check Copy
 
 	echo "Compiling CNVMetric ..."
-	javac $CNV_UTIL/CNVMetric.java
+	javac $CNV_SAMPLES/CNVMetric.java
 	check Compilation
 
 	echo "Instrumenting solver folder with CNVMetric ..."
-	java pt.ulisboa.tecnico.cnv.util.CNVMetric $CNV_SOLVER $CNV_SOLVER
+	java CNVMetric $CNV_SOLVER $CNV_SOLVER
 	check Instrumentation
 
 }
