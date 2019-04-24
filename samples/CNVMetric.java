@@ -31,7 +31,7 @@ public class CNVMetric {
                     InstructionArray instructions = routine.getInstructionArray();
                     for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements();) {
                         BasicBlock bb = (BasicBlock) b.nextElement();
-                        bb.addBefore("CNVMetric", "countInstBB", new Integer(1);
+                        bb.addBefore("CNVMetric", "countInstBB", new Integer(1));
 
                         Instruction instr = (Instruction) instructions.elementAt(bb.getEndAddress());
                         short instr_type = InstructionTable.InstructionTypeTable[instr.getOpcode()];
