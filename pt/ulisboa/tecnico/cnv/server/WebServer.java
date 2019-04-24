@@ -72,10 +72,12 @@ public class WebServer {
 							
 							Metrics metrics = metricsMap.get(Thread.currentThread().getId());
 							if(metrics == null){
-								metrics = new Metrics();
+								//creates a new Metrics object from the query
+								metrics = Metrics.parseFromURL(query);								
+
 								metricsMap.put(Thread.currentThread().getId(), metrics);
 							}
-							metrics.insertParams(params);
+							//metrics.insertParams(params);
 
 							// Store as if it was a direct call to SolverMain.
 							final ArrayList<String> newArgs = new ArrayList<>();

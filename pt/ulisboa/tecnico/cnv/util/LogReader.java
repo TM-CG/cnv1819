@@ -16,7 +16,7 @@ public class LogReader {
             ObjectInputStream oi = new ObjectInputStream(fi);
             Metrics metrics = (Metrics) oi.readObject();
             System.out.println("Number of basic blocks: " + metrics.basicBlocks());
-            System.out.println("Number of branches NOT TAKEN: " + metrics.branches(BranchType.NOT_TAKEN));
+            System.out.println("Number of branches NOT TAKEN: " + metrics.getBranches());
             for(String s : metrics.getParams()){
                 System.out.println(s);
             }        

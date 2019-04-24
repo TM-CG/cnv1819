@@ -1,26 +1,39 @@
 package pt.ulisboa.tecnico.cnv.util;
 
 import java.io.Serializable;
-
+/**
+ * A class for describing Metrics
+ */
 public class Metrics implements Serializable{
 
     static final long serialVersionUID = 3;
-    public enum BranchType {TAKEN, NOT_TAKEN}
 
+    /** The number of basic blocks */
     private long basicBlocks;
+    /** The number of branches not taken */
     private long branches_notTaken;
+
+    /** Size of the map */
     private int width;
     private int height;
+
+    /** Upper-left corner */
     private int x0;
     private int y0;
+
+    /** Lower-right corner */
     private int x1;
     private int y1;
+
+    /** Starting point */
     private int xS;
     private int yS;
-    private String search;
-    private String map;
 
-    private String params[];
+    /** The search algorithm */
+    private String search;
+
+    /** The map image */
+    private String map;
 
     public Metrics(){
         basicBlocks = 0;
@@ -39,27 +52,16 @@ public class Metrics implements Serializable{
         basicBlocks++;
     }
 
-    public void incBranches(BranchType type) {
-	    if (type == BranchType.NOT_TAKEN)
-	    	branches_notTaken++;
+    public void incBranches() {
+	    branches_notTaken++;
     }
 
     public long basicBlocks(){
         return basicBlocks;
     }
 
-    public long branches(BranchType type) {
-	    if (type == BranchType.NOT_TAKEN)
-		    return branches_notTaken;
-	    return -1;
-    }
-
-    public void insertParams(String[] params){
-        this.params = params;
-    }
-
-    public String[] getParams(){
-        return this.params;
+    public long getBranches() {
+		return branches_notTaken;
     }
 
     public void insertArgs(int width, int height, int x0, int x1, int y0, int y1, int xS, int yS, String search, String name){
@@ -73,5 +75,42 @@ public class Metrics implements Serializable{
         this.yS = yS;
         this.search = search;
         this.map = name;
+    }
+
+    /**
+     * Given a url return a parsed Metrics object
+     * @param url to be parsed
+     * @return Metrics object
+     */
+    public static Metrics parseFromURL(String url) {
+        Metrics metric = new Metrics();
+
+        String[] params = url.split("&");
+        
+        for (String param: params) {
+            String splited[] = param.split("=")[0];
+            
+            String paramName = splited[0];
+            String value = splited[1];
+
+            metric.loadParams(paramName, value);
+        }
+
+        return metric;
+    }
+
+    private void loadParams(String param, String value) {
+        switch (param) {
+            case "w" : this.width  = Integer.parseInt(value); break;
+            case "h" : this.height = Integer.parseInt(value); break;
+            case "x0": this.x0     = Integer.parseInt(value); break;
+            case "x1": this.x1     = Integer.parseInt(value); break;
+            case "y0": this.y0     = Integer.parseInt(value); break;
+            case "y1": this.y1     = Integer.parseInt(value); break;
+            case "xS": this.xS     = Integer.parseInt(value); break;
+            case "yS": this.yS     = Integer.parseInt(value); break;
+            case "s" : this.search = value; break;
+            case "i" : this.map    = value; break;
+        }
     }
 }
