@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.Headers;
@@ -28,7 +28,7 @@ import java.lang.Thread;
 import pt.ulisboa.tecnico.cnv.util.Metrics;
 
 public class WebServer {
-    public static HashMap<Long, Metrics>  metricsMap = new HashMap<>();
+    public static ConcurrentHashMap<Long, Metrics>  metricsMap = new ConcurrentHashMap<>();
     private static final String TBL_NAME = "metrics";
 	public static void main(final String[] args) throws Exception {
 
