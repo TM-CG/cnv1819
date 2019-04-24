@@ -4,15 +4,11 @@ import java.io.Serializable;
 
 public class Metrics implements Serializable{
 
-    static final long serialVersionUID = 2;
+    static final long serialVersionUID = 3;
     public enum BranchType {TAKEN, NOT_TAKEN}
 
-    private long methodsCalled;
     private long basicBlocks;
-    private long instructionsRun;    
-    private long branches;
     private long branches_notTaken;
-    private long branches_taken;
     private int width;
     private int height;
     private int x0;
@@ -27,12 +23,8 @@ public class Metrics implements Serializable{
     private String params[];
 
     public Metrics(){
-        methodsCalled = 0;
         basicBlocks = 0;
-        instructionsRun = 0;
-        branches = 0;
         branches_notTaken = 0;
-        branches_taken = 0;
         width = 0;
         height = 0;
         x0 = 0;
@@ -43,16 +35,8 @@ public class Metrics implements Serializable{
         yS = 0;
     }
 
-    public void incMethods(){
-        methodsCalled++;
-    }
-
     public void incBasicBlocks(){
         basicBlocks++;
-    }
-
-    public void incInstructionsRun(int instructions){
-        instructionsRun+= instructions;
     }
 
     public void incBranches(BranchType type) {
@@ -62,24 +46,8 @@ public class Metrics implements Serializable{
 		branches_notTaken++;
     }
 
-    public void incBranches() {
-	branches++;
-    }
-
-    public long methodsCalled(){
-        return methodsCalled;
-    }
-
     public long basicBlocks(){
         return basicBlocks;
-    }
-
-    public long instructionsRun(){
-        return instructionsRun;
-    }
-
-    public long branches() {
-	return branches;
     }
 
     public long branches(BranchType type) {

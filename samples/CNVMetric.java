@@ -27,12 +27,11 @@ public class CNVMetric {
 
                 for (Enumeration e = ci.getRoutines().elements(); e.hasMoreElements();) {
                     Routine routine = (Routine) e.nextElement();
-                    routine.addBefore("CNVMetric", "countMethod", new Integer(1));
 
                     InstructionArray instructions = routine.getInstructionArray();
                     for (Enumeration b = routine.getBasicBlocks().elements(); b.hasMoreElements();) {
                         BasicBlock bb = (BasicBlock) b.nextElement();
-                        bb.addBefore("CNVMetric", "countInstBB", new Integer(bb.size()));
+                        bb.addBefore("CNVMetric", "countInstBB", new Integer(1);
 
                         Instruction instr = (Instruction) instructions.elementAt(bb.getEndAddress());
                         short instr_type = InstructionTable.InstructionTypeTable[instr.getOpcode()];
@@ -58,17 +57,7 @@ public class CNVMetric {
             metrics = new Metrics();
             WebServer.metricsMap.put(Thread.currentThread().getId(), metrics);
         }
-        metrics.incInstructionsRun(instructions);
         metrics.incBasicBlocks();
-    }
-
-    public static synchronized void countMethod(int i) {
-        Metrics metrics = WebServer.metricsMap.get(Thread.currentThread().getId());
-        if (metrics == null) {
-            metrics = new Metrics();
-            WebServer.metricsMap.put(Thread.currentThread().getId(), metrics);
-        }
-        metrics.incMethods();
     }
 
     public static synchronized void countBranchOutcome(int br_outcome) {
@@ -77,14 +66,9 @@ public class CNVMetric {
             metrics = new Metrics();
             WebServer.metricsMap.put(Thread.currentThread().getId(), metrics);
         }
-
         /* Increment the global counter of branches */
-        metrics.incBranches();
-
         if (br_outcome == 0)
             metrics.incBranches(BranchType.NOT_TAKEN);
-        else
-            metrics.incBranches(BranchType.TAKEN);
     }
 
     public static synchronized void saveMetric(String foo) {
