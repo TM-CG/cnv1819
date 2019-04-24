@@ -3,16 +3,19 @@ import java.io.*;
 import java.util.*;
 import java.lang.Thread;
 import pt.ulisboa.tecnico.cnv.util.Metrics;
+import pt.ulisboa.tecnico.cnv.util.AmazonDynamoDBHelper;
 import pt.ulisboa.tecnico.cnv.server.WebServer;
 
 public class CNVMetric {
     private static int sequenceID = 0;
 
+    AmazonDynamoDBHelper dynamoDB;
     /*
      * main reads in all the files class files present in the input directory,
      * instruments them, and outputs them to the specified output directory.
      */
-    public static void main(String argv[]) {
+    public static void main(String argv[]) throws Exception {
+
         File file_in = new File(argv[0]);
         String infilenames[] = file_in.list();
         int branches = 0;
@@ -73,6 +76,10 @@ public class CNVMetric {
     public static synchronized void saveMetric(String foo) {
         Metrics metrics = WebServer.metricsMap.get(Thread.currentThread().getId());
         try {
+            //Store on dynamoDB
+            AmazonDynamoDBHelper.addMetricObject("metrics", Thread.currentThread().getId(), metrics);
+
+
             File file = new File("Logs" + File.separator + sequenceID + ".bin");
             file.createNewFile();
             FileOutputStream f = new FileOutputStream(file, false);

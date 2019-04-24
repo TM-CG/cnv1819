@@ -20,6 +20,7 @@ import com.sun.net.httpserver.HttpServer;
 import pt.ulisboa.tecnico.cnv.solver.Solver;
 import pt.ulisboa.tecnico.cnv.solver.SolverArgumentParser;
 import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
+import pt.ulisboa.tecnico.cnv.util.AmazonDynamoDBHelper;
 
 import javax.imageio.ImageIO;
 import java.lang.Thread;
@@ -28,8 +29,17 @@ import pt.ulisboa.tecnico.cnv.util.Metrics;
 
 public class WebServer {
     public static HashMap<Long, Metrics>  metricsMap = new HashMap<>();
-
+    private static final String TBL_NAME = "metrics";
 	public static void main(final String[] args) throws Exception {
+
+		System.out.println("AmazonDynamoDB is starting ...");
+		AmazonDynamoDBHelper.init();
+		System.out.println("AmazonDynamoDB: Ready!");
+
+		System.out.println("AmazonDynamoDB: Creating table metrics. Please wait ...");
+        //create table if not exists
+		AmazonDynamoDBHelper.createTable(TBL_NAME);
+		System.out.println("AmazonDynamoDB: Table created!");
 
 		//final HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 8000), 0);
 
