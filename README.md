@@ -6,6 +6,41 @@
 [Project FAQ:   https://tinyurl.com/cnv-faq-18-19](https://tinyurl.com/cnv-faq-18-19)
 
 --------
+## How to build and run
+In order to simplify the process of compiling and instrumenting the source code
+we created a script to automate these tasks. To load the script simply run
+the following command on the project's root folder:
+
+	source script.sh
+
+From now on it is possible to perform the following tasks easily:
+**Cleaning the class files**
+
+	clean
+
+**Compiling the source code**
+
+	compile
+
+**Instrumenting the solvers classes**
+
+	inst
+
+**Start the WebServer**
+
+	wsvc
+
+You should see a green OK message after every of the above commands if the
+task were successfully.
+
+## Metrics
+All metrics are saved on ***Logs/*** folder in binary format.
+It is possible to display the content of a metric invoking the following command...
+
+	readLog 0.bin
+
+... for instance, to display the first metric saved by the WebServer.
+
 ## Introduction
 
 The Java code developed by the faculty targets Java version 7.
