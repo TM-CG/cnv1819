@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cnv.util;
 
 import java.io.*;
-import pt.ulisboa.tecnico.cnv.util.Metrics.BranchType;
 
 public class LogReader {
     public static void main(String argv[]) {
@@ -15,11 +14,14 @@ public class LogReader {
             FileInputStream fi = new FileInputStream(file);
             ObjectInputStream oi = new ObjectInputStream(fi);
             Metrics metrics = (Metrics) oi.readObject();
-            System.out.println("Number of basic blocks: " + metrics.basicBlocks());
-            System.out.println("Number of branches NOT TAKEN: " + metrics.getBranches());
-            for(String s : metrics.getParams()){
-                System.out.println(s);
-            }        
+	    System.out.printf("# Basic Blocks: %d\n", metrics.basicBlocks());
+	    System.out.printf("# Branches NOT TAKEN: %d\n", metrics.getBranches());
+	    System.out.printf("Map Size (Witdth x Height): (%d x %d)\n", metrics.getWidth(), metrics.getHeight());
+	    System.out.printf("Upper-left corner: (%d , %d)\n", metrics.getX0(), metrics.getY0());
+	    System.out.printf("Lower-right corner: (%d, %d)\n", metrics.getX1(), metrics.getY1());
+	    System.out.printf("Starting point: (%d, %d)\n", metrics.getXS(), metrics.getYS());
+            System.out.printf("Search Algorithm: %s\n", metrics.getAlgorithm());
+	    System.out.printf("Path to map: %s\n", metrics.getMap());
 
             oi.close();
         }

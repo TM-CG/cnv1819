@@ -4,7 +4,6 @@ import java.util.*;
 import java.lang.Thread;
 import pt.ulisboa.tecnico.cnv.util.Metrics;
 import pt.ulisboa.tecnico.cnv.server.WebServer;
-import pt.ulisboa.tecnico.cnv.util.Metrics.BranchType;
 
 public class CNVMetric {
     private static int sequenceID = 0;
@@ -68,7 +67,7 @@ public class CNVMetric {
         }
         /* Increment the global counter of branches */
         if (br_outcome == 0)
-            metrics.incBranches(BranchType.NOT_TAKEN);
+            metrics.incBranches();
     }
 
     public static synchronized void saveMetric(String foo) {

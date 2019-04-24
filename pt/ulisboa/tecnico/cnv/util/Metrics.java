@@ -48,6 +48,46 @@ public class Metrics implements Serializable{
         yS = 0;
     }
 
+    public int getWidth() {
+       return this.width;
+    }
+
+    public int getHeight() {
+	return this.height;
+    }
+
+    public int getX0() {
+	return this.x0;
+    }
+
+    public int getY0() {
+	return this.y0;
+    }
+
+    public int getX1() {
+	return this.x1;
+    }
+
+    public int getY1() {
+	return this.y1;
+    }
+
+    public int getXS() {
+	return this.xS;
+    }
+
+    public int getYS() {
+	return this.yS;
+    }
+
+    public String getAlgorithm() {
+	return this.search;
+    }
+
+    public String getMap() {
+	return this.map;
+    }
+
     public void incBasicBlocks(){
         basicBlocks++;
     }
@@ -88,7 +128,7 @@ public class Metrics implements Serializable{
         String[] params = url.split("&");
         
         for (String param: params) {
-            String splited[] = param.split("=")[0];
+            String[] splited = param.split("=");
             
             String paramName = splited[0];
             String value = splited[1];
