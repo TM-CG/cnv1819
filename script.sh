@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Hill@Climb config files for Linux based Environments
+# Group 9 - Alameda
 
 export CNV_ROOT=$HOME/cnv-project
 export CNV_GEN=$CNV_ROOT/pt/ulisboa/tecnico/cnv/generator
@@ -7,13 +8,12 @@ export CNV_SERVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/server
 export CNV_SOLVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/solver
 export CNV_UTIL=$CNV_ROOT/pt/ulisboa/tecnico/cnv/util
 
-export CNV_EXAMPLES=$CNV_ROOT/examples
-export CNV_SAMPLES=$CNV_ROOT/samples
+export CNV_METRICS=$CNV_ROOT/metrics
 export CNV_TMP=$HOME/compiled_cnv
 
 export CNV_LOGS=$CNV_ROOT/Logs
 
-export CLASSPATH=$CNV_ROOT:$CNV_SAMPLES:.
+export CLASSPATH=$CNV_ROOT:$CNV_METRICS:.
 
 # Color codes
 export BLINK_ENABLE="\e[5m"
@@ -57,8 +57,7 @@ clean() {
 	rm -f $CNV_SERVER/*.class
 	rm -f $CNV_SOLVER/*.class
 	rm -f $CNV_UTIL/*.class
-	rm -f $CNV_EXAMPLES/*.class
-	rm -f $CNV_SAMPLES/*.class
+	rm -f $CNV_METRICS/*.class
 	check Cleaning	
 }
 
@@ -75,11 +74,8 @@ compile() {
 	echo "Compiling CNV_UTIL ..."
 	javac $CNV_UTIL/*.java
 	check Compilation
-	echo "Compiling CNV_EXAMPLES ..."
-	javac $CNV_EXAMPLES/*.java
-	check Compilation
-	echo "Compiling CNV_SAMPLES ..."
-	javac $CNV_SAMPLES/*.java
+	echo "Compiling CNV_METRICS ..."
+	javac $CNV_METRICS/*.java
 	check Compilation
 	cp -r pt/ $CNV_TMP/
 	check Backup
@@ -95,7 +91,7 @@ inst() {
 	check Copy
 
 	echo "Compiling CNVMetric ..."
-	javac $CNV_SAMPLES/CNVMetric.java
+	javac $CNV_METRICS/CNVMetric.java
 	check Compilation
 
 	echo "Instrumenting solver folder with CNVMetric ..."
