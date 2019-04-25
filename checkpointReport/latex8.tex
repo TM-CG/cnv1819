@@ -86,15 +86,24 @@
    an instance becomes unhealthy (unresponsive or the WebServer crashed for some reason)
    then the auto-scaler will terminate that instance and start another.
 
+\SubSection{Security Group}
+
 %------------------------------------------------------------------------- 
 \Section{Instrumentation}
    We used BIT (Bytecode Instrumenting Tool) presented in the laboratories to 
    to alter the Java Class Byte Code of the program so we could measure the metrics
    that we wanted in a way that would help us decide the cost of replying to a certain request.\\
    This metrics need to be heavily weighted as they might give a big overhead to the 
-   the original program. For example: the metric instructions executed is a bad metric
-   as it will add extra instructions to count every instruction which will lead to a 
-   big overhead.
+   the original program. To store this metrics we created a class called Metric, which
+   stores all of the counter for each type of metric. We guarantee that each thread only 
+   counts its own metrics by using a ConcurrentHashMap to store all the metrics, where the 
+   key is the Thread ID and the Value is the Metric Object (containing all the metrics). At 
+   the end of each request we store permanently the results of the instrumentation and remove
+   the Metric file from the HashMap, this allows to reset the counters for that specific thread.\\
+   With the metrics it's also stored the parameters given to program so we can associate those with
+   the load it creates and in the future compare them with new requests.
+
+
 %-------------------------------------------------------------------------    
 \SubSection{Metrics Used}
    We decided to try a few simple metrics. Instructions run, Basic Blocks, 
@@ -102,7 +111,7 @@
    We ran the instrumented Web Server on an instance of AWS and made some requests 
    (one at a time) while tracking the time it took to reply to each request.
    We obtained a table with all the values and concluded that some metrics grew
-   linearly with the time to answer a request. Those metrics were Instructions
+   linearly with the time to reply a request. Those metrics were Instructions
    Run, Basic Blocks, Branch Queries and Branch not Taken.\\
    Methods Called and Branch Taken were inconsistent because they depended on 
    the search algorithm being used and do not necessarily mean a higher cost to 
@@ -110,18 +119,19 @@
    which could mislead the cost of the request.\\
    As the other metrics scaled linearly with the time to reply to the request we can
    associate a higher number on this metrics to a more CPU intensive task.
-   We decided to use Basic Blocks as the primary metric because its grown 
-   was matched with a higher response time to a request. 
+   We decided to stick with Basic Blocks and Branches not Taken due to its 
+   linear grow matched with response time to the request and also because they provided
+   the lower overhead to the running code. 
 
 %-------------------------------------------------------------------------
 \SubSection{Storing the metrics}
-   We stored the metrics objects obtained by the instrumentation in a binary
-   file so that we could later retrieve and use them on our Load Balancer. Each 
-   request has its own file with its metrics and it's named by its thread id 
-   and the UNIX time of the request.\\
-   To later access this we also create a Java Class, LogReader, which reads
-   the metrics binary files and extracts those values to an object so that 
-   we can use the values in next stage to calculate the cost of a request to
+   After each request we are storing the Metric object on a binary file locally
+   to the machine and we also add those metrics to a table on Dynamo-DB.
+   Each request has its own file with its metrics and it's named by its by 
+   a sequence id local to the instance.\\
+   To later access this binary file we also create a Java Class, LogReader, 
+   which reads the metrics binary files and prints those values so that we can 
+   use the values in next stage to calculate the cost of a request to
    system.
 
 %------------------------------------------------------------------------- 
@@ -129,26 +139,30 @@
 \Section{Future Work}
 \SubSection{Metrics}
    At this point of the project the Web Server at the end of every request 
-   it writes to a binary file the metrics so they can later be used. These files
-   are local to the instances. In the next phase of the project we want to make use
-   of Dynamo-DB to store all the metrics so they can be easily accessible.
+   it writes the metrics to a local (to the instance) binary file and it 
+   also writes them to a table on Dynamo-DB. At this time we don't have 
+   a common key between all instances (we're using the Thread ID), eventually
+   a metric that is on the table will be overwritten by another metric, which 
+   we don't want. With this in the next phase we should design a synchronized
+   identifier to use with all instances metrics.
+
 
 \SubSection{Load Balancer}
    We will stop using AWS LB and will create a special instance to run as the 
    Load Balancer that will use the metrics generated by the Worker Severs to
    decide the cost of a request and to which Worker should the new request be
-   sent to. The Load Balancer will also send information to the new Auto Scaler
-   so it can make decisions on the number of instances that should be running.
+   sent to. We will compare new requests with old requests that we already ran
+   and will try to match them to find out the cost of the new one and decide
+   the better instance to run it.\\ 
+   The Load Balancer will also send information to the new Auto Scaler so it 
+   can make decisions on the number of instances that should be running.
 
 \SubSection{Auto Scaler}
    Just as the LB we will stop using the default AWS Auto Scaler and create our 
-   own auto scaler on a special instance to manage the running instances.
+   own auto scaler on a special instance to manage the running instances that will 
+   receive feedback from the LB and depending of the state of the system it will
+   increase or decrease the number of instances running.
 
 %-------------------------------------------------------------------------
-%------------------------------------------------------------------------- 
-\nocite{ex1,ex2}
-\bibliographystyle{latex8}
-\bibliography{latex8}
-
 \end{document}
 
