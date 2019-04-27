@@ -1,5 +1,3 @@
-package pt.ulisboa.tecnico.cnv.metrics;
-
 import BIT.highBIT.*;
 import java.io.*;
 import java.util.*;
