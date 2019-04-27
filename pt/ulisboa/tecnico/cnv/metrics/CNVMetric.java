@@ -7,8 +7,6 @@ import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 import pt.ulisboa.tecnico.cnv.metrics.Runner;
 
 public class CNVMetric {
-    private static int sequenceID = 0;
-
     // AmazonDynamoDBHelper dynamoDB;
     /*
      * main reads in all the files class files present in the input directory,
@@ -78,13 +76,12 @@ public class CNVMetric {
         try {
             //Store on dynamoDB
             // AmazonDynamoDBHelper.addMetricObject("metrics", Thread.currentThread().getId(), metrics);
-            File file = new File("Logs" + File.separator + sequenceID + ".bin");
+            File file = new File("Logs" + File.separator + 1 + ".bin");
             file.createNewFile();
             FileOutputStream f = new FileOutputStream(file, false);
             ObjectOutputStream o = new ObjectOutputStream(f);
             o.writeObject(metrics);
             o.close();
-            sequenceID++;
             Runner.metricsMap.remove(Thread.currentThread().getId());
         } catch (IOException e) {
             e.printStackTrace();
