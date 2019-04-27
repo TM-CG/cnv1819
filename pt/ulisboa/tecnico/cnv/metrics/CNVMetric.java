@@ -1,10 +1,12 @@
+package pt.ulisboa.tecnico.cnv.metrics;
+
 import BIT.highBIT.*;
 import java.io.*;
 import java.util.*;
 import java.lang.Thread;
-import pt.ulisboa.tecnico.cnv.util.Metrics;
-import pt.ulisboa.tecnico.cnv.util.AmazonDynamoDBHelper;
-import pt.ulisboa.tecnico.cnv.server.WebServer;
+import pt.ulisboa.tecnico.cnv.metrics.Metrics;
+import pt.ulisboa.tecnico.cnv.metrics.AmazonDynamoDBHelper;
+import pt.ulisboa.tecnico.cnv.metrics.Runner;
 
 public class CNVMetric {
     private static int sequenceID = 0;
@@ -54,19 +56,19 @@ public class CNVMetric {
     }
 
     public static void countInstBB(int instructions) {
-        Metrics metrics = WebServer.metricsMap.get(Thread.currentThread().getId());
+        Metrics metrics = Runner.metricsMap.get(Thread.currentThread().getId());
         if (metrics == null) {
             metrics = new Metrics();
-            WebServer.metricsMap.put(Thread.currentThread().getId(), metrics);
+            Runner.metricsMap.put(Thread.currentThread().getId(), metrics);
         }
         metrics.incBasicBlocks();
     }
 
     public static void countBranchOutcome(int br_outcome) {
-        Metrics metrics = WebServer.metricsMap.get(Thread.currentThread().getId());
+        Metrics metrics = Runner.metricsMap.get(Thread.currentThread().getId());
         if (metrics == null) {
             metrics = new Metrics();
-            WebServer.metricsMap.put(Thread.currentThread().getId(), metrics);
+            Runner.metricsMap.put(Thread.currentThread().getId(), metrics);
         }
         /* Increment the global counter of branches */
         if (br_outcome == 0)
@@ -74,12 +76,10 @@ public class CNVMetric {
     }
 
     public static synchronized void saveMetric(String foo) {
-        Metrics metrics = WebServer.metricsMap.get(Thread.currentThread().getId());
+        Metrics metrics = Runner.metricsMap.get(Thread.currentThread().getId());
         try {
             //Store on dynamoDB
-            AmazonDynamoDBHelper.addMetricObject("metrics", Thread.currentThread().getId(), metrics);
-
-
+            // AmazonDynamoDBHelper.addMetricObject("metrics", Thread.currentThread().getId(), metrics);
             File file = new File("Logs" + File.separator + sequenceID + ".bin");
             file.createNewFile();
             FileOutputStream f = new FileOutputStream(file, false);
@@ -87,7 +87,7 @@ public class CNVMetric {
             o.writeObject(metrics);
             o.close();
             sequenceID++;
-            WebServer.metricsMap.remove(Thread.currentThread().getId());
+            Runner.metricsMap.remove(Thread.currentThread().getId());
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error initializing stream");

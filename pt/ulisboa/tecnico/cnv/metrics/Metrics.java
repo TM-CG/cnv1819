@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cnv.util;
+package pt.ulisboa.tecnico.cnv.metrics;
 
 import java.io.Serializable;
 /**
