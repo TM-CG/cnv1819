@@ -2,7 +2,7 @@
 # Hill@Climb config files for Linux based Environments
 # Group 9 - Alameda
 
-export CNV_ROOT=$HOME/cnv-project
+export CNV_ROOT=$HOME/cnv-project/src/java/
 export CNV_GEN=$CNV_ROOT/pt/ulisboa/tecnico/cnv/generator
 export CNV_SERVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/server
 export CNV_SOLVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/solver
