@@ -64,13 +64,14 @@ public class WebServer {
 							// Break it down into String[].
 							final String[] params = query.split("&");
 							
-							Metrics metrics = metricsMap.get(Thread.currentThread().getId());
-							if(metrics == null){
-								//creates a new Metrics object from the query
-								metrics = Metrics.parseFromURL(query);								
+							//TODO ADD PARAM TO METRICS
+							// Metrics metrics = metricsMap.get(Thread.currentThread().getId());
+							// if(metrics == null){
+							// 	//creates a new Metrics object from the query
+							// 	metrics = Metrics.parseFromURL(query);								
 
-								metricsMap.put(Thread.currentThread().getId(), metrics);
-							}
+							// 	metricsMap.put(Thread.currentThread().getId(), metrics);
+						//	}
 							//metrics.insertParams(params);
 
 							// Store as if it was a direct call to SolverMain.
