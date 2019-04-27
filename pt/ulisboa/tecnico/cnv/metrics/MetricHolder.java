@@ -24,7 +24,7 @@ public class MetricHolder {
 	// 	System.out.println("AmazonDynamoDB: Table created!");
   // }
   
-  public static synchronized void saveMetric() {
+  public static synchronized void saveMetrics() {
     Metrics metrics = MetricHolder.metricsMap.get(Thread.currentThread().getId());
     try {
         //Store on dynamoDB
