@@ -8,7 +8,7 @@ export CNV_SERVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/server
 export CNV_SOLVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/solver
 export CNV_UTIL=$CNV_ROOT/pt/ulisboa/tecnico/cnv/util
 
-export CNV_METRICS=$CNV_ROOT/metrics
+export CNV_METRICS=$CNV_ROOT/pt/ulisboa/tecnico/cnv/metrics
 export CNV_TMP=$HOME/compiled_cnv
 
 export CNV_LOGS=$CNV_ROOT/Logs
@@ -16,7 +16,7 @@ export CNV_LOGS=$CNV_ROOT/Logs
 # Path to AWS Java SDK
 export AWS_SDK=$HOME/aws-java-sdk-1.11.538
 
-export CLASSPATH=$CNV_ROOT:$CNV_METRICS:$AWS_SDK/lib/aws-java-sdk-1.11.538.jar:$AWS_SDK/third-party/lib/*:.
+export CLASSPATH=$CNV_ROOT:$AWS_SDK/lib/aws-java-sdk-1.11.538.jar:$AWS_SDK/third-party/lib/*:.
 
 # Color codes
 export BLINK_ENABLE="\e[5m"
