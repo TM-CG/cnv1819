@@ -14,9 +14,9 @@ export CNV_TMP=$HOME/compiled_cnv
 export CNV_LOGS=$CNV_ROOT/Logs
 
 # Path to AWS Java SDK
-export AWS_SDK=$HOME/aws-java-sdk-1.11.538
+export AWS_SDK=$HOME/aws-java-sdk-1.11.541
 
-export CLASSPATH=$CNV_ROOT:$CNV_METRICS:$CNV_METRICS/CNVMetric.class:$AWS_SDK/lib/aws-java-sdk-1.11.538.jar:$AWS_SDK/third-party/lib/*:.
+export CLASSPATH=$CNV_ROOT:$CNV_METRICS:$CNV_METRICS/CNVMetric.class:$AWS_SDK/lib/aws-java-sdk-1.11.541.jar:$AWS_SDK/third-party/lib/*:.
 
 # Color codes
 export BLINK_ENABLE="\e[5m"
