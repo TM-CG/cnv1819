@@ -152,9 +152,8 @@ public class WebServer {
 					System.err.println("IOException! Returning thread");
 					return;
 				}
+				MetricHolder.saveMetrics();
 			}	
-
-			MetricHolder.saveMetrics();
 		};
 
 		thread.start();
