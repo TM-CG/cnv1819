@@ -21,6 +21,9 @@ import pt.ulisboa.tecnico.cnv.solver.Solver;
 import pt.ulisboa.tecnico.cnv.solver.SolverArgumentParser;
 import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
 
+import pt.ulisboa.tecnico.cnv.metrics.MetricHolder;
+import pt.ulisboa.tecnico.cnv.metrics.Metrics;
+
 import javax.imageio.ImageIO;
 import java.lang.Thread;
 
@@ -65,14 +68,12 @@ public class WebServer {
 							final String[] params = query.split("&");
 							
 							//TODO ADD PARAM TO METRICS
-							// Metrics metrics = metricsMap.get(Thread.currentThread().getId());
-							// if(metrics == null){
-							// 	//creates a new Metrics object from the query
-							// 	metrics = Metrics.parseFromURL(query);								
-
-							// 	metricsMap.put(Thread.currentThread().getId(), metrics);
-						//	}
-							//metrics.insertParams(params);
+							Metrics metrics = MetricHolder.metricsMap.get(Thread.currentThread().getId());
+							if(metrics == null){
+								//creates a new Metrics object from the query
+								metrics = Metrics.parseFromURL(query);								
+								MetricHolder.metricsMap.put(Thread.currentThread().getId(), metrics);
+							}
 
 							// Store as if it was a direct call to SolverMain.
 							final ArrayList<String> newArgs = new ArrayList<>();
@@ -152,6 +153,8 @@ public class WebServer {
 					return;
 				}
 			}	
+
+			MetricHolder.saveMetrics();
 		};
 
 		thread.start();
