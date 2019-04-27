@@ -1,17 +1,15 @@
-package pt.ulisboa.tecnico.cnv.metrics;
-
 import BIT.highBIT.*;
 import java.io.*;
 import java.util.*;
 import java.lang.Thread;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
-import pt.ulisboa.tecnico.cnv.metrics.AmazonDynamoDBHelper;
+// import pt.ulisboa.tecnico.cnv.metrics.AmazonDynamoDBHelper;
 import pt.ulisboa.tecnico.cnv.metrics.Runner;
 
 public class CNVMetric {
     private static int sequenceID = 0;
 
-    AmazonDynamoDBHelper dynamoDB;
+    // AmazonDynamoDBHelper dynamoDB;
     /*
      * main reads in all the files class files present in the input directory,
      * instruments them, and outputs them to the specified output directory.
