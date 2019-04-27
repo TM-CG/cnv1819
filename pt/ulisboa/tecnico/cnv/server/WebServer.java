@@ -10,9 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
-
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -20,10 +18,8 @@ import com.sun.net.httpserver.HttpServer;
 import pt.ulisboa.tecnico.cnv.solver.Solver;
 import pt.ulisboa.tecnico.cnv.solver.SolverArgumentParser;
 import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
-
 import pt.ulisboa.tecnico.cnv.metrics.MetricHolder;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
-
 import javax.imageio.ImageIO;
 import java.lang.Thread;
 
