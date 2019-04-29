@@ -117,6 +117,10 @@ as() {
 	java pt.ulisboa.tecnico.cnv.aws.AutoScaler
 }
 
+lb() {
+	java pt.ulisboa.tecnic.cnv.aws.LoadBalancer
+}
+
 readLog() {
 	java pt.ulisboa.tecnico.cnv.util.LogReader $1
 }

@@ -1,12 +1,17 @@
 package pt.ulisboa.tecnico.cnv.aws;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
-import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
@@ -33,12 +38,10 @@ public class AutoScaler {
 
   public static void main(String[] args){
     init();
-    DescribeAvailabilityZonesResult availabilityZonesResult = ec2.describeAvailabilityZones();
-    System.out.println("You have access to " + availabilityZonesResult.getAvailabilityZones().size() +
-    " Availability Zones.");
-    }
+    getNumberOfInstances();
+  }
 
-  public void launchInstance(){
+  public static void launchInstance(){
     RunInstancesRequest runInstancesRequest =  new RunInstancesRequest();
 
     runInstancesRequest.withImageId("ami-0086b9668000c59ae")
@@ -53,16 +56,26 @@ public class AutoScaler {
     .get(0).getInstanceId();
   }
 
-  public void terminateInstance(String instanceID){
+  public static void terminateInstance(String instanceID){
     TerminateInstancesRequest termInstanceReq = new TerminateInstancesRequest();
     termInstanceReq.withInstanceIds(instanceID);
     ec2.terminateInstances(termInstanceReq);
   }
 
-  public void getNumberOfInstances(){
-    DescribeAvailabilityZonesResult availabilityZonesResult = ec2.describeAvailabilityZones();
-    System.out.println("You have access to " + availabilityZonesResult.getAvailabilityZones().size() +
-    " Availability Zones.");
+  public static void getNumberOfInstances(){
+    DescribeInstancesResult describeInstancesRequest = ec2.describeInstances();
+    List<Reservation> reservations = describeInstancesRequest.getReservations();
+    Set<Instance> instances = new HashSet<Instance>();
+
+    for (Reservation reservation : reservations) {
+        instances.addAll(reservation.getInstances());
+    }
+
+    for (Instance instance : instances) {
+      System.out.println(instance.getInstanceId());
+    }
+
+    System.out.println("You have " + instances.size() + " Amazon EC2 instance(s) running.");
   }
 }
 
