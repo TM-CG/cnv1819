@@ -2,15 +2,14 @@
 # Hill@Climb config files for Linux based Environments
 # Group 9 - Alameda
 
-export CNV_ROOT=$HOME/cnv-project/
+export CNV_ROOT=$HOME/cnv-project
 export CNV_GEN=$CNV_ROOT/pt/ulisboa/tecnico/cnv/generator
 export CNV_SERVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/server
 export CNV_SOLVER=$CNV_ROOT/pt/ulisboa/tecnico/cnv/solver
 export CNV_UTIL=$CNV_ROOT/pt/ulisboa/tecnico/cnv/util
-
 export CNV_METRICS=$CNV_ROOT/pt/ulisboa/tecnico/cnv/metrics
+export CNV_AWS=$CNV_ROOT/pt/ulisboa/tecnico/cnv/aws
 export CNV_TMP=$HOME/compiled_cnv
-
 export CNV_LOGS=$CNV_ROOT/Logs
 
 # Path to AWS Java SDK
@@ -80,6 +79,9 @@ compile() {
 	echo "Compiling CNV_METRICS ..."
 	javac $CNV_METRICS/*.java
 	check Compilation
+		echo "Compiling CNV_AWS ..."
+	javac $CNV_AWS/*.java
+	check Compilation
 	cp -r pt/ $CNV_TMP/
 	check Backup
 }
@@ -109,6 +111,10 @@ check_inst() {
 
 wsvc() {
 	java pt.ulisboa.tecnico.cnv.server.WebServer	
+}
+
+as() {
+	java pt.ulisboa.tecnico.cnv.aws.AutoScaler
 }
 
 readLog() {
