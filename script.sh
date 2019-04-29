@@ -118,7 +118,7 @@ as() {
 }
 
 lb() {
-	java pt.ulisboa.tecnic.cnv.aws.LoadBalancer
+	java pt.ulisboa.tecnico.cnv.aws.LoadBalancer
 }
 
 readLog() {

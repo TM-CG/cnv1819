@@ -35,12 +35,18 @@ public class LoadBalancer {
 
   public static void main(String[] args){
 
+    init();
+
     DescribeInstancesResult describeInstancesRequest = ec2.describeInstances();
     List<Reservation> reservations = describeInstancesRequest.getReservations();
     instances = new HashSet<Instance>();
 
     for (Reservation reservation : reservations) {
         instances.addAll(reservation.getInstances());
+    }
+
+    for (Instance instance : instances){
+      System.out.println(instance.getPublicIpAddress());
     }
   }
 
