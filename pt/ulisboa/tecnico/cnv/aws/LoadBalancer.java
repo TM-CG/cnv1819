@@ -14,10 +14,15 @@ import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Reservation;
 
+
 public class LoadBalancer {
+
+  private static String AS_ID = "123";
+  private static String LB_ID = "234";
 
   static AmazonEC2 ec2;
   static Set<Instance> instances;
+  static Instance autoscaler;
 
   public static void init() {
     AWSCredentials credentials = null;
@@ -31,11 +36,24 @@ public class LoadBalancer {
     }
     ec2 = AmazonEC2ClientBuilder.standard().withRegion("eu-central-1")
     .withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
+
+    recheckAWS();
   }
 
   public static void main(String[] args){
-
     init();
+    
+  }
+
+
+  public static String selectWorker(){
+    /*Sends the request to a worker instance*/
+    return "ugabuga";
+  }
+
+  public static void requestCost(){}
+
+  public static void recheckAWS(){
 
     DescribeInstancesResult describeInstancesRequest = ec2.describeInstances();
     List<Reservation> reservations = describeInstancesRequest.getReservations();
@@ -44,14 +62,15 @@ public class LoadBalancer {
     for (Reservation reservation : reservations) {
         instances.addAll(reservation.getInstances());
     }
-
-    for (Instance instance : instances){
-      System.out.println(instance.getPublicIpAddress());
+    for (Instance instance : instances) {
+      if (instance.getImageId().equals(LoadBalancer.AS_ID)){
+        autoscaler = instance;
+        instances.remove(instance);
+      }
+      if (instance.getImageId().equals(LoadBalancer.LB_ID)){
+        instances.remove(instance);
+      }
     }
   }
 
-
-  public static void sendRequest(){
-    /*Sends the request to a worker instance*/
-  }
 }
