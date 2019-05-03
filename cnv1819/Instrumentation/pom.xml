@@ -40,9 +40,6 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <compilerArgs>
-                        <arg>-XX:-UseSplitVerifier</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
