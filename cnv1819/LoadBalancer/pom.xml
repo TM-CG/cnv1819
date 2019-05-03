@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>pt.tecnico.cnv</groupId>
-            <artifactId>Intrumentation</artifactId>
+            <artifactId>Instrumentation</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
@@ -41,9 +41,6 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <compilerArgs>
-                        <arg>-XX:-UseSplitVerifier</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

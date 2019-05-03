@@ -29,23 +29,22 @@ public class WebServer {
     @Override
     public void handle(final HttpExchange t) {
 
-        try{
-          final String query = t.getRequestURI().getQuery();
+      try{
+        final String query = t.getRequestURI().getQuery();
 
-          System.out.println(">Query:\t" + query);
+        System.out.println(">Query:\t" + query);
 
-          final String[] params = query.split("&");
+        final String[] params = query.split("&");
 
-          String publicAddress = loadBalancer.selectWorker();
+        String publicAddress = loadBalancer.selectWorker();
 
-          //metrics
-          /* Recebe o request dos clientes e adiciona o id 
-          necessário para a tabela do dynamo, decide qual o
-          melhor worker para mandar o pedido para e envia juntamente
-          com o id extra */
-        }catch (Exception e){}
-      }
-    
+        //metrics
+        /* Recebe o request dos clientes e adiciona o id 
+        necessário para a tabela do dynamo, decide qual o
+        melhor worker para mandar o pedido para e envia juntamente
+        com o id extra */
+      }catch (Exception e){}
     }
+    
   }
 }
