@@ -25,7 +25,6 @@
             <version>1.0</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -49,7 +48,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>pt.tecnico.cnv.loadbalancer.WebServer</mainClass>
+                    <mainClass>pt.ulisboa.tecnico.cnv.server.WebServer</mainClass>
                 </configuration>
             </plugin>
         </plugins>
