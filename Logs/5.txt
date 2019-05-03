@@ -1,9 +1,0 @@
-Reading 5.bin...
-# Basic Blocks: 965891572
-# Branches NOT TAKEN: 275118041
-Map Size (Witdth x Height): (512 x 512)
-Upper-left corner: (0 , 0)
-Lower-right corner: (512, 512)
-Starting point: (0, 0)
-Search Algorithm: ASTAR
-Path to map: datasets/RANDOM_HILL_512x512_2019-03-01_10-28-59.dat
