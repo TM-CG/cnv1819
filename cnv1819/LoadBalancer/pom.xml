@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>pt.tecnico.cnv</groupId>
-            <artifactId>metrics</artifactId>
+            <artifactId>Intrumentation</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
