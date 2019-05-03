@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>Library</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>Library</name>

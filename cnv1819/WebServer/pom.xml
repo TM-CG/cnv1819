@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>WebServer</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>WebServer</name>
@@ -21,6 +22,7 @@
         <dependency>
             <groupId>pt.tecnico.cnv</groupId>
             <artifactId>Instrumentation</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 

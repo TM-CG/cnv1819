@@ -9,7 +9,9 @@
     </parent>
 
     <artifactId>LoadBalancer</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
+
 
     <name>LoadBalancer</name>
 
@@ -26,6 +28,7 @@
         <dependency>
             <groupId>pt.tecnico.cnv</groupId>
             <artifactId>metrics</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
