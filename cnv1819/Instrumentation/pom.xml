@@ -8,16 +8,21 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>WebServer</artifactId>
+    <artifactId>Instrumentation</artifactId>
     <packaging>jar</packaging>
 
-    <name>WebServer</name>
+    <name>Instrumentation</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.11.545</version>
+        </dependency>
         <dependency>
             <groupId>pt.tecnico.cnv</groupId>
             <artifactId>Instrumentation</artifactId>
