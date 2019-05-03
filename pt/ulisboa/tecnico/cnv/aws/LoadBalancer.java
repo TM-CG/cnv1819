@@ -48,6 +48,7 @@ public class LoadBalancer {
 
   public static String selectWorker(){
     /*Sends the request to a worker instance*/
+    requestCost();
     return "ugabuga";
   }
 

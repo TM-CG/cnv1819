@@ -37,13 +37,13 @@ public class WebServer {
           final String[] params = query.split("&");
 
           String publicAddress = loadBalancer.selectWorker();
-                    
+
           //metrics
           /* Recebe o request dos clientes e adiciona o id 
           necessário para a tabela do dynamo, decide qual o
           melhor worker para mandar o pedido para e envia juntamente
           com o id extra */
-        }
+        }catch (Exception e){}
       }
     
     }
