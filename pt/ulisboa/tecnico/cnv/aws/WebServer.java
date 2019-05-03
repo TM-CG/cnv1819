@@ -22,7 +22,7 @@ public class WebServer {
     server.setExecutor(Executors.newCachedThreadPool());
     server.start();
 
-    System.out.println(server.getAddress().toString())
+    System.out.println(server.getAddress().toString());
   }
 
   static class MyHandler implements HttpHandler {
@@ -37,8 +37,7 @@ public class WebServer {
           final String[] params = query.split("&");
 
           String publicAddress = loadBalancer.selectWorker();
-
-          
+                    
           //metrics
           /* Recebe o request dos clientes e adiciona o id 
           necessário para a tabela do dynamo, decide qual o
