@@ -1,21 +1,36 @@
 package pt.ulisboa.tecnico.cnv.loadbalancer;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 
 public class WebServer {
-
-  static LoadBalancer loadBalancer;
+  private static LoadBalancer loadBalancer;
+  private static AmazonEC2 ec2;
+  private static AmazonCloudWatch cloudWatch;
 
   public static void main(String[] args) throws Exception {
    
-    loadBalancer = new LoadBalancer();
+    System.out.println("************ Launching Web Server ************");
+    try{
+      init();
+    }catch(Exception e){
+      e.printStackTrace();
+      System.out.println("Error while initializing LoadBalancer");
+      System.exit(0);
+    }
 
     final HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
@@ -36,8 +51,6 @@ public class WebServer {
 
         final String[] params = query.split("&");
 
-        String publicAddress = loadBalancer.selectWorker();
-
         //metrics
         /* Recebe o request dos clientes e adiciona o id 
         necessário para a tabela do dynamo, decide qual o
@@ -46,5 +59,22 @@ public class WebServer {
       }catch (Exception e){}
     }
     
+  }
+
+  private static void init() throws AmazonClientException {
+    AWSCredentials credentials = null;
+    try {
+        credentials = new ProfileCredentialsProvider().getCredentials();
+    } catch (Exception e) {
+        throw new AmazonClientException(
+                "Cannot load the credentials from the credential profiles file. " +
+                        "Please make sure that your credentials file is at the correct " +
+                        "location (~/.aws/credentials), and is in valid format.",
+                e);
+    }
+    ec2 = AmazonEC2ClientBuilder.standard().withRegion("eu-west-2").withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
+    cloudWatch = AmazonCloudWatchClientBuilder.standard().withRegion("eu-west-2").withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
+
+    loadBalancer = new LoadBalancer();
   }
 }
