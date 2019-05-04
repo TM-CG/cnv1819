@@ -8,9 +8,9 @@
 	<packaging>pom</packaging>
 
 	<name>cnv1819</name>
-	<url>http://maven.apache.org</url>
-
+	
 	<properties>
+           	<base.dir>/home/ec2-user/cnv-project</base.dir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 

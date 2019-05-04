@@ -29,7 +29,7 @@ public class MetricHolder {
     try {
         //Store on dynamoDB
         // AmazonDynamoDBHelper.addMetricObject("metrics", Thread.currentThread().getId(), metrics);
-        File file = new File("Logs" + File.separator + 1 + ".bin");
+        File file = new File("/home/ec2-user/cnv-project/Logs" + File.separator + 1 + ".bin");
         file.createNewFile();
         FileOutputStream f = new FileOutputStream(file, false);
         ObjectOutputStream o = new ObjectOutputStream(f);

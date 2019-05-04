@@ -144,11 +144,11 @@ public class WebServer {
 
 							System.out.println("> Sent response to " + t.getRemoteAddress().toString());
 						}
+						MetricHolder.saveMetrics();
 				} catch (IOException e) {
 					System.err.println("IOException! Returning thread");
 					return;
 				}
-				MetricHolder.saveMetrics();
 			}	
 		};
 
