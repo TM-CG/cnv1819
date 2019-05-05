@@ -38,27 +38,9 @@ public class WebServer {
     server.start();
 
     System.out.println(server.getAddress().toString());
-  }
 
-  static class MyHandler implements HttpHandler {
-    @Override
-    public void handle(final HttpExchange t) {
-
-      try{
-        final String query = t.getRequestURI().getQuery();
-
-        System.out.println(">Query:\t" + query);
-
-        final String[] params = query.split("&");
-
-        //metrics
-        /* Recebe o request dos clientes e adiciona o id 
-        necessário para a tabela do dynamo, decide qual o
-        melhor worker para mandar o pedido para e envia juntamente
-        com o id extra */
-      }catch (Exception e){}
-    }
-    
+    server.createContext("/climb", new RequestHandler());
+    server.createContext("/test", new HelloHandler());
   }
 
   private static void init() throws AmazonClientException {
@@ -72,9 +54,38 @@ public class WebServer {
                         "location (~/.aws/credentials), and is in valid format.",
                 e);
     }
-    ec2 = AmazonEC2ClientBuilder.standard().withRegion("eu-west-2").withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
-    cloudWatch = AmazonCloudWatchClientBuilder.standard().withRegion("eu-west-2").withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
+    ec2 = AmazonEC2ClientBuilder.standard().withRegion("eu-central-1").withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
+    cloudWatch = AmazonCloudWatchClientBuilder.standard().withRegion("eu-central-1").withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
 
-    loadBalancer = new LoadBalancer();
+    loadBalancer = new LoadBalancer(ec2);
+  }
+
+  private static class RequestHandler implements HttpHandler {
+    @Override
+    public void handle(final HttpExchange t) {
+
+      try {
+        final String query = t.getRequestURI().getQuery();
+
+        System.out.println(">Query:\t" + query);
+
+        final String[] params = query.split("&");
+
+        //metrics
+        /* Recebe o request dos clientes e adiciona o id
+        necessário para a tabela do dynamo, decide qual o
+        melhor worker para mandar o pedido para e envia juntamente
+        com o id extra */
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private static class HelloHandler implements HttpHandler {
+    @Override
+    public void handle(final HttpExchange t) {
+      System.out.println("Hello");
+    }
   }
 }
