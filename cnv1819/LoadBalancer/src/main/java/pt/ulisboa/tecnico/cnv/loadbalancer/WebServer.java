@@ -40,7 +40,7 @@ public class WebServer {
     System.out.println(server.getAddress().toString());
 
     server.createContext("/climb", new RequestHandler());
-    server.createContext("/test", new HelloHandler());
+    server.createContext("/instances", new ListInstancesHandler());
   }
 
   private static void init() throws AmazonClientException {
@@ -82,7 +82,7 @@ public class WebServer {
     }
   }
 
-  private static class HelloHandler implements HttpHandler {
+  private static class ListInstancesHandler implements HttpHandler {
     @Override
     public void handle(final HttpExchange t) {
       System.out.println("Hello");
