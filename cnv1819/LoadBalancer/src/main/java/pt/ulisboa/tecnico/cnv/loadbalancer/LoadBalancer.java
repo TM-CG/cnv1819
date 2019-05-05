@@ -2,6 +2,10 @@ package pt.ulisboa.tecnico.cnv.loadbalancer;
 
 
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.Instance;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class LoadBalancer {
@@ -15,5 +19,15 @@ public class LoadBalancer {
     instanceManager = new InstanceManager(ec2);
   }
 
+  protected List<String> listWorkers() {
+    List<Instance> instanceList = instanceManager.listWorkerInstances();
+    List<String> instancesIps = new ArrayList<>();
+
+    for (Instance instance : instanceList) {
+      instancesIps.add(instance.getPublicIpAddress());
+    }
+
+    return instancesIps;
+  }
 
 }

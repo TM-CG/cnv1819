@@ -1,6 +1,9 @@
 package pt.ulisboa.tecnico.cnv.loadbalancer;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 import com.amazonaws.AmazonClientException;
@@ -85,7 +88,16 @@ public class WebServer {
   private static class ListInstancesHandler implements HttpHandler {
     @Override
     public void handle(final HttpExchange t) {
-      System.out.println("Hello");
+      try {
+        List<String> instances = loadBalancer.listWorkers();
+        String response = instances.toString();
+        t.sendResponseHeaders(200, response.length());
+        OutputStream os = t.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+      }catch(IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 }

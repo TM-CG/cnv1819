@@ -51,7 +51,7 @@ public class InstanceManager {
 
   }
 
-  private List<Instance> listWorkerInstances(){
+  protected List<Instance> listWorkerInstances(){
     List<Instance> workers = new ArrayList<>();
 
     List<String> filter = new ArrayList<>();
