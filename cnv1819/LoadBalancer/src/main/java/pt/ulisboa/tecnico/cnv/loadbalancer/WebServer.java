@@ -36,7 +36,7 @@ public class WebServer {
       System.exit(0);
     }
 
-    final HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+    final HttpServer server = HttpServer.create(new InetSocketAddress(8001), 0);
 
     server.setExecutor(Executors.newCachedThreadPool());
     server.start();
@@ -70,7 +70,7 @@ public class WebServer {
       try {
 
         final String query = t.getRequestURI().getQuery();
-        String workerIp = "192.168.20.1:8000";
+        String workerIp = "35.156.23.222:8000";
         HttpRequest.redirectURL(workerIp, t.getRequestURI().toString());
 
         System.out.println(">Sent to :\t" + workerIp);

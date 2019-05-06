@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -12,23 +13,46 @@ public class HttpRequest {
     private static final String USER_AGENT = "Mozilla/5.0";
 
     public static void redirectURL(String host, String url) {
-        String realUrl = host + url;
-        System.out.println(realUrl);
+        url = host + url;
+        try{
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            HttpAnswer answer = sendGet(con);
+            System.out.println(answer.getResponse());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
 
-        try {
-            if (arguments.size() > 0 ){
-                url += "?";
-                for (Map.Entry<String, String> entry : arguments.entrySet()) {
-                    url+= entry.getKey() + "=" + entry.getValue() + "&";
-                }
+        if (arguments.size() > 0 ){
+            url += "?";
+            for (Map.Entry<String, String> entry : arguments.entrySet()) {
+                url+= entry.getKey() + "=" + entry.getValue() + "&";
             }
-            System.out.println(url);
-            URL obj = new URL(url);
+        }
+        System.out.println(url);
+        URL obj = null;
+        try {
+            obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null; //TODO
+    }
+
+    private static HttpAnswer sendGet(HttpURLConnection con) {
+        try{
             con.setRequestMethod("GET");
             con.setRequestProperty("User-Agent", USER_AGENT);
 
