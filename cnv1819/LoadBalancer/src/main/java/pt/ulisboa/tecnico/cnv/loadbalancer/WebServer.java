@@ -74,7 +74,7 @@ public class WebServer {
 
         final String query = t.getRequestURI().getQuery();
         String workerIp = "http://35.156.23.222:8000";
-        HttpAnswer response = HttpRequest.redirectURL(workerIp, "/ping");
+        HttpAnswer response = HttpRequest.redirectURL(workerIp, "/climb?w=512&h=512&x0=0&x1=512&y0=0&y1=512&xS=450&yS=400&s=BFS&i=datasets/RANDOM_HILL_512x512_2019-02-27_09-46-42.dat");
 
         System.out.println(">Sent to :\t" + workerIp);
 
