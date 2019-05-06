@@ -10,9 +10,8 @@ import java.util.List;
 
 public class LoadBalancer {
 
-
-  AmazonEC2 ec2;
-  InstanceManager instanceManager;
+  private AmazonEC2 ec2;
+  private InstanceManager instanceManager;
 
   public LoadBalancer(AmazonEC2 ec2){
     this.ec2 = ec2;

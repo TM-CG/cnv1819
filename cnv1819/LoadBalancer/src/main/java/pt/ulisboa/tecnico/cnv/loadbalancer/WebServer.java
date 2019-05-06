@@ -17,6 +17,7 @@ import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
 
 
 public class WebServer {
@@ -66,9 +67,11 @@ public class WebServer {
   private static class RequestHandler implements HttpHandler {
     @Override
     public void handle(final HttpExchange t) {
-
       try {
+
         final String query = t.getRequestURI().getQuery();
+
+        HttpRequest.sendHttpRequest(t.getRequestURI().toString(), query);
 
         System.out.println(">Query:\t" + query);
 
