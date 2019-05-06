@@ -19,5 +19,6 @@
 		<module>Instrumentation</module>
 		<module>WebServer</module>
 		<module>LoadBalancer</module>
+		<module>MetricStorageServer</module>
 	</modules>
 </project>
