@@ -76,7 +76,7 @@ public class WebServer {
         System.out.println(">Sent to :\t" + workerIp);
 
         //metrics
-        /* Recebe o request dos clientes e adiciona o id
+        /* Recebe o request dos clientes e adiciona o id¢ﬂ
         necessário para a tabela do dynamo, decide qual o
         melhor worker para mandar o pedido para e envia juntamente
         com o id extra */
