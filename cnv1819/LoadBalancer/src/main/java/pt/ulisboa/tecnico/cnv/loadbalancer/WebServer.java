@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cnv.loadbalancer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -14,9 +15,11 @@ import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
 
 
@@ -71,10 +74,25 @@ public class WebServer {
 
         final String query = t.getRequestURI().getQuery();
         String workerIp = "http://35.156.23.222:8000";
-        HttpRequest.redirectURL(workerIp, "/ping");
+        HttpAnswer response = HttpRequest.redirectURL(workerIp, "/ping");
 
         System.out.println(">Sent to :\t" + workerIp);
 
+        // Send response to browser.
+        final Headers hdrs = t.getResponseHeaders();
+
+        t.sendResponseHeaders(200, response.getResponse().length());
+
+        hdrs.add("Content-Type", "image/png");
+
+        hdrs.add("Access-Control-Allow-Origin", "*");
+        hdrs.add("Access-Control-Allow-Credentials", "true");
+        hdrs.add("Access-Control-Allow-Methods", "POST, GET, HEAD, OPTIONS");
+        hdrs.add("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+        final OutputStream os = t.getResponseBody();
+        os.write(response.getResponse().getBytes());
+        os.close();
         //metrics
         /* Recebe o request dos clientes e adiciona o id¢ﬂ
         necessário para a tabela do dynamo, decide qual o

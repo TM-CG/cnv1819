@@ -12,21 +12,20 @@ public class HttpRequest {
 
     private static final String USER_AGENT = "Mozilla/5.0";
 
-    public static void redirectURL(String host, String url) {
+    public static HttpAnswer redirectURL(String host, String url) {
         url = host + url;
         try{
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-            HttpAnswer answer = sendGet(con);
-            System.out.println(answer.getResponse());
+            return sendGet(con);
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        return new HttpAnswer(400, "");
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
