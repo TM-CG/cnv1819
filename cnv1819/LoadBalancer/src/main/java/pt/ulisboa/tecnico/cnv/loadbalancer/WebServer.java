@@ -70,12 +70,10 @@ public class WebServer {
       try {
 
         final String query = t.getRequestURI().getQuery();
+        String workerIp = "192.168.20.1:8000";
+        HttpRequest.redirectURL(workerIp, t.getRequestURI().toString());
 
-        HttpRequest.sendHttpRequest(t.getRequestURI().toString(), query);
-
-        System.out.println(">Query:\t" + query);
-
-        final String[] params = query.split("&");
+        System.out.println(">Sent to :\t" + workerIp);
 
         //metrics
         /* Recebe o request dos clientes e adiciona o id

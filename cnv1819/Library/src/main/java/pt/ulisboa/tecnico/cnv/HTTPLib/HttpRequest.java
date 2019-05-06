@@ -11,7 +11,7 @@ public class HttpRequest {
 
     private static final String USER_AGENT = "Mozilla/5.0";
 
-    public static void sendHttpRequest(String url, String arguments) {
+    public static void redirectURL(String host, String url) {
         if (arguments != "") {
             url += "?";
             url += arguments;
