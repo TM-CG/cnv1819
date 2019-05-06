@@ -70,7 +70,7 @@ public class WebServer {
       try {
 
         final String query = t.getRequestURI().getQuery();
-        String workerIp = "35.156.23.222:8000";
+        String workerIp = "http://35.156.23.222:8000";
         HttpRequest.redirectURL(workerIp, "/ping");
 
         System.out.println(">Sent to :\t" + workerIp);
