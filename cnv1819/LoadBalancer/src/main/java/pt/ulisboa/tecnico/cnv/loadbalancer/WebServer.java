@@ -74,14 +74,14 @@ public class WebServer {
             try {
 
                 final String query = t.getRequestURI().getQuery();
+                //decide the worker that should do the work
                 String workerIp = "http://35.156.23.222:8000";
-                HttpAnswer response = HttpRequest.redirectURL(workerIp, "/climb?w=512&h=512&x0=0&x1=512&y0=0&y1=512&xS" +
-                        "=450&yS=400&s=BFS&i=datasets/RANDOM_HILL_512x512_2019-02-27_09-46-42.dat");
+                System.out.println(">Job sent to :\t" + workerIp);
 
-                System.out.println(">Sent to :\t" + workerIp);
+                HttpAnswer response = HttpRequest.redirectURL(workerIp, "/climb?" + query);
+
                 // Send response to browser.
                 final Headers hdrs = t.getResponseHeaders();
-
                 t.sendResponseHeaders(200, response.getResponse().length);
                 hdrs.add("Content-Type", "image/png");
 
