@@ -127,7 +127,6 @@ public class WebServer {
 				final OutputStream os = t.getResponseBody();
 				Files.copy(responseFile.toPath(), os);
 
-
 				os.close();
 
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
