@@ -83,7 +83,8 @@ public class WebServer {
                 final Headers hdrs = t.getResponseHeaders();
 
                 t.sendResponseHeaders(200, response.getResponse().getBytes().length);
-
+                System.out.println(response.getResponse().length());
+                System.out.println(response.getResponse().getBytes().length);
                 hdrs.add("Content-Type", "image/png");
 
                 hdrs.add("Access-Control-Allow-Origin", "*");
