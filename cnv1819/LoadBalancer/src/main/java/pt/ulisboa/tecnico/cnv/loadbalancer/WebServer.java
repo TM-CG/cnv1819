@@ -78,13 +78,11 @@ public class WebServer {
                 HttpAnswer response = HttpRequest.redirectURL(workerIp, "/climb?w=512&h=512&x0=0&x1=512&y0=0&y1=512&xS" +
                         "=450&yS=400&s=BFS&i=datasets/RANDOM_HILL_512x512_2019-02-27_09-46-42.dat");
 
-                System.out.println(response.getResponse());
-                //System.out.println(">Sent to :\t" + workerIp);
-/*
+                System.out.println(">Sent to :\t" + workerIp);
                 // Send response to browser.
                 final Headers hdrs = t.getResponseHeaders();
 
-                t.sendResponseHeaders(200, response.getResponse().getBytes().length);
+                t.sendResponseHeaders(200, response.getResponse().length);
                 hdrs.add("Content-Type", "image/png");
 
                 hdrs.add("Access-Control-Allow-Origin", "*");
@@ -93,8 +91,8 @@ public class WebServer {
                 hdrs.add("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
                 final OutputStream os = t.getResponseBody();
-                os.write(response.getResponse().getBytes());
-                os.close();*/
+                os.write(response.getResponse());
+                os.close();
 
             } catch (Exception e) {
                 e.printStackTrace();

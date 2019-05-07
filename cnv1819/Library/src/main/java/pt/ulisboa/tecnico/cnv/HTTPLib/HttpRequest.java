@@ -56,7 +56,7 @@ public class HttpRequest {
             con.setRequestMethod("GET");
             con.setRequestProperty("User-Agent", USER_AGENT);
 
-            OutputStream os = new FileOutputStream("request.png");
+            ByteArrayOutputStream os = new ByteArrayOutputStream(con.getContentLength());
             int responseCode = con.getResponseCode();
             InputStream in = con.getInputStream();
 
@@ -67,7 +67,7 @@ public class HttpRequest {
             }
             in.close();
 
-            return new HttpAnswer(responseCode, "pls");
+            return new HttpAnswer(responseCode, os.toByteArray());
         }catch (IOException e){
             return new HttpAnswer(400, "Error");
         }
