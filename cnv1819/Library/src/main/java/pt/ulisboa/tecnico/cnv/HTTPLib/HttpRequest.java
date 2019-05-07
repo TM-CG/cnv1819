@@ -3,10 +3,7 @@ package pt.ulisboa.tecnico.cnv.HTTPLib;
 import com.amazonaws.http.apache.request.impl.HttpGetWithBody;
 import com.amazonaws.services.waf.model.HTTPRequest;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -59,21 +56,18 @@ public class HttpRequest {
             con.setRequestMethod("GET");
             con.setRequestProperty("User-Agent", USER_AGENT);
 
+            OutputStream os = new FileOutputStream("request.png");
             int responseCode = con.getResponseCode();
-            HTTPRequest request = new HTTPRequest();
+            InputStream in = con.getInputStream();
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                System.out.println(inputLine);
+            byte[] bytes = new byte[2048];
+            int length;
+            while ((length = in.read(bytes)) != -1) {
+                os.write(bytes, 0, length);
             }
             in.close();
 
-            return new HttpAnswer(responseCode, response.toString());
+            return new HttpAnswer(responseCode, "pls");
         }catch (IOException e){
             return new HttpAnswer(400, "Error");
         }
