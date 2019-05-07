@@ -1,8 +1,5 @@
 package pt.ulisboa.tecnico.cnv.HTTPLib;
 
-import com.amazonaws.http.apache.request.impl.HttpGetWithBody;
-import com.amazonaws.services.waf.model.HTTPRequest;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
