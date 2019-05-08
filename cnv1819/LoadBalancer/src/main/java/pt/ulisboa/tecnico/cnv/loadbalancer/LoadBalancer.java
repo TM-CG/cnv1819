@@ -1,36 +1,54 @@
 package pt.ulisboa.tecnico.cnv.loadbalancer;
 
 
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class LoadBalancer {
 
-  private AmazonEC2 ec2;
-  private InstanceManager instanceManager;
+    private AmazonEC2 ec2;
+    private AmazonCloudWatch cloudWatch;
+    private InstanceManager instanceManager;
 
-  public LoadBalancer(AmazonEC2 ec2){
-    this.ec2 = ec2;
-    instanceManager = new InstanceManager(ec2);
-  }
-
-  protected List<String> listWorkers() {
-    List<Instance> instanceList = instanceManager.listWorkerInstances();
-    List<String> instancesIps = new ArrayList<>();
-
-    for (Instance instance : instanceList) {
-      instancesIps.add(instance.getPublicIpAddress());
+    public LoadBalancer(AmazonEC2 ec2, AmazonCloudWatch cloudWatch){
+        this.ec2 = ec2;
+        this.cloudWatch = cloudWatch;
+        instanceManager = new InstanceManager(this.ec2);
     }
 
-    return instancesIps;
-  }
+    protected List<String> listWorkers() {
+        List<Instance> instanceList = instanceManager.listWorkerInstances();
+        List<String> instancesIps = new ArrayList<>();
 
-  public void requestMetrics(){
+        for (Instance instance : instanceList) {
+            instancesIps.add(instance.getPublicIpAddress());
+        }
 
-  }
+        return instancesIps;
+    }
+
+    public void requestMetrics(String query){
+
+    }
+
+    public Map<String, String> argumentsFromQuery(String query) {
+        HashMap<String, String> arguments = new HashMap<>();
+
+        String[] args = query.split("&");
+        for(String s : args){
+            String[] paremeter = s.split("=");
+            System.out.println(s);
+            arguments.put(paremeter[0], paremeter[1]);
+            System.out.println(paremeter[0] + " " + paremeter[1]);
+        }
+        return arguments;
+    }
 
 }
