@@ -10,25 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MetricHolder {
   
   public static ConcurrentHashMap<Long, Metrics>  metricsMap = new ConcurrentHashMap<>();
-  private static final String TBL_NAME = "metrics";
 
   public MetricHolder(){}
 
-  // public void initAmazon(){
-  //   System.out.println("AmazonDynamoDB is starting ...");
-	// 	AmazonDynamoDBHelper.init();
-	// 	System.out.println("AmazonDynamoDB: Ready!");
-	// 	System.out.println("AmazonDynamoDB: Creating table metrics. Please wait ...");
-  //       //create table if not exists
-	// 	AmazonDynamoDBHelper.createTable(TBL_NAME);
-	// 	System.out.println("AmazonDynamoDB: Table created!");
-  // }
-  
   public static synchronized void saveMetrics() {
     Metrics metrics = MetricHolder.metricsMap.get(Thread.currentThread().getId());
     try {
-        //Store on dynamoDB
-        // AmazonDynamoDBHelper.addMetricObject("metrics", Thread.currentThread().getId(), metrics);
         File file = new File("/home/ec2-user/cnv-project/Logs" + File.separator + 1 + ".bin");
         file.createNewFile();
         FileOutputStream f = new FileOutputStream(file, false);

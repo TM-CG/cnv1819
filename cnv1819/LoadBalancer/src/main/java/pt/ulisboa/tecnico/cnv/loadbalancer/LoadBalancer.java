@@ -29,4 +29,8 @@ public class LoadBalancer {
     return instancesIps;
   }
 
+  public void requestMetrics(){
+
+  }
+
 }

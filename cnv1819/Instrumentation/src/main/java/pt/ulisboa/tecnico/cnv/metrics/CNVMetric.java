@@ -3,11 +3,9 @@ import java.io.*;
 import java.util.*;
 import java.lang.Thread;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
-// import pt.ulisboa.tecnico.cnv.metrics.AmazonDynamoDBHelper;
 import pt.ulisboa.tecnico.cnv.metrics.MetricHolder;
 
 public class CNVMetric {
-    // AmazonDynamoDBHelper dynamoDB;
     /*
      * main reads in all the files class files present in the input directory,
      * instruments them, and outputs them to the specified output directory.
@@ -16,7 +14,6 @@ public class CNVMetric {
 
         File file_in = new File(argv[0]);
         String infilenames[] = file_in.list();
-        int branches = 0;
 
         for (int i = 0; i < infilenames.length; i++) {
             String infilename = infilenames[i];
@@ -38,7 +35,6 @@ public class CNVMetric {
                         /* Branch taken and not taken counts */
                         if (instr_type == InstructionTable.CONDITIONAL_INSTRUCTION) {
                             instr.addBefore("CNVMetric", "countBranchOutcome", "BranchOutcome");
-                            branches++;
                         }
                     }
                 }
