@@ -38,17 +38,4 @@ public class LoadBalancer {
 
     }
 
-    public Map<String, String> argumentsFromQuery(String query) {
-        HashMap<String, String> arguments = new HashMap<>();
-
-        String[] args = query.split("&");
-        for(String s : args){
-            String[] paremeter = s.split("=");
-            System.out.println(s);
-            arguments.put(paremeter[0], paremeter[1]);
-            System.out.println(paremeter[0] + " " + paremeter[1]);
-        }
-        return arguments;
-    }
-
 }
