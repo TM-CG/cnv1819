@@ -18,8 +18,6 @@ public class HttpRequest {
 
             return sendGet(con);
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -27,24 +25,31 @@ public class HttpRequest {
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
+        StringBuilder newUrl = new StringBuilder();
 
         if (arguments.size() > 0 ){
             url += "?";
+            newUrl.append(url);
+            newUrl.append("?");
             for (Map.Entry<String, String> entry : arguments.entrySet()) {
-                url+= entry.getKey() + "=" + entry.getValue() + "&";
-            }
+                newUrl.append(entry.getKey());
+                newUrl.append("=");
+                newUrl.append(entry.getValue());
+                newUrl.append("&"); }
         }
-        System.out.println(url);
-        URL obj = null;
+
+        System.out.println(newUrl);
+
+        URL obj;
         try {
-            obj = new URL(url);
+            obj = new URL(newUrl.toString());
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            return sendGet(con);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return null; //TODO
     }
 
