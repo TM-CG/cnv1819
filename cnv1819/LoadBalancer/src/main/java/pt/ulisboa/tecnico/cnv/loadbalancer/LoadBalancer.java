@@ -2,13 +2,13 @@ package pt.ulisboa.tecnico.cnv.loadbalancer;
 
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.model.ListMetricsResult;
+import com.amazonaws.services.cloudwatch.model.Metric;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class LoadBalancer {
@@ -36,6 +36,15 @@ public class LoadBalancer {
 
     public void requestMetrics(String query){
 
+    }
+
+    public void getCloudWatchMetrics() {
+        ListMetricsResult response = cloudWatch.listMetrics();
+        List<Metric> metrics = response.getMetrics();
+
+        for (Metric metric : metrics) {
+            System.out.println(metric.getMetricName());
+        }
     }
 
 }
