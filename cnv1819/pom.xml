@@ -17,7 +17,7 @@
 	<modules>
 		<module>Library</module>
 		<module>Instrumentation</module>
-		<module>WebServer</module>
+		<module>Worker</module>
 		<module>LoadBalancer</module>
 		<module>MetricStorageServer</module>
 	</modules>

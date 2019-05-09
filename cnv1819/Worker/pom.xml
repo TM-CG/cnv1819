@@ -8,11 +8,11 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>WebServer</artifactId>
+    <artifactId>Worker</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>WebServer</name>
+    <name>Worker</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
