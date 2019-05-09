@@ -50,7 +50,7 @@ public class LoadBalancer extends TimerTask {
         return instancesIps;
     }
 
-    private void getCloudWatchMetrics() {
+    public void getCloudWatchMetrics() {
         ListMetricsResult response = cloudWatch.listMetrics();
         List<Metric> metrics = response.getMetrics();
 
