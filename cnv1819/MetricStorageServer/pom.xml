@@ -30,6 +30,11 @@
             <artifactId>Instrumentation</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>pt.tecnico.cnv</groupId>
+            <artifactId>Library</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
