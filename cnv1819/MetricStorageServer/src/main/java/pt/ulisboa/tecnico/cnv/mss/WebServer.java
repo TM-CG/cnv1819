@@ -7,11 +7,13 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import pt.ulisboa.tecnico.cnv.common.Common;
 
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.Executors;
-
+import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 public class WebServer {
     private static MetricStorageManager mss;
@@ -56,9 +58,7 @@ public class WebServer {
             try {
                 final String query = t.getRequestURI().getQuery();
 
-                System.out.println(">Query:\t" + query);
 
-                final String[] params = query.split("&");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -72,9 +72,11 @@ public class WebServer {
                 final String query = t.getRequestURI().getQuery();
                 System.out.println(">Query:\t" + query);
 
-                //make put
+                Map<String, String> arguments = Common.argumentsFromQuery(query);
+                Metrics metric  = Common.metricFromArguments(arguments);
+                mss.addMetricObject(MetricStorageManager.TBL_NAME, 0, metric);
 
-                String response = "";
+                String response = "METRIC INSERTED IN DYNAMODB";
                 t.sendResponseHeaders(200, response.length());
                 final OutputStream os = t.getResponseBody();
                 os.write(response.getBytes());

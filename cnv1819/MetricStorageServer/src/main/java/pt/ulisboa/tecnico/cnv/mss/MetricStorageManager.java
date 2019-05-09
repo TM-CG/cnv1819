@@ -1,9 +1,6 @@
 package pt.ulisboa.tecnico.cnv.mss;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
@@ -12,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MetricStorageManager {
-    private static final String TBL_NAME = "metrics";
+    public static final String TBL_NAME = "metrics";
 
     private AmazonDynamoDB dynamoDB;
 
@@ -83,7 +80,7 @@ public class MetricStorageManager {
     }
 
     private Map<String, AttributeValue> newMetric(long id, Metrics metric) {
-        Map<String, AttributeValue> item = new HashMap<String, AttributeValue>();
+        Map<String, AttributeValue> item = new HashMap<>();
 
         item.put("id", new AttributeValue(String.valueOf(id)));
         item.put("bb", new AttributeValue(String.valueOf(metric.basicBlocks())));
@@ -101,4 +98,5 @@ public class MetricStorageManager {
 
         return item;
     }
+
 }
