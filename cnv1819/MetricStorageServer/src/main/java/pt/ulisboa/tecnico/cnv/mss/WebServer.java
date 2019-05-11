@@ -18,6 +18,9 @@ import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 public class WebServer {
     private static MetricStorageManager mss;
 
+    private static final Object id_lock = new Object();
+    private static int identifier = 0;
+
     public static void main(String[] args) throws Exception {
 
         init();
@@ -57,7 +60,7 @@ public class WebServer {
 
             try {
                 final String query = t.getRequestURI().getQuery();
-
+                Map<String, String> arguments = Common.argumentsFromQuery(query);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -74,7 +77,10 @@ public class WebServer {
 
                 Map<String, String> arguments = Common.argumentsFromQuery(query);
                 Metrics metric  = Common.metricFromArguments(arguments);
-                mss.addMetricObject(MetricStorageManager.TBL_NAME, 0, metric);
+                synchronized (id_lock) {
+                    mss.addMetricObject(MetricStorageManager.TBL_NAME, identifier, metric);
+                    identifier++;
+                }
 
                 String response = "METRIC INSERTED IN DYNAMODB";
                 t.sendResponseHeaders(200, response.length());

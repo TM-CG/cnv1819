@@ -15,6 +15,8 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
+import pt.ulisboa.tecnico.cnv.common.Common;
 import pt.ulisboa.tecnico.cnv.solver.Solver;
 import pt.ulisboa.tecnico.cnv.solver.SolverArgumentParser;
 import pt.ulisboa.tecnico.cnv.solver.SolverFactory;
@@ -24,6 +26,9 @@ import javax.imageio.ImageIO;
 import java.lang.Thread;
 
 public class WebServer {
+
+	private static String MSS_ADDRESS = "";
+
 	public static void main(final String[] args) throws Exception {
 
 
@@ -129,7 +134,7 @@ public class WebServer {
 				os.close();
 
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
-				MetricHolder.saveMetrics();
+				HttpRequest.sendHttpRequest(MSS_ADDRESS + "/putmetric", Common.argumentsFromQuery(query));
 			} catch (IOException e) {
 				System.err.println("IOException! Returning thread");
 				return;
