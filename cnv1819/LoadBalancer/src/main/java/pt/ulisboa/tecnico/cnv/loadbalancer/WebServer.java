@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 import com.amazonaws.AmazonClientException;
@@ -121,7 +122,9 @@ public class WebServer {
     private static class TestHandler implements HttpHandler {
         @Override
         public void handle(final HttpExchange t) {
-            loadBalancer.getCloudWatchMetrics();
+            final String query = t.getRequestURI().getQuery();
+            Map<String, String> map = Common.argumentsFromQuery(query);
+            loadBalancer.requestMetricMss(map);
         }
     }
 }
