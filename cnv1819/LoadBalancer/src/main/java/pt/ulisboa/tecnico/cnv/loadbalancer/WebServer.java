@@ -125,6 +125,16 @@ public class WebServer {
             final String query = t.getRequestURI().getQuery();
             Map<String, String> map = Common.argumentsFromQuery(query);
             loadBalancer.requestMetricMss(map);
+            try{
+                String response = "OK";
+                t.sendResponseHeaders(200, response.length());
+                OutputStream os = t.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
