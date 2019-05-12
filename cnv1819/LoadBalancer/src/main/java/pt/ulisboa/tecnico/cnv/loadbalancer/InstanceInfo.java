@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InstanceInfo {
-    Instance instance;
+    private Instance instance;
     HashMap<String, Long> metrics;
-    Date launchTime;
+    private Date launchTime;
 
     public InstanceInfo(Instance instance, List<Metric> metricList) {
         this.instance = instance;

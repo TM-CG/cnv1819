@@ -153,4 +153,11 @@ public class Metrics implements Serializable{
             case "i" : this.map    = value; break;
         }
     }
+
+    @Override
+    public String toString() {
+        String string = "w=" + this.width + "&h=" + this.height + "&x0=" + this.x0 + "&x1=" + this.x1 + "&y0=" + this.y1
+                + "&xS=" + this.xS + "&yS=" + this.yS + "&s=" + this.search + "&i=" + this.map + "&";
+        return string;
+    }
 }

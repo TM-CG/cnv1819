@@ -6,8 +6,13 @@ import com.amazonaws.services.cloudwatch.model.ListMetricsResult;
 import com.amazonaws.services.cloudwatch.model.Metric;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
+import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
+import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.*;
 
 
@@ -34,7 +39,7 @@ public class LoadBalancer extends TimerTask {
         HashMap<String, InstanceInfo> infoHashMap = new HashMap<>();
 
         for (Instance instance : instances) {
-           // infoHashMap.put(instance.getInstanceId(), new InstanceInfo(instance, cloudWatch.getMetricData()))
+           //instanceInfoMap.put(instance.getInstanceId(), new InstanceInfo(instance, cloudWatch.getMetricData()))
         }
         return infoHashMap;
     }
@@ -60,11 +65,17 @@ public class LoadBalancer extends TimerTask {
     }
 
 
-    public void requestMetricMss(Map<String, String> arguments) {
-        HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT, arguments);
-    }
-    public void run(){
+    public void requestMetricMss(Map<String, String> arguments) throws IOException, ClassNotFoundException {
+        HttpAnswer answer = HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
+        byte[] response = answer.getResponse();
 
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response));
+        Metrics metrics = (Metrics) ois.readObject();
+        System.out.println(metrics.getAlgorithm());
+    }
+
+    @Override
+    public void run(){
     }
 
 }
