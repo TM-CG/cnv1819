@@ -38,7 +38,7 @@ public class HttpRequest {
                 newUrl.append("&"); }
         }
 
-        System.out.println(newUrl);
+        System.out.println(newUrl.toString());
 
         URL obj;
         try {
