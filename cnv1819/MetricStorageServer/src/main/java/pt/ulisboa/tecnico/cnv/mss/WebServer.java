@@ -61,10 +61,15 @@ public class WebServer {
             try {
                 final String query = t.getRequestURI().getQuery();
                 Map<String, String> arguments = Common.argumentsFromQuery(query);
+
                 Metrics metrics = new Metrics();
+                String response = metrics.toString();
+                t.sendResponseHeaders(200, response.length());
 
                 final OutputStream os = t.getResponseBody();
-                t.sendResponseHeaders(200, );
+                os.write(response.getBytes());
+                os.close();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

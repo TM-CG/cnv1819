@@ -65,12 +65,11 @@ public class LoadBalancer extends TimerTask {
     }
 
 
-    public void requestMetricMss(Map<String, String> arguments) throws IOException, ClassNotFoundException {
+    public void requestMetricMss(Map<String, String> arguments) {
         HttpAnswer answer = HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
-        byte[] response = answer.getResponse();
-
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response));
-        Metrics metrics = (Metrics) ois.readObject();
+        String response = answer.getString();
+        System.out.println(response);
+        Metrics metrics = Metrics.parseFromURL(response);
         System.out.println(metrics.getAlgorithm());
     }
 

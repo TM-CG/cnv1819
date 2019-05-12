@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cnv.mss;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
+import com.amazonaws.services.glue.model.Table;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ public class MetricStorageManager {
     public MetricStorageManager(AmazonDynamoDB dynamoDB) {
         this.dynamoDB = dynamoDB;
         boolean f = true;
-        while(f) {
+        while (f) {
             try {
                 createTable(TBL_NAME);
                 System.out.println("Table " + TBL_NAME + " created.");
@@ -30,6 +31,7 @@ public class MetricStorageManager {
 
     /**
      * Creates a table on DynamoDB
+     *
      * @param tableName the table name
      */
     public void createTable(String tableName) throws InterruptedException {
@@ -48,6 +50,7 @@ public class MetricStorageManager {
 
     /**
      * Returns the table description
+     *
      * @param tableName the name of the table to get the description
      * @return
      */
@@ -71,6 +74,7 @@ public class MetricStorageManager {
         return dynamoDB.putItem(putItemRequest);
 
     }
+
     private Map<String, AttributeValue> newMetric(String metricName, String value) {
         Map<String, AttributeValue> item = new HashMap<>();
         item.put("metricName", new AttributeValue(metricName));
