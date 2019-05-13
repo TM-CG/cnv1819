@@ -62,6 +62,7 @@ public class WebServer {
                 Map<String, String> arguments = Common.argumentsFromQuery(query);
 
                 Metrics metrics = new Metrics();
+                metrics.insertArgs(2,3,4,5,6,7,8,9,"BFS", "ugabuga");
                 String response = metrics.toString();
                 t.sendResponseHeaders(200, response.length());
 

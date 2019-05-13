@@ -126,9 +126,9 @@ public class WebServer {
             final String query = t.getRequestURI().getQuery();
             if(query != null ){
                 Map<String, String> map = Common.argumentsFromQuery(query);
-                loadBalancer.requestMetricMss(map);
+                HttpAnswer answer = loadBalancer.requestMetricMss(map);
                 try{
-                    String response = "OK";
+                    String response = answer.getString();
                     t.sendResponseHeaders(200, response.length());
                     OutputStream os = t.getResponseBody();
                     os.write(response.getBytes());
