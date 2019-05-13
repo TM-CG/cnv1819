@@ -67,7 +67,6 @@ public class LoadBalancer extends TimerTask {
         String response = answer.getString();
         System.out.println(response);
         Metrics metrics = Metrics.parseFromURL(response);
-        System.out.println(metrics.getAlgorithm());
     }
 
     @Override

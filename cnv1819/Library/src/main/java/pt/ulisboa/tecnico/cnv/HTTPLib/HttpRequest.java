@@ -25,7 +25,6 @@ public class HttpRequest {
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
-        System.out.println(url);
         StringBuilder newUrl = new StringBuilder();
         if (arguments.size() > 0 ){
             newUrl.append(url);
@@ -36,8 +35,6 @@ public class HttpRequest {
                 newUrl.append(entry.getValue());
                 newUrl.append("&"); }
         }
-
-        System.out.println(newUrl.toString());
 
         URL obj;
         try {
