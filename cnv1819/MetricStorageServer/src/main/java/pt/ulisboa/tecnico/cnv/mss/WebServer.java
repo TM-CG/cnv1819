@@ -61,6 +61,8 @@ public class WebServer {
                 //final String query = t.getRequestURI().getQuery();
                 //Map<String, String> arguments = Common.argumentsFromQuery(query);
 
+                System.out.println("Hello");
+
                 Metrics metrics = new Metrics();
                 metrics.insertArgs(2,3,4,5,6,7,8,9,"BFS", "ugabuga");
                 String response = metrics.toString();

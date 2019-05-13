@@ -63,8 +63,7 @@ public class LoadBalancer extends TimerTask {
 
 
     public HttpAnswer requestMetricMss(Map<String, String> arguments) {
-        HttpAnswer answer = HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
-        return answer;
+        return HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
     }
 
     @Override
