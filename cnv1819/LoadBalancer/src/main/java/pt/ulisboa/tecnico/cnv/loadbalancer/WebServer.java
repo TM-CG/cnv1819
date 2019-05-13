@@ -125,7 +125,7 @@ public class WebServer {
         public void handle(final HttpExchange t) {
             final String query = t.getRequestURI().getQuery();
             if(query != null ){
-                Map<String, String> map = new HashMap<>();
+                Map<String, String> map = Common.argumentsFromQuery(query);
                 loadBalancer.requestMetricMss(map);
                 try{
                     String response = "OK";
