@@ -25,21 +25,19 @@ public class HttpRequest {
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
-        StringBuilder newUrl = new StringBuilder();
+	StringBuilder newUrl = new StringBuilder();
         if (arguments.size() > 0 ){
             newUrl.append(url);
             newUrl.append("?");
-            for (Map.Entry<String, String> entry : arguments.entrySet()) {
-                newUrl.append(entry.getKey());
+	 for (Map.Entry<String, String> entry : arguments.entrySet()) {
+		newUrl.append(entry.getKey());
                 newUrl.append("=");
                 newUrl.append(entry.getValue());
                 newUrl.append("&");
             }
-            newUrl.deleteCharAt(-1);
+	newUrl.deleteCharAt(newUrl.length() - 1);
         }
-        System.out.println(newUrl.toString());
         try {
-            System.out.println("PLS");
             URL obj = new URL(newUrl.toString());
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -51,7 +49,6 @@ public class HttpRequest {
     }
 
     private static HttpAnswer sendGet(HttpURLConnection con) {
-        System.out.println("SEND GET");
         try{
             con.setRequestMethod("GET");
             con.setRequestProperty("User-Agent", USER_AGENT);
