@@ -29,13 +29,13 @@ public class HttpRequest {
         if (arguments.size() > 0 ){
             newUrl.append(url);
             newUrl.append("?");
-	 for (Map.Entry<String, String> entry : arguments.entrySet()) {
-		newUrl.append(entry.getKey());
+            for (Map.Entry<String, String> entry : arguments.entrySet()) {
+		        newUrl.append(entry.getKey());
                 newUrl.append("=");
                 newUrl.append(entry.getValue());
                 newUrl.append("&");
             }
-	newUrl.deleteCharAt(newUrl.length() - 1);
+	        newUrl.deleteCharAt(newUrl.length() - 1);
         }
         try {
             URL obj = new URL(newUrl.toString());

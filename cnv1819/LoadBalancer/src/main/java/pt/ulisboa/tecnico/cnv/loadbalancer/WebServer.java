@@ -25,6 +25,7 @@ import org.apache.http.HttpResponse;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
 import pt.ulisboa.tecnico.cnv.common.Common;
+import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 
 public class WebServer {
@@ -127,6 +128,8 @@ public class WebServer {
             if(query != null ){
                 Map<String, String> map = Common.argumentsFromQuery(query);
                 HttpAnswer answer = loadBalancer.requestMetricMss(map);
+                Metrics metrics = Metrics.parseFromURL(new String(answer.getResponse()));
+                System.out.println(metrics);
                 try{
                     String response = new String(answer.getResponse());
                     t.sendResponseHeaders(200, response.length());
