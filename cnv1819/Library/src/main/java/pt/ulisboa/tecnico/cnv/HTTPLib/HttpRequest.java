@@ -25,8 +25,8 @@ public class HttpRequest {
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
-        StringBuilder newUrl = new StringBuilder();
         System.out.println(url);
+        StringBuilder newUrl = new StringBuilder();
         if (arguments.size() > 0 ){
             newUrl.append(url);
             newUrl.append("?");

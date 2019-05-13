@@ -124,17 +124,28 @@ public class WebServer {
         @Override
         public void handle(final HttpExchange t) {
             final String query = t.getRequestURI().getQuery();
-            Map<String, String> map = new HashMap<>();
-            loadBalancer.requestMetricMss(map);
-            try{
-                String response = "OK";
-                t.sendResponseHeaders(200, response.length());
-                OutputStream os = t.getResponseBody();
-                os.write(response.getBytes());
-                os.close();
-            }catch (IOException e) {
-                e.printStackTrace();
+            if(query != null ){
+                Map<String, String> map = new HashMap<>();
+                loadBalancer.requestMetricMss(map);
+                try{
+                    String response = "OK";
+                    t.sendResponseHeaders(200, response.length());
+                    OutputStream os = t.getResponseBody();
+                    os.write(response.getBytes());
+                    os.close();
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            else{
+                try{
+                    String response = "NOT OK";
+                    t.sendResponseHeaders(500, response.length());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
 
         }
     }
