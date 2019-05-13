@@ -18,7 +18,7 @@ import java.util.*;
 
 public class LoadBalancer extends TimerTask {
 
-    private String MSS_IP = "35.22.232.232";
+    private String MSS_IP = "35.156.23.222";
     private String MSS_PORT = "8000";
 
     private AmazonEC2 ec2;

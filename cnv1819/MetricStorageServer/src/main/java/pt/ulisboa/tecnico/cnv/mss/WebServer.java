@@ -22,7 +22,6 @@ public class WebServer {
     private static int identifier = 0;
 
     public static void main(String[] args) throws Exception {
-
         init();
 
         final HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
