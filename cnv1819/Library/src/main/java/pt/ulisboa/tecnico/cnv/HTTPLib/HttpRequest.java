@@ -37,21 +37,19 @@ public class HttpRequest {
             }
             newUrl.deleteCharAt(-1);
         }
-
-        URL obj;
         try {
-            obj = new URL(newUrl.toString());
+            URL obj = new URL(newUrl.toString());
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             return sendGet(con);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null; //TODO
     }
 
     private static HttpAnswer sendGet(HttpURLConnection con) {
+        System.out.println("SEND GET");
         try{
             con.setRequestMethod("GET");
             con.setRequestProperty("User-Agent", USER_AGENT);
