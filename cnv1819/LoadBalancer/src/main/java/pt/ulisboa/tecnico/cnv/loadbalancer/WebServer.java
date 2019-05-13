@@ -141,6 +141,9 @@ public class WebServer {
                 try{
                     String response = "NOT OK";
                     t.sendResponseHeaders(500, response.length());
+                    OutputStream os = t.getResponseBody();
+                    os.write(response.getBytes());
+                    os.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
