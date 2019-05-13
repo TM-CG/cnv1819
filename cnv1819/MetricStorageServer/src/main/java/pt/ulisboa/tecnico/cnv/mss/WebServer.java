@@ -59,7 +59,6 @@ public class WebServer {
 
             try {
                 final String query = t.getRequestURI().getQuery();
-                System.out.println(query.equals(""));
                 Map<String, String> arguments = Common.argumentsFromQuery(query);
 
                 Metrics metrics = new Metrics();
