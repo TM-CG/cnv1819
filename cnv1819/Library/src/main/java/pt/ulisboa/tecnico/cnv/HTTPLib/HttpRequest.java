@@ -37,7 +37,9 @@ public class HttpRequest {
             }
             newUrl.deleteCharAt(-1);
         }
+        System.out.println(newUrl.toString());
         try {
+            System.out.println("PLS");
             URL obj = new URL(newUrl.toString());
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
