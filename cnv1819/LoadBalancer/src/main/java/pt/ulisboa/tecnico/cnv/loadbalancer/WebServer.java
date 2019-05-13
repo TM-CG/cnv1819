@@ -129,7 +129,7 @@ public class WebServer {
                 HttpAnswer answer = loadBalancer.requestMetricMss(map);
                 try{
                     System.out.println("ugabuga");
-                    String response = answer.getString();
+                    String response = new String(answer.getResponse());
                     t.sendResponseHeaders(200, response.length());
                     OutputStream os = t.getResponseBody();
                     os.write(response.getBytes());

@@ -21,7 +21,7 @@ public class HttpRequest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new HttpAnswer(400, "");
+        return new HttpAnswer(400, null);
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
@@ -69,7 +69,7 @@ public class HttpRequest {
 
             return new HttpAnswer(responseCode, os.toByteArray());
         }catch (IOException e){
-            return new HttpAnswer(400, "Error");
+            return new HttpAnswer(400, null);
         }
     }
 }
