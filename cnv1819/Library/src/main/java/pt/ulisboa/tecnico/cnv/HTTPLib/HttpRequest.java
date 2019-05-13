@@ -33,7 +33,9 @@ public class HttpRequest {
                 newUrl.append(entry.getKey());
                 newUrl.append("=");
                 newUrl.append(entry.getValue());
-                newUrl.append("&"); }
+                newUrl.append("&");
+            }
+            newUrl.deleteCharAt(-1);
         }
 
         URL obj;
