@@ -28,7 +28,6 @@ public class HttpRequest {
         StringBuilder newUrl = new StringBuilder();
         System.out.println(url);
         if (arguments.size() > 0 ){
-            url += "?";
             newUrl.append(url);
             newUrl.append("?");
             for (Map.Entry<String, String> entry : arguments.entrySet()) {
