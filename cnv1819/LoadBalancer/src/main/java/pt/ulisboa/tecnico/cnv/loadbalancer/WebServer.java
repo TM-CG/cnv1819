@@ -122,9 +122,9 @@ public class WebServer {
     private static class TestHandler implements HttpHandler {
         @Override
         public void handle(final HttpExchange t) {
-            final String query = t.getRequestURI().getQuery();
-            Map<String, String> map = Common.argumentsFromQuery(query);
-            loadBalancer.requestMetricMss(map);
+//            final String query = t.getRequestURI().getQuery();
+//            Map<String, String> map = Common.argumentsFromQuery(query);
+//            loadBalancer.requestMetricMss(map);
             try{
                 String response = "OK";
                 t.sendResponseHeaders(200, response.length());
