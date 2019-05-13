@@ -128,6 +128,7 @@ public class WebServer {
                 Map<String, String> map = Common.argumentsFromQuery(query);
                 HttpAnswer answer = loadBalancer.requestMetricMss(map);
                 try{
+                    System.out.println("ugabuga");
                     String response = answer.getString();
                     t.sendResponseHeaders(200, response.length());
                     OutputStream os = t.getResponseBody();
