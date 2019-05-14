@@ -58,6 +58,7 @@ public class LoadBalancer extends TimerTask {
                 .withStartTime(new Date(new Date().getTime() - offsetInMilliseconds))
                 .withPeriod(60 * 60)
                 .withEndTime(new Date())
+                .withNamespace("AWS/EC2")
                 .withDimensions(new Dimension().withName("ImageId").withValue("ami-09def150731bdbcc2"))
                 .withMetricName("CPUUtilization")
                 .withStatistics("Average", "Maximum");
