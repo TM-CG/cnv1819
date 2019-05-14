@@ -13,7 +13,7 @@ public abstract class GenericTimeTask extends TimerTask {
     public GenericTimeTask(LoadBalancer loadBalancer, int seconds) {
         this.loadBalancer = loadBalancer;
         this.timer = new Timer();
-        timer.schedule(this, 1000 * seconds);
+        timer.schedule(this, 0, 1000 * seconds);
     }
 
 }
