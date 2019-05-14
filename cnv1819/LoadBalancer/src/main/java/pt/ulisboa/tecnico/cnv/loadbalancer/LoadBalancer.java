@@ -53,7 +53,11 @@ public class LoadBalancer extends TimerTask {
     }
 
     public void getCloudWatchMetrics() {
+        long offsetInMilliseconds = 1000 * 60 * 60 * 24;
         GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
+                .withStartTime(new Date(new Date().getTime() - offsetInMilliseconds))
+                .withPeriod(60 * 60)
+                .withEndTime(new Date())
                 .withDimensions(new Dimension().withName("ImageId").withValue("ami-09def150731bdbcc2"))
                 .withMetricName("CPUUtilization")
                 .withStatistics("Average", "Maximum");
