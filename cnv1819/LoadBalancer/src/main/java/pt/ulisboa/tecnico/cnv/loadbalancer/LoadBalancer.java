@@ -7,11 +7,12 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
+import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
 
 import java.util.*;
 
 
-public class LoadBalancer extends TimerTask {
+public class LoadBalancer {
 
     private String MSS_IP = "35.156.23.222";
     private String MSS_PORT = "8000";
@@ -20,15 +21,16 @@ public class LoadBalancer extends TimerTask {
     private AmazonCloudWatch cloudWatch;
     private InstanceManager instanceManager;
     private Map<String, InstanceInfo> instanceInfoMap;
-    private Timer timer;
+
+    private GetMetricsCloudWatch getMetricsCloudWatchTask;
 
     public LoadBalancer(AmazonEC2 ec2, AmazonCloudWatch cloudWatch) {
         this.ec2 = ec2;
         this.cloudWatch = cloudWatch;
         instanceManager = new InstanceManager(this.ec2);
         instanceInfoMap = createInstanceMap();
-        timer = new Timer();
-        timer.schedule(this, 0, 5000);
+        getMetricsCloudWatchTask = new GetMetricsCloudWatch(this, cloudWatch);
+
     }
 
     private Map<String, InstanceInfo> createInstanceMap() {
@@ -52,29 +54,8 @@ public class LoadBalancer extends TimerTask {
         return instancesIps;
     }
 
-    public void getCloudWatchMetrics() {
-        long offsetInMilliseconds = 1000 * 60;
-        GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
-                .withStartTime(new Date(new Date().getTime() - offsetInMilliseconds))
-                .withPeriod(60 * 60)
-                .withEndTime(new Date())
-                .withNamespace("AWS/EC2")
-                .withDimensions(new Dimension().withName("ImageId").withValue("ami-09def150731bdbcc2"))
-                .withMetricName("CPUUtilization")
-                .withStatistics("Average", "Maximum");
-        GetMetricStatisticsResult result = cloudWatch.getMetricStatistics(request);
-
-        System.out.println(result.getLabel() + ": " + result.getDatapoints() );
-    }
-
-
     public HttpAnswer requestMetricMss(Map<String, String> arguments) {
         return HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
-    }
-
-    @Override
-    public void run(){
-        getCloudWatchMetrics();
     }
 
 }
