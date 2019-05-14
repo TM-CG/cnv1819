@@ -1,9 +1,10 @@
 package pt.ulisboa.tecnico.cnv.mss;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.document.ScanFilter;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
-import com.amazonaws.services.glue.model.Table;
+import pt.ulisboa.tecnico.cnv.common.Common;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 import java.util.HashMap;
@@ -48,6 +49,17 @@ public class MetricStorageManager {
 
     }
 
+    public void getMetrics(String query) {
+        HashMap<String, Condition> scanFilter = new HashMap<>();
+        Condition condition = new Condition()
+                .withComparisonOperator(ComparisonOperator.EQ.toString())
+                .withAttributeValueList(new AttributeValue(query));
+        scanFilter.put("id", condition);
+
+        ScanRequest scanRequest = new ScanRequest(TBL_NAME).withScanFilter(scanFilter);
+        ScanResult scanResult = dynamoDB.scan(scanRequest);
+
+    }
     /**
      * Returns the table description
      *

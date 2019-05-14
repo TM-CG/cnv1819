@@ -8,7 +8,6 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
-import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 import java.util.*;
 
@@ -29,6 +28,8 @@ public class LoadBalancer extends TimerTask {
         this.cloudWatch = cloudWatch;
         instanceManager = new InstanceManager(this.ec2);
         instanceInfoMap = createInstanceMap();
+        timer = new Timer();
+        timer.schedule(this, 0, 1000);
     }
 
     private Map<String, InstanceInfo> createInstanceMap() {
@@ -68,6 +69,7 @@ public class LoadBalancer extends TimerTask {
 
     @Override
     public void run(){
+        getCloudWatchMetrics();
     }
 
 }
