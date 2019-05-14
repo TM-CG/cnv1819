@@ -64,7 +64,7 @@ public class LoadBalancer extends TimerTask {
                 .withStatistics("Average", "Maximum");
         GetMetricStatisticsResult result = cloudWatch.getMetricStatistics(request);
 
-        System.out.println("Label: " + result.getLabel());
+        System.out.println(result.getLabel() + ": " + result.getDatapoints() );
     }
 
 
