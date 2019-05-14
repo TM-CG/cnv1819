@@ -19,7 +19,7 @@ public class GetMetricsCloudWatch extends GenericTimeTask {
 
     public void getCloudWatchMetrics() {
 
-        long offsetInMilliseconds = 1000 * 60;
+        long offsetInMilliseconds = 1000 * 90;
         GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
                 .withStartTime(new Date(new Date().getTime() - offsetInMilliseconds))
                 .withPeriod(60)
