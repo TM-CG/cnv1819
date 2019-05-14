@@ -29,7 +29,7 @@ public class LoadBalancer {
         this.cloudWatch = cloudWatch;
         instanceManager = new InstanceManager(this.ec2);
         instanceInfoMap = createInstanceMap();
-        getMetricsCloudWatchTask = new GetMetricsCloudWatch(this, cloudWatch);
+        getMetricsCloudWatchTask = new GetMetricsCloudWatch(this, cloudWatch,30);
 
     }
 

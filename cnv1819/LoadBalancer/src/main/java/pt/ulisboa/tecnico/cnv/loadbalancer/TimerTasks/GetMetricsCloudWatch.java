@@ -7,20 +7,14 @@ import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsResult;
 import pt.ulisboa.tecnico.cnv.loadbalancer.LoadBalancer;
 
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class GetMetricsCloudWatch extends TimerTask {
+public class GetMetricsCloudWatch extends GenericTimeTask {
 
-    private LoadBalancer loadBalancer;
     private AmazonCloudWatch cloudWatch;
-    private Timer timer;
 
-    public GetMetricsCloudWatch(LoadBalancer loadBalancer, AmazonCloudWatch cloudWatch) {
-        this.loadBalancer = loadBalancer;
+    public GetMetricsCloudWatch(LoadBalancer loadBalancer, AmazonCloudWatch cloudWatch, int seconds) {
+        super(loadBalancer, seconds);
         this.cloudWatch = cloudWatch;
-        timer = new Timer();
-        timer.schedule(this, 1000 );
     }
 
     public void getCloudWatchMetrics() {
