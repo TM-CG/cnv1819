@@ -53,7 +53,7 @@ public class LoadBalancer extends TimerTask {
     }
 
     public void getCloudWatchMetrics() {
-        long offsetInMilliseconds = 1000 * 60 * 60 * 24;
+        long offsetInMilliseconds = 1000 * 60;
         GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
                 .withStartTime(new Date(new Date().getTime() - offsetInMilliseconds))
                 .withPeriod(60 * 60)
