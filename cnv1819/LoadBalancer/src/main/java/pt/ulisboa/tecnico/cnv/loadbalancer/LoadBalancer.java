@@ -2,8 +2,7 @@ package pt.ulisboa.tecnico.cnv.loadbalancer;
 
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.model.ListMetricsResult;
-import com.amazonaws.services.cloudwatch.model.Metric;
+import com.amazonaws.services.cloudwatch.model.*;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
@@ -29,7 +28,7 @@ public class LoadBalancer extends TimerTask {
         instanceManager = new InstanceManager(this.ec2);
         instanceInfoMap = createInstanceMap();
         timer = new Timer();
-        timer.schedule(this, 0, 1000);
+        timer.schedule(this, 0, 5000);
     }
 
     private Map<String, InstanceInfo> createInstanceMap() {
@@ -54,12 +53,13 @@ public class LoadBalancer extends TimerTask {
     }
 
     public void getCloudWatchMetrics() {
-        ListMetricsResult response = cloudWatch.listMetrics();
-        List<Metric> metrics = response.getMetrics();
+        GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
+                .withDimensions(new Dimension().withName("ImageId").withValue("ami-09def150731bdbcc2"))
+                .withMetricName("CPUUtilization")
+                .withStatistics("Average", "Maximum");
+        GetMetricStatisticsResult result = cloudWatch.getMetricStatistics(request);
 
-        for (Metric metric : metrics) {
-            System.out.println(metric.getMetricName());
-        }
+        System.out.println("Label: " + result.getLabel());
     }
 
 
