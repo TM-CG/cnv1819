@@ -20,7 +20,7 @@ public class InstanceManager {
         this.ec2 = ec2;
     }
 
-    private void launchInstance(int numberOfInstances){
+    public void launchInstance(int numberOfInstances){
 
         if( numberOfInstances > 0) {
             RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
@@ -38,7 +38,7 @@ public class InstanceManager {
 
     }
 
-    private List<InstanceStateChange> terminateInstances(List<String> instancesIds){
+    public List<InstanceStateChange> terminateInstances(List<String> instancesIds){
 
         if(instancesIds.size() > 0) {
             TerminateInstancesRequest terminateInstancesRequest = new TerminateInstancesRequest();

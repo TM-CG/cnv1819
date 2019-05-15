@@ -1,12 +1,17 @@
 package pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks;
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.model.Datapoint;
 import com.amazonaws.services.cloudwatch.model.Dimension;
 import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest;
 import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsResult;
+import com.amazonaws.services.ec2.model.Instance;
+import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceInfo;
 import pt.ulisboa.tecnico.cnv.loadbalancer.LoadBalancer;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class GetMetricsCloudWatch extends GenericTimeTask {
 
@@ -17,7 +22,7 @@ public class GetMetricsCloudWatch extends GenericTimeTask {
         this.cloudWatch = cloudWatch;
     }
 
-    public void getCloudWatchMetrics() {
+    private void getCloudWatchMetrics(InstanceInfo instance) {
 
         long offsetInMilliseconds = 1000 * 90;
         GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
@@ -25,17 +30,20 @@ public class GetMetricsCloudWatch extends GenericTimeTask {
                 .withPeriod(60)
                 .withEndTime(new Date())
                 .withNamespace("AWS/EC2")
-                .withDimensions(new Dimension().withName("ImageId").withValue("ami-09def150731bdbcc2"))
+                .withDimensions(new Dimension().withName("InstanceId").withValue(instance.getInstanceId()))
                 .withMetricName("CPUUtilization")
                 .withStatistics("Average", "Maximum");
         GetMetricStatisticsResult result = cloudWatch.getMetricStatistics(request);
+        List<Datapoint> data = result.getDatapoints();
 
-        System.out.println(result.getLabel() + ": " + result.getDatapoints() );
+        loadBalancer.cpuUtilization.put(instance.getInstanceId(), data.get(0).getAverage());
+
     }
 
     @Override
     public void run() {
-        getCloudWatchMetrics();
+        for (Map.Entry<String, InstanceInfo> entry : loadBalancer.getInstanceSet())
+            getCloudWatchMetrics(entry.getValue());
 
     }
 }
