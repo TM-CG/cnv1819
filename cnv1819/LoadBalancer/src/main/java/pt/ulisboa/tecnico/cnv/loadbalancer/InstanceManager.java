@@ -91,7 +91,7 @@ public class InstanceManager {
             }
         } catch (AmazonEC2Exception ase) {
             System.out.println("Caught Exception: " + ase.getMessage());
-            System.out.println("Reponse Status Code: " + ase.getStatusCode());
+            System.out.println("Response Status Code: " + ase.getStatusCode());
             System.out.println("Error Code: " + ase.getErrorCode());
             System.out.println("Request ID: " + ase.getRequestId());
         }
