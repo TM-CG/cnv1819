@@ -3,14 +3,20 @@ package pt.ulisboa.tecnico.cnv.loadbalancer;
 import com.amazonaws.services.ec2.model.Instance;
 
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class InstanceInfo {
+
+    private static final Object jobLocker = new Object();
+    private static int jobCounter = 0;
+
     private Instance instance;
     private Date launchTime;
     private boolean setForDelete;
-    private List<Job> jobs;
+    private ConcurrentHashMap<Integer, Job> jobs;
 
     public InstanceInfo(Instance instance) {
         this.instance = instance;
@@ -31,8 +37,27 @@ public class InstanceInfo {
         this.setForDelete = true;
     }
 
-    public List<Job> getJobs() {
+    public int addJob(Job job) {
+        int number;
+        synchronized (jobLocker) {
+            number = InstanceInfo.jobCounter++;
+            jobs.put(number, job);
+        }
+        return number;
+    }
+
+    public void removeJob(int i) {
+        synchronized (jobLocker) {
+            jobs.remove(i);
+            InstanceInfo.jobCounter = InstanceInfo.jobCounter--;
+        }
+    }
+
+    public Map<Integer, Job> getJobs() {
         return jobs;
     }
 
+    public Instance getInstance() {
+        return instance;
+    }
 }

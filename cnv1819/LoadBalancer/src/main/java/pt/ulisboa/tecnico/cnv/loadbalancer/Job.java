@@ -1,19 +1,24 @@
 package pt.ulisboa.tecnico.cnv.loadbalancer;
 
-import com.amazonaws.services.autoscaling.model.Instance;
+
+import com.amazonaws.services.ec2.model.Instance;
 
 public class Job {
 
     public enum State {
-        RUNNING,
-        COMPLETE,
-        ERROR
+        NEW,
+        SEEN
     }
 
-    Instance intance;
+    private double percent;
+
+    private State state;
+
+    Instance instance;
 
 
-    public Job() {
-
+    public Job(Instance instance, State state) {
+        this.instance = instance;
+        this.state = state;
     }
 }

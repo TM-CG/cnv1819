@@ -34,8 +34,7 @@ public class AutoScaleVerifier extends GenericTimeTask {
             while(loadBalancer.instanceInfoMap.get(toDelete.get(0)).getJobs().size() > 0){
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException e) { e.printStackTrace();
                 }
             }
             instanceManager.terminateInstances(loadBalancer.setInstanceForDelete());

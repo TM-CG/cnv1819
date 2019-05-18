@@ -6,6 +6,7 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
+import pt.ulisboa.tecnico.cnv.common.Common;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
 
 import java.util.*;
@@ -15,6 +16,8 @@ public class LoadBalancer {
 
     private String MSS_IP = "35.156.23.222";
     private String MSS_PORT = "8000";
+
+    protected static int jobCounter  = 0;
 
     private AmazonEC2 ec2;
     private AmazonCloudWatch cloudWatch;
@@ -63,9 +66,13 @@ public class LoadBalancer {
         return instanceInfoMap.entrySet();
     }
 
+    public InstanceInfo whichWorker(String query) {
+        HttpAnswer cost = requestMetricMss(Common.argumentsFromQuery(query));
+        return null;
+    }
+
     public List<String> setInstanceForDelete() {
-        InstanceInfo toDelete = null;
-        for (Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
+        InstanceInfo toDelete = null;for (Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
             if(toDelete == null || entry.getValue().getLaunchTime().before(toDelete.getLaunchTime()))
                 toDelete = entry.getValue();
         }

@@ -5,7 +5,6 @@ import com.amazonaws.services.cloudwatch.model.Datapoint;
 import com.amazonaws.services.cloudwatch.model.Dimension;
 import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest;
 import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsResult;
-import com.amazonaws.services.ec2.model.Instance;
 import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceInfo;
 import pt.ulisboa.tecnico.cnv.loadbalancer.LoadBalancer;
 
