@@ -25,7 +25,8 @@ public class HttpRequest {
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
-	StringBuilder newUrl = new StringBuilder();
+	    StringBuilder newUrl = new StringBuilder();
+
         if (arguments.size() > 0 ){
             newUrl.append(url);
             newUrl.append("?");
@@ -37,8 +38,9 @@ public class HttpRequest {
             }
 	        newUrl.deleteCharAt(newUrl.length() - 1);
         }
+        URL obj;
         try {
-            URL obj = new URL(newUrl.toString());
+            obj = new URL(newUrl.toString());
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             return sendGet(con);
