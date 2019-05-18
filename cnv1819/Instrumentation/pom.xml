@@ -51,8 +51,8 @@
                 <configuration>
                     <mainClass>CNVMetric</mainClass>
                     <arguments>
-                        <argument>${base.dir}/cnv1819/WebServer/target/classes/pt/ulisboa/tecnico/cnv/solver</argument>
-                        <argument>${base.dir}/cnv1819/WebServer/target/classes/pt/ulisboa/tecnico/cnv/solver</argument>
+                        <argument>${base.dir}/cnv1819/Worker/target/classes/pt/ulisboa/tecnico/cnv/solver</argument>
+                        <argument>${base.dir}/cnv1819/Worker/target/classes/pt/ulisboa/tecnico/cnv/solver</argument>
                     </arguments>
                 </configuration>
             </plugin>
