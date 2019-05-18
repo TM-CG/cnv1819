@@ -24,7 +24,7 @@ public class WebServer {
     public static void main(String[] args) throws Exception {
         init();
 
-        final HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+        final HttpServer server = HttpServer.create(new InetSocketAddress(8002), 0);
 
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();
