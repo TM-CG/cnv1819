@@ -13,6 +13,8 @@ public class InstanceInfo {
     private static final Object jobLocker = new Object();
     private static int jobCounter = 0;
 
+    private long load;
+
     private Instance instance;
     private Date launchTime;
     private boolean setForDelete;
@@ -22,6 +24,7 @@ public class InstanceInfo {
         this.instance = instance;
         this.launchTime = instance.getLaunchTime();
         this.setForDelete = false;
+        this.load = 0;
     }
 
     public String getInstanceId() {

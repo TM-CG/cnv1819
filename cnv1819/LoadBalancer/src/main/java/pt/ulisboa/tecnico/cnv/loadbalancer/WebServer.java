@@ -81,12 +81,12 @@ public class WebServer {
                 final String query = t.getRequestURI().getQuery();
                 //decide the worker that should do the work
 
-                InstanceInfo instanceInfo = loadBalancer.whichWorker(query);
+                //InstanceInfo instanceInfo = loadBalancer.whichWorker(query);
                 String workerIp = "35.156.23.222";
-                int jobId = instanceInfo.addJob(new Job(instanceInfo.getInstance(), Job.State.NEW));
+                //int jobId = instanceInfo.addJob(new Job(instanceInfo.getInstance(), Job.State.NEW));
                 System.out.println(">Job sent to :\t" + workerIp);
                 HttpAnswer response = HttpRequest.redirectURL("http://" + workerIp, "/climb?" + query);
-                instanceInfo.removeJob(jobId);
+                //instanceInfo.removeJob(jobId);
 
                 // Send response to browser.
                 final Headers hdrs = t.getResponseHeaders();
