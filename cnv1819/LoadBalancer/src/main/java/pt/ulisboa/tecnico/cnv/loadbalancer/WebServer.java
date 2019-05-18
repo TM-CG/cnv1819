@@ -82,7 +82,7 @@ public class WebServer {
                 //decide the worker that should do the work
 
                 //InstanceInfo instanceInfo = loadBalancer.whichWorker(query);
-                String workerIp = "35.156.23.222";
+                String workerIp = "35.156.23.222:8000";
                 //int jobId = instanceInfo.addJob(new Job(instanceInfo.getInstance(), Job.State.NEW));
                 System.out.println(">Job sent to :\t" + workerIp);
                 HttpAnswer response = HttpRequest.redirectURL("http://" + workerIp + ":8000/climb?", query);

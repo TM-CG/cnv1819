@@ -20,6 +20,14 @@ public class Common {
         return arguments;
     }
 
+    public static Map<String, String> argumentsFromQuery(String query, Metrics metrics) {
+        Map<String, String> arguments = argumentsFromQuery(query);
+        arguments.put("basicBlocks", String.valueOf(metrics.getBasicBlocks()));
+        arguments.put("branchesNotTaken", String.valueOf(metrics.getBranches_notTaken()));
+
+        return arguments;
+    }
+
     public static Metrics metricFromArguments(Map<String, String> arguments) {
         Metrics metrics = new Metrics();
         metrics.insertArgs(Integer.parseInt(arguments.get("w")), Integer.parseInt(arguments.get("h")),

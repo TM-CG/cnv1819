@@ -27,7 +27,7 @@ import java.lang.Thread;
 
 public class WebServer {
 
-	private static String MSS_ADDRESS = "";
+	private static String MSS_ADDRESS = "http://35.156.23.222:8002";
 
 	public static void main(final String[] args) throws Exception {
 
@@ -134,7 +134,8 @@ public class WebServer {
 				os.close();
 
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
-				HttpRequest.sendHttpRequest(MSS_ADDRESS + "/putmetric", Common.argumentsFromQuery(query));
+				HttpRequest.sendHttpRequest(MSS_ADDRESS + "/putmetric", Common.argumentsFromQuery(query, metrics));
+
 			} catch (IOException e) {
 				System.err.println("IOException! Returning thread");
 				return;

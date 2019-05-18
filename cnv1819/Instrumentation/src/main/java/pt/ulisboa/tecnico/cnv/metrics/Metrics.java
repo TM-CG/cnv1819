@@ -8,6 +8,14 @@ public class Metrics implements Serializable{
 
     static final long serialVersionUID = 3;
 
+    public long getBasicBlocks() {
+        return basicBlocks;
+    }
+
+    public long getBranches_notTaken() {
+        return branches_notTaken;
+    }
+
     /** The number of basic blocks */
     private long basicBlocks;
     /** The number of branches not taken */
