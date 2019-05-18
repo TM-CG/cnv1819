@@ -85,7 +85,7 @@ public class WebServer {
                 String workerIp = "35.156.23.222";
                 //int jobId = instanceInfo.addJob(new Job(instanceInfo.getInstance(), Job.State.NEW));
                 System.out.println(">Job sent to :\t" + workerIp);
-                HttpAnswer response = HttpRequest.redirectURL("http://" + workerIp, "/climb?" + query);
+                HttpAnswer response = HttpRequest.redirectURL("http://" + workerIp + ":8000/climb?", query);
                 //instanceInfo.removeJob(jobId);
 
                 // Send response to browser.
