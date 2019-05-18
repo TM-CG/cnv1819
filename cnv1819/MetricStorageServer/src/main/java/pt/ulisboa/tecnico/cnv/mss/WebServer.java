@@ -59,11 +59,9 @@ public class WebServer {
 
             try {
                 final String query = t.getRequestURI().getQuery();
-                Map<String, String> arguments = Common.argumentsFromQuery(query);
 
-                Metrics metrics = new Metrics();
-                metrics.insertArgs(2,3,4,5,6,7,8,9,"BFS", "ugabuga");
-                String response = metrics.toString();
+                System.out.println(mss.getMetrics(query));
+                String response = "";               
                 t.sendResponseHeaders(200, response.length());
 
                 final OutputStream os = t.getResponseBody();
@@ -85,10 +83,7 @@ public class WebServer {
 
                 Map<String, String> arguments = Common.argumentsFromQuery(query);
                 Metrics metric  = Common.metricFromArguments(arguments);
-                synchronized (id_lock) {
-                    mss.addMetricObject(MetricStorageManager.TBL_NAME, identifier, metric);
-                    identifier++;
-                }
+                mss.addMetricObject(MetricStorageManager.TBL_NAME, metric.toStringForId(), metric);
 
                 String response = "METRIC INSERTED IN DYNAMODB";
                 t.sendResponseHeaders(200, response.length());

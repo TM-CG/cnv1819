@@ -112,6 +112,14 @@ public class Metrics implements Serializable{
 		return branches_notTaken;
     }
 
+    public void setBranches(long branches) {
+        this.branches_notTaken = branches;
+    }
+
+    public void setBasicBlocks(long basicBlocks) {
+        this.basicBlocks = basicBlocks;
+    }
+
     public void insertArgs(int width, int height, int x0, int x1, int y0, int y1, int xS, int yS, String search, String name){
         this.width = width;
         this.height = height;
@@ -164,8 +172,50 @@ public class Metrics implements Serializable{
 
     @Override
     public String toString() {
-        String string = "w=" + this.width + "&h=" + this.height + "&x0=" + this.x0 + "&x1=" + this.x1 + "&y0=" + this.y1
-                + "&xS=" + this.xS + "&yS=" + this.yS + "&s=" + this.search + "&i=" + this.map + "&";
-        return string;
+        return "w=" + this.width + "&h=" + this.height + "&x0=" + this.x0 + "&x1=" + this.x1 + "&y0=" + this.y1
+                + "&xS=" + this.xS + "&yS=" + this.yS + "&s=" + this.search + "&i=" + this.map + "&bb=" + this.basicBlocks + "&bnt=" + this.branches_notTaken +  "&" ;
+    }
+
+    public String toStringForId() {
+        return "" + this.width + this.height + this.x0 + this.x1 + this.y1 + this.xS + this.yS + this.search + this.map;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setX0(int x0) {
+        this.x0 = x0;
+    }
+
+    public void setY0(int y0) {
+        this.y0 = y0;
+    }
+
+    public void setX1(int x1) {
+        this.x1 = x1;
+    }
+
+    public void setY1(int y1) {
+        this.y1 = y1;
+    }
+
+    public void setXS(int xS) {
+        this.xS = xS;
+    }
+    public void setYS(int yS) {
+        this.yS = yS;
+    }
+
+    public void setAlgorithm(String search) {
+        this.search = search;
+    }
+
+    public void setMap(String map) {
+        this.map = map;
     }
 }

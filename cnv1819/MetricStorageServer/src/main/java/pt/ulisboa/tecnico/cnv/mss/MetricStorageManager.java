@@ -49,16 +49,45 @@ public class MetricStorageManager {
 
     }
 
-    public void getMetrics(String query) {
+    public Metrics getMetrics(String query) {
         HashMap<String, Condition> scanFilter = new HashMap<>();
+
+        Map<String, String> args = Common.argumentsFromQuery(query);
+        String id = "" + args.get("w") + args.get("h") + args.get("x0") + args.get("x1")
+                + args.get("y1") + args.get("xS") + args.get("yS")
+                + args.get("s") + args.get("i");
+
+        System.out.println("ID " + id);
+
         Condition condition = new Condition()
                 .withComparisonOperator(ComparisonOperator.EQ.toString())
-                .withAttributeValueList(new AttributeValue(query));
+                .withAttributeValueList(new AttributeValue(id));
         scanFilter.put("id", condition);
 
         ScanRequest scanRequest = new ScanRequest(TBL_NAME).withScanFilter(scanFilter);
         ScanResult scanResult = dynamoDB.scan(scanRequest);
+        Map<String, AttributeValue> metricLine;
+        Metrics metric = new Metrics();
 
+        if (scanResult.getItems().size() > 0) {
+            metricLine = scanResult.getItems().get(0);
+
+            metric.setBasicBlocks (Long.parseLong(metricLine.get("bb").getS()));
+            metric.setBranches    (Long.parseLong(metricLine.get("bb").getS()));
+            metric.setWidth       (Integer.parseInt(metricLine.get("w").getS()));
+            metric.setHeight      (Integer.parseInt(metricLine.get("h").getS()));
+            metric.setX0          (Integer.parseInt(metricLine.get("x0").getS()));
+            metric.setY0          (Integer.parseInt(metricLine.get("y0").getS()));
+            metric.setX1          (Integer.parseInt(metricLine.get("x1").getS()));
+            metric.setY1          (Integer.parseInt(metricLine.get("y1").getS()));
+            metric.setXS          (Integer.parseInt(metricLine.get("xS").getS()));
+            metric.setYS          (Integer.parseInt(metricLine.get("yS").getS()));
+            metric.setAlgorithm   (metricLine.get("a").getS());
+            metric.setMap         (metricLine.get("i").getS());
+
+            return metric;
+        }
+        return null;
     }
     /**
      * Returns the table description
@@ -79,7 +108,7 @@ public class MetricStorageManager {
         return dynamoDB.putItem(putItemRequest);
     }
 
-    public PutItemResult addMetricObject(String tableName, long id, Metrics metric) {
+    public PutItemResult addMetricObject(String tableName, String id, Metrics metric) {
         // Add an item
         Map<String, AttributeValue> item = newMetric(id, metric);
         PutItemRequest putItemRequest = new PutItemRequest(tableName, item);
@@ -95,22 +124,22 @@ public class MetricStorageManager {
         return item;
     }
 
-    private Map<String, AttributeValue> newMetric(long id, Metrics metric) {
+    private Map<String, AttributeValue> newMetric(String id, Metrics metric) {
         Map<String, AttributeValue> item = new HashMap<>();
 
-        item.put("id", new AttributeValue(String.valueOf(id)));
-        item.put("bb", new AttributeValue(String.valueOf(metric.basicBlocks())));
+        item.put("id",  new AttributeValue(id));
+        item.put("bb",  new AttributeValue(String.valueOf(metric.basicBlocks())));
         item.put("bnt", new AttributeValue(String.valueOf(metric.getBranches())));
-        item.put("w", new AttributeValue(String.valueOf(metric.getWidth())));
-        item.put("h", new AttributeValue(String.valueOf(metric.getHeight())));
-        item.put("x0", new AttributeValue(String.valueOf(metric.getX0())));
-        item.put("y0", new AttributeValue(String.valueOf(metric.getY0())));
-        item.put("x1", new AttributeValue(String.valueOf(metric.getX1())));
-        item.put("y1", new AttributeValue(String.valueOf(metric.getY1())));
-        item.put("xS", new AttributeValue(String.valueOf(metric.getXS())));
-        item.put("yS", new AttributeValue(String.valueOf(metric.getYS())));
-        item.put("a", new AttributeValue(metric.getAlgorithm()));
-        item.put("m", new AttributeValue(metric.getMap()));
+        item.put("w",   new AttributeValue(String.valueOf(metric.getWidth())));
+        item.put("h",   new AttributeValue(String.valueOf(metric.getHeight())));
+        item.put("x0",  new AttributeValue(String.valueOf(metric.getX0())));
+        item.put("y0",  new AttributeValue(String.valueOf(metric.getY0())));
+        item.put("x1",  new AttributeValue(String.valueOf(metric.getX1())));
+        item.put("y1",  new AttributeValue(String.valueOf(metric.getY1())));
+        item.put("xS",  new AttributeValue(String.valueOf(metric.getXS())));
+        item.put("yS",  new AttributeValue(String.valueOf(metric.getYS())));
+        item.put("a",   new AttributeValue(metric.getAlgorithm()));
+        item.put("i",   new AttributeValue(metric.getMap()));
 
         return item;
     }

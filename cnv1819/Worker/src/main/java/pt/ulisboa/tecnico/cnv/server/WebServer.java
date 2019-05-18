@@ -51,8 +51,8 @@ public class WebServer {
 			try {
 				// Get the query.
 				final String query = t.getRequestURI().getQuery();
-
 				System.out.println("> Query:\t" + query);
+				
 
 				// Break it down into String[].
 				final String[] params = query.split("&");
@@ -134,7 +134,9 @@ public class WebServer {
 				os.close();
 
 				System.out.println("> Sent response to " + t.getRemoteAddress().toString());
-				HttpRequest.sendHttpRequest(MSS_ADDRESS + "/putmetric", Common.argumentsFromQuery(query, metrics));
+				System.out.println("composto " + "http://" + t.getRemoteAddress().getAddress().toString() + ":8002"  + "/putmetric");
+				System.out.println("args " + Common.argumentsFromQuery(query, metrics));
+				HttpRequest.sendHttpRequest("http:/" + t.getRemoteAddress().getAddress().toString() + ":8002"  + "/putmetric", Common.argumentsFromQuery(query, metrics));
 
 			} catch (IOException e) {
 				System.err.println("IOException! Returning thread");

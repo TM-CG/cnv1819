@@ -22,8 +22,8 @@ public class Common {
 
     public static Map<String, String> argumentsFromQuery(String query, Metrics metrics) {
         Map<String, String> arguments = argumentsFromQuery(query);
-        arguments.put("basicBlocks", String.valueOf(metrics.getBasicBlocks()));
-        arguments.put("branchesNotTaken", String.valueOf(metrics.getBranches_notTaken()));
+        arguments.put("bb", String.valueOf(metrics.getBasicBlocks()));
+        arguments.put("br", String.valueOf(metrics.getBranches_notTaken()));
 
         return arguments;
     }
@@ -36,6 +36,10 @@ public class Common {
                 Integer.parseInt(arguments.get("xS")), Integer.parseInt(arguments.get("yS")),
                 arguments.get("s"), arguments.get("i"));
 
+        if(arguments.containsKey("br") && arguments.containsKey("bb")){
+            metrics.setBranches(Long.parseLong(arguments.get("br")));
+            metrics.setBasicBlocks(Long.parseLong(arguments.get("bb")));
+        }
         return metrics;
     }
 }
