@@ -35,8 +35,9 @@ public class GetMetricsCloudWatch extends GenericTimeTask {
         GetMetricStatisticsResult result = cloudWatch.getMetricStatistics(request);
         List<Datapoint> data = result.getDatapoints();
 
-        loadBalancer.cpuUtilization.put(instance.getInstanceId(), data.get(0).getAverage());
-
+        if (data.size() > 0) {
+            loadBalancer.cpuUtilization.put(instance.getInstanceId(), data.get(0).getAverage());
+        }
     }
 
     @Override

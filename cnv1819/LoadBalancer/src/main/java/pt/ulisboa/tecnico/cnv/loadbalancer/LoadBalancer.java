@@ -14,7 +14,7 @@ import java.util.*;
 
 public class LoadBalancer {
 
-    private String MSS_IP = "35.156.23.222";
+    private String MSS_IP = "localhost";
     private String MSS_PORT = "8000";
 
     protected static int jobCounter  = 0;
@@ -31,8 +31,9 @@ public class LoadBalancer {
     public LoadBalancer(AmazonEC2 ec2, AmazonCloudWatch cloudWatch) {
         this.ec2 = ec2;
         this.cloudWatch = cloudWatch;
-        instanceManager = new InstanceManager(this.ec2);
-        instanceInfoMap = createInstanceMap();
+        this.instanceManager = new InstanceManager(this.ec2);
+        this.instanceInfoMap = createInstanceMap();
+        this.cpuUtilization = new HashMap<>();
         getMetricsCloudWatchTask = new GetMetricsCloudWatch(this, cloudWatch,30);
 
     }
@@ -42,7 +43,7 @@ public class LoadBalancer {
         HashMap<String, InstanceInfo> infoHashMap = new HashMap<>();
 
         for (Instance instance : instances) {
-           instanceInfoMap.put(instance.getInstanceId(), new InstanceInfo(instance));
+            infoHashMap.put(instance.getPublicIpAddress(), new InstanceInfo(instance));
         }
         return infoHashMap;
     }
@@ -68,7 +69,9 @@ public class LoadBalancer {
 
     public InstanceInfo whichWorker(String query) {
         HttpAnswer cost = requestMetricMss(Common.argumentsFromQuery(query));
-        return null;
+        List<String> workers = this.listWorkers();
+
+        return this.instanceInfoMap.get(workers.get(0));
     }
 
     public List<String> setInstanceForDelete() {

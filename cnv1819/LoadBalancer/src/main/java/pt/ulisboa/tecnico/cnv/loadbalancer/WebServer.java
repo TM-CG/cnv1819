@@ -81,9 +81,9 @@ public class WebServer {
                 final String query = t.getRequestURI().getQuery();
                 //decide the worker that should do the work
 
-                //InstanceInfo instanceInfo = loadBalancer.whichWorker(query);
-                String workerIp = "35.156.23.222:8000";
+                InstanceInfo instanceInfo = loadBalancer.whichWorker(query);
                 //int jobId = instanceInfo.addJob(new Job(instanceInfo.getInstance(), Job.State.NEW));
+                String workerIp = instanceInfo.getInstance().getPublicIpAddress();
                 System.out.println(">Job sent to :\t" + workerIp);
                 HttpAnswer response = HttpRequest.redirectURL("http://" + workerIp + ":8000/climb?", query);
                 //instanceInfo.removeJob(jobId);
@@ -128,34 +128,27 @@ public class WebServer {
         @Override
         public void handle(final HttpExchange t) {
             final String query = t.getRequestURI().getQuery();
-            if(query != null ){
-                Map<String, String> map = Common.argumentsFromQuery(query);
-                HttpAnswer answer = loadBalancer.requestMetricMss(map);
-                Metrics metrics = Metrics.parseFromURL(new String(answer.getResponse()));
-                System.out.println(metrics);
-                try{
-                    String response = new String(answer.getResponse());
-                    t.sendResponseHeaders(200, response.length());
-                    OutputStream os = t.getResponseBody();
-                    os.write(response.getBytes());
-                    os.close();
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else{
-                try{
-                    String response = "NOT OK";
-                    t.sendResponseHeaders(500, response.length());
-                    OutputStream os = t.getResponseBody();
-                    os.write(response.getBytes());
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
+            try {
+                List<String> workers = loadBalancer.listWorkers();
 
+                
+                String response = "List of active instances\n";
+                for (String worker : workers) {
+                    response += worker + "\n";
+                }  
+                
+                t.sendResponseHeaders(200, response.length());
+                System.out.println(response);
+
+                System.out.println(loadBalancer.instanceInfoMap);
+
+                OutputStream os = t.getResponseBody();
+                os.write(response.getBytes()); 
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

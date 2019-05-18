@@ -9,7 +9,7 @@ import java.util.List;
 public class InstanceManager {
 
     private static final String MSS_AMI_ID = "ami-1234";
-    private static final String WORKER_AMI_ID = "ami-123";
+    private static final String WORKER_AMI_ID = "ami-098ef58d8c6deb43a";
     private static final String INSTANCE_TYPE = "t2.micro";
     private static final String SECURITY_GROUP = "cnv-project";
     private static final String KEY_NAME = "cnv-project";
