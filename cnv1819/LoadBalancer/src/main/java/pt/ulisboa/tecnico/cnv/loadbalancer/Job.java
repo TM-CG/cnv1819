@@ -10,15 +10,32 @@ public class Job {
         SEEN
     }
 
-    private double percent;
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public Instance getInstance() {
+        return instance;
+    }
+
+    public void setInstance(Instance instance) {
+        this.instance = instance;
+    }
+
+    private double cost;
 
     private State state;
 
     Instance instance;
 
 
-    public Job(Instance instance, State state) {
+    public Job(Instance instance, State state, double cost) {
         this.instance = instance;
         this.state = state;
+        this.cost = cost;
     }
 }

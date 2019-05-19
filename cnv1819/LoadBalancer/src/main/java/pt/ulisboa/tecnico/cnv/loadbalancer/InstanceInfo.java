@@ -10,14 +10,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InstanceInfo {
 
-    private static final Object jobLocker = new Object();
-    private static int jobCounter = 0;
+    private final Object jobLocker = new Object();
+    private int jobCounter = 0;
 
     private long load;
 
     private Instance instance;
     private Date launchTime;
     private boolean setForDelete;
+    private double totalCost;
     private ConcurrentHashMap<Integer, Job> jobs;
 
     public InstanceInfo(Instance instance) {
@@ -43,16 +44,19 @@ public class InstanceInfo {
     public int addJob(Job job) {
         int number;
         synchronized (jobLocker) {
-            number = InstanceInfo.jobCounter++;
+            number = jobCounter++;
             jobs.put(number, job);
+            totalCost += job.getCost();
         }
         return number;
     }
 
     public void removeJob(int i) {
         synchronized (jobLocker) {
+            totalCost -= jobs.get(i).getCost();
             jobs.remove(i);
-            InstanceInfo.jobCounter = InstanceInfo.jobCounter--;
+            jobCounter = jobCounter--;
+
         }
     }
 

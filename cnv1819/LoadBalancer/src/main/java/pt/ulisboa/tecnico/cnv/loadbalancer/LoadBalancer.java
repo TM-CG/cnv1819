@@ -63,9 +63,11 @@ public class LoadBalancer {
     public double requestMetricMss(Map<String, String> arguments) {
         HttpAnswer answer = HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
         String metricString = new String(answer.getResponse());
+        System.out.println(metricString);
+
         Map<String, String> argumentsMap = Common.argumentsFromQuery(metricString);
         Metrics metric = Common.metricFromArguments(argumentsMap);
-        System.out.println("metric " + metric.toStringForCost());
+
         return metric.getCost();
     }
 
