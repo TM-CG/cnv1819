@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
 import pt.ulisboa.tecnico.cnv.common.Common;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
+import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 import java.util.*;
 import static pt.ulisboa.tecnico.cnv.common.StaticConsts.*;
@@ -59,8 +60,13 @@ public class LoadBalancer {
         return instancesIps;
     }
 
-    public HttpAnswer requestMetricMss(Map<String, String> arguments) {
-        return HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
+    public double requestMetricMss(Map<String, String> arguments) {
+        HttpAnswer answer = HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
+        String metricString = new String(answer.getResponse());
+        Map<String, String> argumentsMap = Common.argumentsFromQuery(metricString);
+        Metrics metric = Common.metricFromArguments(argumentsMap);
+        System.out.println("metric " + metric.toStringForCost());
+        return metric.getCost();
     }
 
     public Set<Map.Entry<String, InstanceInfo>> getInstanceSet() {
@@ -68,7 +74,7 @@ public class LoadBalancer {
     }
 
     public InstanceInfo whichWorker(String query) {
-        HttpAnswer cost = requestMetricMss(Common.argumentsFromQuery(query));
+        double cost = requestMetricMss(Common.argumentsFromQuery(query));
         List<String> workers = this.listWorkers();
 
         return this.instanceInfoMap.get(workers.get(0));

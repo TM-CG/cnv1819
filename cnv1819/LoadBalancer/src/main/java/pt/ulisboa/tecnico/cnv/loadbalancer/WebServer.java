@@ -137,12 +137,15 @@ public class WebServer {
                 for (String worker : workers) {
                     response += worker + "\n";
                 }  
-                
+
+                System.out.println("COST $: " + loadBalancer.requestMetricMss(Common.argumentsFromQuery(query)));
+
                 t.sendResponseHeaders(200, response.length());
                 System.out.println(response);
 
                 System.out.println(loadBalancer.instanceInfoMap);
 
+                
                 OutputStream os = t.getResponseBody();
                 os.write(response.getBytes()); 
                 os.close();

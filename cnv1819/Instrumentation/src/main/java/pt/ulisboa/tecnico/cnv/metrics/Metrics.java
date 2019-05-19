@@ -56,7 +56,7 @@ public class Metrics implements Serializable{
         y1 = 0;
         xS = 0;
         yS = 0;
-        cost = 0;
+        cost = 0.0;
     }
 
     public int getWidth() {
@@ -175,7 +175,7 @@ public class Metrics implements Serializable{
 
     @Override
     public String toString() {
-        return "w=" + this.width + "&h=" + this.height + "&x0=" + this.x0 + "&x1=" + this.x1 + "&y0=" + this.y1
+        return "w=" + this.width + "&h=" + this.height + "&x0=" + this.x0 + "&x1=" + this.x1 + "&y0=" + this.y0 + "&y1=" + this.y1
                 + "&xS=" + this.xS + "&yS=" + this.yS + "&s=" + this.search + "&i=" + this.map + "&bb=" + this.basicBlocks + "&bnt=" + this.branches_notTaken +  "&" ;
     }
 
@@ -184,7 +184,7 @@ public class Metrics implements Serializable{
     }
 
     public String toStringForCost() {
-        return "w=" + this.width + "&h=" + this.height + "&x0=" + this.x0 + "&x1=" + this.x1 + "&y0=" + this.y1
+        return "w=" + this.width + "&h=" + this.height + "&x0=" + this.x0 + "&x1=" + this.x1 + "&y0=" + this.y0 + "&y1=" + this.y1
         + "&xS=" + this.xS + "&yS=" + this.yS + "&s=" + this.search + "&i=" + this.map + "&bb=" + this.basicBlocks + "&bnt=" + this.branches_notTaken +  "&c=" + this.cost + 
         "&" ;
     }

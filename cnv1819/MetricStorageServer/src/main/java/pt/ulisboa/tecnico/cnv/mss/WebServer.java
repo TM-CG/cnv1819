@@ -62,6 +62,7 @@ public class WebServer {
 
                 Metrics metric = mss.getMetrics(query);
                 String response = metric.toStringForCost();
+                System.out.println("REQUEST METRIC Response: " + response);
                 t.sendResponseHeaders(200, response.length());
 
                 final OutputStream os = t.getResponseBody();

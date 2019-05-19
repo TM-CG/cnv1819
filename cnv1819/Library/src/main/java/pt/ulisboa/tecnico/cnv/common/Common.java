@@ -29,19 +29,28 @@ public class Common {
     }
 
     public static Metrics metricFromArguments(Map<String, String> arguments) {
+        System.out.println("Arguments: " + arguments);
         Metrics metrics = new Metrics();
+        System.out.println("Arguments 1: " + arguments);
+        try {
         metrics.insertArgs(Integer.parseInt(arguments.get("w")), Integer.parseInt(arguments.get("h")),
                 Integer.parseInt(arguments.get("x0")), Integer.parseInt(arguments.get("x1")),
                 Integer.parseInt(arguments.get("y0")), Integer.parseInt(arguments.get("y1")),
                 Integer.parseInt(arguments.get("xS")), Integer.parseInt(arguments.get("yS")),
                 arguments.get("s"), arguments.get("i"));
-
-        if(arguments.containsKey("br") && arguments.containsKey("bb")){
-            metrics.setBranches(Long.parseLong(arguments.get("br")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("Arguments 2: " + arguments);
+        if(arguments.containsKey("bnt") && arguments.containsKey("bb")){
+            metrics.setBranches(Long.parseLong(arguments.get("bnt")));
             metrics.setBasicBlocks(Long.parseLong(arguments.get("bb")));
         }
-        if(arguments.containsKey("c")) 
+        System.out.println("Arguments 3: " + arguments);
+        if(arguments.containsKey("c")) {
+            System.out.println("C: " + arguments.get("c"));
             metrics.setCost(Double.parseDouble(arguments.get("c")));
+        }
         return metrics;
     }
 }
