@@ -27,7 +27,7 @@ public class InstanceManager {
                     .withMinCount(numberOfInstances)
                     .withMaxCount(numberOfInstances)
                     .withKeyName(StaticConsts.KEY_NAME)
-                    .withSecurityGroups(SECURITY_GROUP);
+                    .withSecurityGroups(StaticConsts.SECURITY_GROUP);
 
             RunInstancesResult runInstancesResult = ec2.runInstances(runInstancesRequest);
             System.out.println(runInstancesResult);
