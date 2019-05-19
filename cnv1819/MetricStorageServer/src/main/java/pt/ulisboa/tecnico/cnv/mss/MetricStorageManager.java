@@ -65,11 +65,10 @@ public class MetricStorageManager {
         scanFilter.put("id", condition);
 
         ScanRequest scanRequest = new ScanRequest(TBL_NAME).withScanFilter(scanFilter);
-        ScanResult scanResult = dynamoDB.scan(scanRequest);
-        Map<String, AttributeValue> metricLine = scanResult.getItems().get(0);
-        
+        ScanResult scanResult = dynamoDB.scan(scanRequest);        
 
         if (scanResult.getItems().size() > 0) {
+            Map<String, AttributeValue> metricLine = scanResult.getItems().get(0);
             return Double.parseDouble(metricLine.get("c").getS());
         } else {
             try {
