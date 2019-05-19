@@ -5,11 +5,6 @@ import com.amazonaws.services.ec2.model.Instance;
 
 public class Job {
 
-    public enum State {
-        NEW,
-        SEEN
-    }
-
     public double getCost() {
         return cost;
     }
@@ -28,14 +23,12 @@ public class Job {
 
     private double cost;
 
-    private State state;
 
     Instance instance;
 
 
-    public Job(Instance instance, State state, double cost) {
+    public Job(Instance instance, double cost) {
         this.instance = instance;
-        this.state = state;
         this.cost = cost;
     }
 }

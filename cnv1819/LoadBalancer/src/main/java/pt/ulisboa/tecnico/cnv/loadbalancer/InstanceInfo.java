@@ -18,6 +18,15 @@ public class InstanceInfo {
     private Instance instance;
     private Date launchTime;
     private boolean setForDelete;
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
+
     private double totalCost;
     private ConcurrentHashMap<Integer, Job> jobs;
 

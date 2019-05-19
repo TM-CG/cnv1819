@@ -61,25 +61,32 @@ public class LoadBalancer {
     }
 
     public double requestMetricMss(Map<String, String> arguments) {
+        double result;
+
         HttpAnswer answer = HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
         String metricString = new String(answer.getResponse());
-        System.out.println(metricString);
 
-        Map<String, String> argumentsMap = Common.argumentsFromQuery(metricString);
-        Metrics metric = Common.metricFromArguments(argumentsMap);
+        if(metricString.equals("null")){
+            //TODO Calculate default cost
+            result = 123456;
+        }
+        else{
+            Map<String, String> argumentsMap = Common.argumentsFromQuery(metricString);
+            Metrics metric = Common.metricFromArguments(argumentsMap);
+            result = metric.getCost();
+        }
 
-        return metric.getCost();
+        return result;
     }
 
     public Set<Map.Entry<String, InstanceInfo>> getInstanceSet() {
         return instanceInfoMap.entrySet();
     }
 
-    public InstanceInfo whichWorker(String query) {
-        double cost = requestMetricMss(Common.argumentsFromQuery(query));
-        List<String> workers = this.listWorkers();
+    public InstanceInfo whichWorker() {
 
-        return this.instanceInfoMap.get(workers.get(0));
+        return getInstanceWithLeastCost();
+
     }
 
     public List<String> setInstanceForDelete() {
@@ -94,4 +101,15 @@ public class LoadBalancer {
 
     }
 
+    public InstanceInfo getInstanceWithLeastCost() {
+        double cost = 0;
+        InstanceInfo instance = null;
+        for(Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
+            if(entry.getValue().getTotalCost() < cost) {
+                cost = entry.getValue().getTotalCost();
+                instance = entry.getValue();
+            }
+        }
+        return instance;
+    }
 }
