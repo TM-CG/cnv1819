@@ -10,12 +10,12 @@ import pt.ulisboa.tecnico.cnv.common.Common;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
 
 import java.util.*;
+import static pt.ulisboa.tecnico.cnv.common.StaticConsts.*;
 
 
 public class LoadBalancer {
 
-    private String MSS_IP = "localhost";
-    private String MSS_PORT = "8000";
+
 
     protected static int jobCounter  = 0;
 

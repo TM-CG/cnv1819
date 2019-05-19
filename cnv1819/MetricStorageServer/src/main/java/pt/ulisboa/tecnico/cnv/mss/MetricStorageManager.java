@@ -72,7 +72,7 @@ public class MetricStorageManager {
             metricLine = scanResult.getItems().get(0);
 
             metric.setBasicBlocks (Long.parseLong(metricLine.get("bb").getS()));
-            metric.setBranches    (Long.parseLong(metricLine.get("bb").getS()));
+            metric.setBranches    (Long.parseLong(metricLine.get("bnt").getS()));
             metric.setWidth       (Integer.parseInt(metricLine.get("w").getS()));
             metric.setHeight      (Integer.parseInt(metricLine.get("h").getS()));
             metric.setX0          (Integer.parseInt(metricLine.get("x0").getS()));
@@ -83,7 +83,7 @@ public class MetricStorageManager {
             metric.setYS          (Integer.parseInt(metricLine.get("yS").getS()));
             metric.setAlgorithm   (metricLine.get("a").getS());
             metric.setMap         (metricLine.get("i").getS());
-
+            metric.setCost        (Double.parseDouble(metricLine.get("c").getS()));
             return metric;
         }
         return null;
@@ -139,8 +139,14 @@ public class MetricStorageManager {
         item.put("yS",  new AttributeValue(String.valueOf(metric.getYS())));
         item.put("a",   new AttributeValue(metric.getAlgorithm()));
         item.put("i",   new AttributeValue(metric.getMap()));
+        item.put("c",   new AttributeValue(String.valueOf(cost(metric.basicBlocks(), metric.getBranches()))));
+
 
         return item;
+    }
+
+    public double cost(long bb,long bt) {
+        return ((bb*bt)/(bb+bt))/1000;
     }
 
 }

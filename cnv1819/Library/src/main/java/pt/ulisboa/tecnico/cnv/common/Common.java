@@ -40,6 +40,8 @@ public class Common {
             metrics.setBranches(Long.parseLong(arguments.get("br")));
             metrics.setBasicBlocks(Long.parseLong(arguments.get("bb")));
         }
+        if(arguments.containsKey("c")) 
+            metrics.setCost(Double.parseDouble(arguments.get("c")));
         return metrics;
     }
 }

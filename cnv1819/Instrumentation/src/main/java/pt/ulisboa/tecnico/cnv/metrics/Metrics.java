@@ -43,6 +43,8 @@ public class Metrics implements Serializable{
     /** The map image */
     private String map;
 
+    private double cost;
+
     public Metrics(){
         basicBlocks = 0;
         branches_notTaken = 0;
@@ -54,6 +56,7 @@ public class Metrics implements Serializable{
         y1 = 0;
         xS = 0;
         yS = 0;
+        cost = 0;
     }
 
     public int getWidth() {
@@ -180,6 +183,12 @@ public class Metrics implements Serializable{
         return "" + this.width + this.height + this.x0 + this.x1 + this.y1 + this.xS + this.yS + this.search + this.map;
     }
 
+    public String toStringForCost() {
+        return "w=" + this.width + "&h=" + this.height + "&x0=" + this.x0 + "&x1=" + this.x1 + "&y0=" + this.y1
+        + "&xS=" + this.xS + "&yS=" + this.yS + "&s=" + this.search + "&i=" + this.map + "&bb=" + this.basicBlocks + "&bnt=" + this.branches_notTaken +  "&c=" + this.cost + 
+        "&" ;
+    }
+
     public void setWidth(int width) {
         this.width = width;
     }
@@ -217,5 +226,13 @@ public class Metrics implements Serializable{
 
     public void setMap(String map) {
         this.map = map;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 }
