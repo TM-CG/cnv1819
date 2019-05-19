@@ -3,16 +3,13 @@ package pt.ulisboa.tecnico.cnv.loadbalancer;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.*;
+import pt.ulisboa.tecnico.cnv.common.StaticConsts;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class InstanceManager {
 
-    private static final String MSS_AMI_ID = "ami-1234";
-    private static final String WORKER_AMI_ID = "ami-098ef58d8c6deb43a";
-    private static final String INSTANCE_TYPE = "t2.micro";
-    private static final String SECURITY_GROUP = "cnv-project";
-    private static final String KEY_NAME = "cnv-project";
 
     private final AmazonEC2 ec2;
 
@@ -25,11 +22,11 @@ public class InstanceManager {
         if( numberOfInstances > 0) {
             RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
 
-            runInstancesRequest.withImageId(WORKER_AMI_ID)
-                    .withInstanceType(INSTANCE_TYPE)
+            runInstancesRequest.withImageId(StaticConsts.WORKER_AMI)
+                    .withInstanceType(StaticConsts.INSTANCE_TYPE)
                     .withMinCount(numberOfInstances)
                     .withMaxCount(numberOfInstances)
-                    .withKeyName(KEY_NAME)
+                    .withKeyName(StaticConsts.KEY_NAME)
                     .withSecurityGroups(SECURITY_GROUP);
 
             RunInstancesResult runInstancesResult = ec2.runInstances(runInstancesRequest);
@@ -57,7 +54,7 @@ public class InstanceManager {
 
         if(instances != null){
             for (Instance instance : instances) {
-                if(!instance.getImageId().equals(WORKER_AMI_ID))
+                if(!instance.getImageId().equals(StaticConsts.WORKER_AMI))
                     continue;
                 workers.add(instance);
             }
@@ -69,7 +66,7 @@ public class InstanceManager {
         List<Instance> instances = getInstancesFromReservation();
 
         for (Instance instance : instances) {
-            if(instance.getImageId().equals(MSS_AMI_ID))
+            if(instance.getImageId().equals(StaticConsts.MSS_AMI))
                 return instance;
         }
         return null;

@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cnv.mss;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.document.ScanFilter;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
 import pt.ulisboa.tecnico.cnv.common.Common;
