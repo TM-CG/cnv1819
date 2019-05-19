@@ -9,6 +9,7 @@ import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
 import pt.ulisboa.tecnico.cnv.common.Common;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.AutoScaleVerifier;
+import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.TestTimer;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 import java.util.*;
@@ -29,6 +30,7 @@ public class LoadBalancer {
     private GetMetricsCloudWatch getMetricsCloudWatchTask;
 
     private AutoScaleVerifier autoScale;
+    private TestTimer testTimer;
 
     public LoadBalancer(AmazonEC2 ec2, AmazonCloudWatch cloudWatch) {
         this.ec2 = ec2;
@@ -37,6 +39,7 @@ public class LoadBalancer {
         this.instanceInfoMap = createInstanceMap();
         getMetricsCloudWatchTask = new GetMetricsCloudWatch(this, cloudWatch,30);
         this.autoScale = new AutoScaleVerifier(this, this.instanceManager, 60);
+        this.testTimer = new TestTimer(this, 10);
 
     }
 
@@ -110,7 +113,7 @@ public class LoadBalancer {
         double cost = -1;
         InstanceInfo instance = null;
         for(Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
-            if(entry.getValue().getTotalCost() < cost || cost == -1) {
+            if((entry.getValue().getTotalCost() < cost || cost == -1) && (entry.getValue().isToDelete() == false)) {
                 System.out.println("COST: " + entry.getValue().getTotalCost()  + " cost: " + cost);
                 cost = entry.getValue().getTotalCost();
                 instance = entry.getValue();

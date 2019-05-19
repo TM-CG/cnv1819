@@ -80,6 +80,10 @@ public class InstanceInfo {
         return jobs;
     }
 
+    public int getNumberOfJobs() {
+        return jobs.size();
+    }
+
     public Instance getInstance() {
         return instance;
     }
