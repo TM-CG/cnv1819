@@ -23,7 +23,7 @@ public class GetMetricsCloudWatch extends GenericTimeTask {
 
     private void getCloudWatchMetrics(InstanceInfo instance) {
 
-        long offsetInMilliseconds = 1000 * 90;
+        long offsetInMilliseconds = 1000 * 300;
         GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
                 .withStartTime(new Date(new Date().getTime() - offsetInMilliseconds))
                 .withPeriod(60)
@@ -36,14 +36,17 @@ public class GetMetricsCloudWatch extends GenericTimeTask {
         List<Datapoint> data = result.getDatapoints();
 
         if (data.size() > 0) {
-            loadBalancer.cpuUtilization.put(instance.getInstanceId(), data.get(0).getAverage());
+            instance.setCpuUtilization(data.get(0).getAverage());
+            //loadBalancer.cpuUtilization.put(instance.getInstance().getPublicIpAddress(), data.get(0).getAverage());
         }
     }
 
     @Override
     public void run() {
-        for (Map.Entry<String, InstanceInfo> entry : loadBalancer.getInstanceSet())
+        for (Map.Entry<String, InstanceInfo> entry : loadBalancer.getInstanceSet()) {
             getCloudWatchMetrics(entry.getValue());
 
+            System.out.println(entry.getValue().getCpuUtilization());
+        }
     }
 }

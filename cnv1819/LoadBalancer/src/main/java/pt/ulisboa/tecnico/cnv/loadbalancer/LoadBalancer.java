@@ -24,7 +24,6 @@ public class LoadBalancer {
     private AmazonCloudWatch cloudWatch;
     public InstanceManager instanceManager;
     public Map<String, InstanceInfo> instanceInfoMap;
-    public Map<String, Double> cpuUtilization;
 
     public ArrayList<InstanceInfo> toDelete = new ArrayList<>();
     private GetMetricsCloudWatch getMetricsCloudWatchTask;
@@ -34,7 +33,6 @@ public class LoadBalancer {
         this.cloudWatch = cloudWatch;
         this.instanceManager = new InstanceManager(this.ec2);
         this.instanceInfoMap = createInstanceMap();
-        this.cpuUtilization = new HashMap<>();
         getMetricsCloudWatchTask = new GetMetricsCloudWatch(this, cloudWatch,30);
 
     }

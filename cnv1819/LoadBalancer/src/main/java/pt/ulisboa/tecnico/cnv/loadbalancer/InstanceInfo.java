@@ -19,6 +19,8 @@ public class InstanceInfo {
     private Date launchTime;
     private boolean setForDelete;
 
+    private double cpuUtilization;
+
     public double getTotalCost() {
         return totalCost;
     }
@@ -76,5 +78,13 @@ public class InstanceInfo {
 
     public Instance getInstance() {
         return instance;
+    }
+
+    public double getCpuUtilization() {
+        return cpuUtilization;
+    }
+
+    public void setCpuUtilization(double cpuUtilization) {
+        this.cpuUtilization = cpuUtilization;
     }
 }

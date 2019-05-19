@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks;
 
 import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceManager;
 import pt.ulisboa.tecnico.cnv.loadbalancer.LoadBalancer;
+import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,8 @@ public class AutoScaleVerifier extends GenericTimeTask {
 
         int numberOfInstances = loadBalancer.getInstanceSet().size();
         Double sum = 0.0;
-        for(Map.Entry<String, Double> entry : loadBalancer.cpuUtilization.entrySet()){
-            sum+= entry.getValue();
+        for(Map.Entry<String, InstanceInfo> entry : loadBalancer.instanceInfoMap.entrySet()){
+            sum+= entry.getValue().getCpuUtilization();
         }
         Double average = sum / numberOfInstances;
 
