@@ -26,7 +26,7 @@ public class GetMetricsCloudWatch extends GenericTimeTask {
         long offsetInMilliseconds = 1000 * 300;
         GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
                 .withStartTime(new Date(new Date().getTime() - offsetInMilliseconds))
-                .withPeriod(60)
+                .withPeriod(300)
                 .withEndTime(new Date())
                 .withNamespace("AWS/EC2")
                 .withDimensions(new Dimension().withName("InstanceId").withValue(instance.getInstanceId()))

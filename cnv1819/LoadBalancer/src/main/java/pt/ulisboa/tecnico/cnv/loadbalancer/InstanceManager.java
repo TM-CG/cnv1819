@@ -17,7 +17,7 @@ public class InstanceManager {
         this.ec2 = ec2;
     }
 
-    public void launchInstance(int numberOfInstances){
+    public List<Instance> launchInstance(int numberOfInstances){
 
         if( numberOfInstances > 0) {
             RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
@@ -31,15 +31,18 @@ public class InstanceManager {
 
             RunInstancesResult runInstancesResult = ec2.runInstances(runInstancesRequest);
             System.out.println(runInstancesResult);
+            return runInstancesResult.getReservation().getInstances();
         }
-
+        return null;
     }
 
-    public List<InstanceStateChange> terminateInstances(List<String> instancesIds){
+    public List<InstanceStateChange> terminateInstances(InstanceInfo instance){
 
-        if(instancesIds.size() > 0) {
+        if(instance != null) {
+            List<String> instancesToTerminate = new ArrayList<>();
+            instancesToTerminate.add(instance.getInstance().getInstanceId());
             TerminateInstancesRequest terminateInstancesRequest = new TerminateInstancesRequest();
-            terminateInstancesRequest.setInstanceIds(instancesIds);
+            terminateInstancesRequest.setInstanceIds(instancesToTerminate);
 
             TerminateInstancesResult result = ec2.terminateInstances(terminateInstancesRequest);
             return result.getTerminatingInstances();

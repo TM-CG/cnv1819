@@ -8,6 +8,8 @@ public class StaticConsts {
     public static String MSS_IP = "18.196.246.143";
     public static String MSS_PORT = "8002";
     public static final String INSTANCE_TYPE = "t2.micro";
-    public static final String SECURITY_GROUP = "cnv-project";
-    public static final String KEY_NAME = "cnv-project";
+    public static final String SECURITY_GROUP = "CNV-Project";
+    public static final String KEY_NAME = "cnv-vitor";
+
+    public static final int MAX_INSTANCES = 4;
 }
