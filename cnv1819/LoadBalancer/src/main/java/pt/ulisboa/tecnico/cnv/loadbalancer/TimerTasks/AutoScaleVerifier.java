@@ -3,16 +3,20 @@ package pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks;
 import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceManager;
 import pt.ulisboa.tecnico.cnv.loadbalancer.LoadBalancer;
 import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceInfo;
+import static pt.ulisboa.tecnico.cnv.common.StaticConsts.MAX_INSTANCES;
 
 import java.util.List;
 import java.util.Map;
+
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.InstanceStateChange;
 
 public class AutoScaleVerifier extends GenericTimeTask {
 
     private InstanceManager instanceManager;
 
     public AutoScaleVerifier(LoadBalancer loadBalancer, InstanceManager instanceManager, int seconds) {
-        super(loadBalancer, seconds);
+        super(loadBalancer, seconds, 30);
         this.instanceManager = instanceManager;
 
     }
@@ -26,19 +30,41 @@ public class AutoScaleVerifier extends GenericTimeTask {
             sum+= entry.getValue().getCpuUtilization();
         }
         Double average = sum / numberOfInstances;
-
+        System.out.println("AutoScale check");
         if(average >= 60.0){
-            instanceManager.launchInstance(1);
-        }
-        else if(average <= 40) {
-            List<String> toDelete = loadBalancer.setInstanceForDelete();
-            while(loadBalancer.instanceInfoMap.get(toDelete.get(0)).getJobs().size() > 0){
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) { e.printStackTrace();
+            System.out.println("Average >= 60");
+            if (numberOfInstances < MAX_INSTANCES) {
+                List<Instance> instances = instanceManager.launchInstance(1);
+                for (Instance instance : instances) {
+                    loadBalancer.instanceInfoMap.put(instance.getPublicIpAddress(), new InstanceInfo(instance));
                 }
             }
-            instanceManager.terminateInstances(loadBalancer.setInstanceForDelete());
+        }
+        else if(average <= 40) {
+            
+            
+            if (loadBalancer.instanceInfoMap.size() > 1) {
+                InstanceInfo toDelete = loadBalancer.setInstanceForDelete();
+                if(toDelete != null ){
+                    while(toDelete.isToDelete() && toDelete.getJobs().size() > 0){
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) { e.printStackTrace(); }
+                    }
+
+                    int stateCode;
+                    List<InstanceStateChange> state;
+                    state = instanceManager.terminateInstances(loadBalancer.setInstanceForDelete());
+                    do {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) { e.printStackTrace(); }
+                        stateCode = state.get(0).getCurrentState().getCode();
+                    } while (stateCode != 32 && stateCode != 48);
+                    
+                    loadBalancer.instanceInfoMap.remove(toDelete.getInstance().getPublicIpAddress());
+                }
+            }
         }
 
     }

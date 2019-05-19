@@ -48,6 +48,10 @@ public class InstanceInfo {
         return launchTime;
     }
 
+    public boolean isToDelete() {
+        return this.setForDelete;
+    }
+
     public void setToDelete() {
         //guarantee that it does not receive extra jobs
         this.setForDelete = true;
