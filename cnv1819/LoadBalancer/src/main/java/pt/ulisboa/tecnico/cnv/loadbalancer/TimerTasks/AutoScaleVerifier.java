@@ -42,13 +42,24 @@ public class AutoScaleVerifier extends GenericTimeTask {
         else if(average <= 40) {
             
             InstanceInfo toDelete = loadBalancer.setInstanceForDelete();
-            if(toDelete != null ){
-                while(toDelete.isToDelete() && toDelete.getJobs().size() > 0){
-                    try {
+            if (loadBalancer.instanceInfoMap.size() > 1) {
+                if(toDelete != null ){
+                    while(toDelete.isToDelete() && toDelete.getJobs().size() > 0){
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) { e.printStackTrace(); }
+                    }
+
+                    int stateCode;
+                    List<InstanceStateChange> state;
+                    do {
+                        state = instanceManager.terminateInstances(loadBalancer.setInstanceForDelete());
+                        stateCode = state.get(0).getCurrentState().getCode();
                         Thread.sleep(1000);
-                    } catch (InterruptedException e) { e.printStackTrace(); }
+                    } while (stateCode != 32 && stateCode != 48);
+                    
+                    loadBalancer.instanceInfoMap.remove(toDelete.getInstance().getPublicIpAddress());
                 }
-                instanceManager.terminateInstances(loadBalancer.setInstanceForDelete());
             }
         }
 
