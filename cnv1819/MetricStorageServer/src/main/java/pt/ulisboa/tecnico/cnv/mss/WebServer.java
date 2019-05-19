@@ -60,8 +60,8 @@ public class WebServer {
             try {
                 final String query = t.getRequestURI().getQuery();
 
-                System.out.println(mss.getMetrics(query));
-                String response = "";               
+                Metrics metric = mss.getMetrics(query);
+                String response = metric.toString();
                 t.sendResponseHeaders(200, response.length());
 
                 final OutputStream os = t.getResponseBody();
