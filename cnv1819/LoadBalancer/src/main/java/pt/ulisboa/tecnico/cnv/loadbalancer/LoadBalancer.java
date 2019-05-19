@@ -8,11 +8,11 @@ import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
 import pt.ulisboa.tecnico.cnv.common.Common;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
-import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.AutoScaleVerifier;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 import java.util.*;
 import static pt.ulisboa.tecnico.cnv.common.StaticConsts.*;
+
 
 public class LoadBalancer {
 
@@ -28,15 +28,12 @@ public class LoadBalancer {
     public ArrayList<InstanceInfo> toDelete = new ArrayList<>();
     private GetMetricsCloudWatch getMetricsCloudWatchTask;
 
-    private AutoScaleVerifier autoScale;
-
     public LoadBalancer(AmazonEC2 ec2, AmazonCloudWatch cloudWatch) {
         this.ec2 = ec2;
         this.cloudWatch = cloudWatch;
         this.instanceManager = new InstanceManager(this.ec2);
         this.instanceInfoMap = createInstanceMap();
         getMetricsCloudWatchTask = new GetMetricsCloudWatch(this, cloudWatch,30);
-        this.autoScale = new AutoScaleVerifier(this, this.instanceManager, 60);
 
     }
 
@@ -68,18 +65,8 @@ public class LoadBalancer {
 
         HttpAnswer answer = HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
         String metricString = new String(answer.getResponse());
-
-        if(metricString.equals("null")){
-            //TODO Calculate default cost
-            result = 123456;
-        }
-        else{
-            Map<String, String> argumentsMap = Common.argumentsFromQuery(metricString);
-            Metrics metric = Common.metricFromArguments(argumentsMap);
-            result = metric.getCost();
-        }
-
-        return result;
+        
+        return Double.valueOf(metricString);
     }
 
     public Set<Map.Entry<String, InstanceInfo>> getInstanceSet() {
@@ -92,17 +79,16 @@ public class LoadBalancer {
 
     }
 
-    public InstanceInfo setInstanceForDelete() {
+    public List<String> setInstanceForDelete() {
         InstanceInfo toDelete = null;
-        double cost = -1;
         for (Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
-            if(toDelete == null || cost == -1 || entry.getValue().getTotalCost() < cost) {
+            if(toDelete == null || entry.getValue().getLaunchTime().before(toDelete.getLaunchTime()))
                 toDelete = entry.getValue();
-                cost = entry.getValue().getTotalCost();
-            }
         }
         toDelete.setToDelete();
-        return toDelete;
+        ArrayList<String> toDeleteList = new ArrayList<>();
+        toDeleteList.add(toDelete.getInstanceId());
+        return toDeleteList;
 
     }
 

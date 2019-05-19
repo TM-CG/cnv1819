@@ -61,8 +61,7 @@ public class WebServer {
                 final String query = t.getRequestURI().getQuery();
                 String response;
                 try{
-                    Metrics metric = mss.getMetrics(query);
-                    response = metric.toStringForCost();
+                    response = String.valueOf(mss.getMetrics(query));
                 }catch(NullPointerException e) {
                     response = "null";
                 }

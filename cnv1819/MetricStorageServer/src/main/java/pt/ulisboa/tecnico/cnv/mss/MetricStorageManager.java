@@ -48,7 +48,8 @@ public class MetricStorageManager {
 
     }
 
-    public Metrics getMetrics(String query) {
+    public double getMetrics(String query) {
+        /**duvida -> devo retornar exatamente que cena zés? */
         HashMap<String, Condition> scanFilter = new HashMap<>();
 
         Map<String, String> args = Common.argumentsFromQuery(query);
@@ -65,28 +66,43 @@ public class MetricStorageManager {
 
         ScanRequest scanRequest = new ScanRequest(TBL_NAME).withScanFilter(scanFilter);
         ScanResult scanResult = dynamoDB.scan(scanRequest);
-        Map<String, AttributeValue> metricLine;
-        Metrics metric = new Metrics();
+        Map<String, AttributeValue> metricLine = scanResult.getItems().get(0);
+        
 
         if (scanResult.getItems().size() > 0) {
-            metricLine = scanResult.getItems().get(0);
+            return Double.parseDouble(metricLine.get("c").getS());
+        } else {
+            try {
+                System.out.println("entrei");
+                double searchArea = (Double.parseDouble(args.get("x1")) - Double.parseDouble(args.get("x0"))) * (Double.parseDouble(args.get("y1")) - Double.parseDouble(args.get("y0")));
+                String searchMethod = new String(args.get("s"));
+                int initX = Integer.parseInt(args.get("xS"));
+                int initY = Integer.parseInt(args.get("yS"));
+                System.out.println("SearchArea: " + searchArea + " SearchMethod: " + searchMethod + " initX: " + initX + " initY: " + initY);
 
-            metric.setBasicBlocks (Long.parseLong(metricLine.get("bb").getS()));
-            metric.setBranches    (Long.parseLong(metricLine.get("bnt").getS()));
-            metric.setWidth       (Integer.parseInt(metricLine.get("w").getS()));
-            metric.setHeight      (Integer.parseInt(metricLine.get("h").getS()));
-            metric.setX0          (Integer.parseInt(metricLine.get("x0").getS()));
-            metric.setY0          (Integer.parseInt(metricLine.get("y0").getS()));
-            metric.setX1          (Integer.parseInt(metricLine.get("x1").getS()));
-            metric.setY1          (Integer.parseInt(metricLine.get("y1").getS()));
-            metric.setXS          (Integer.parseInt(metricLine.get("xS").getS()));
-            metric.setYS          (Integer.parseInt(metricLine.get("yS").getS()));
-            metric.setAlgorithm   (metricLine.get("a").getS());
-            metric.setMap         (metricLine.get("i").getS());
-            metric.setCost        (Double.parseDouble(metricLine.get("c").getS()));
-            return metric;
+                Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
+                expressionAttributeValues.put(":maxH",  new AttributeValue(String.valueOf(Integer.parseInt(args.get("h"))+20)));
+                expressionAttributeValues.put(":minH",  new AttributeValue(String.valueOf(Integer.parseInt(args.get("h"))-20)));
+
+                ScanRequest sRequest = new ScanRequest()
+                    .withTableName("metrics")
+                    .withFilterExpression("h < :maxH and h > :minH")
+                    .withProjectionExpression("area")
+                    .withExpressionAttributeValues(expressionAttributeValues);
+                
+                ScanResult result = dynamoDB.scan(sRequest);
+                System.out.println("elements matched in dynamodb: " + result.getCount());
+                for (Map<String, AttributeValue> item : result.getItems()) {
+                    System.out.println(item.get("area").getS());
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
+
+            
         }
-        return null;
+        return 800000;
     }
     /**
      * Returns the table description
@@ -140,7 +156,7 @@ public class MetricStorageManager {
         item.put("a",   new AttributeValue(metric.getAlgorithm()));
         item.put("i",   new AttributeValue(metric.getMap()));
         item.put("c",   new AttributeValue(String.valueOf(cost(metric.basicBlocks(), metric.getBranches()))));
-
+        item.put("area", new AttributeValue(String.valueOf((metric.getX1() - metric.getX0()) * (metric.getY1() - metric.getY0()))));
 
         return item;
     }
