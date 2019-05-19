@@ -23,7 +23,7 @@ public class Common {
     public static Map<String, String> argumentsFromQuery(String query, Metrics metrics) {
         Map<String, String> arguments = argumentsFromQuery(query);
         arguments.put("bb", String.valueOf(metrics.getBasicBlocks()));
-        arguments.put("br", String.valueOf(metrics.getBranches_notTaken()));
+        arguments.put("bnt", String.valueOf(metrics.getBranches_notTaken()));
 
         return arguments;
     }

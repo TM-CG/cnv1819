@@ -35,6 +35,7 @@ public class InstanceInfo {
         this.launchTime = instance.getLaunchTime();
         this.setForDelete = false;
         this.load = 0;
+        this.jobs = new ConcurrentHashMap<>();
     }
 
     public String getInstanceId() {

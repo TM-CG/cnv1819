@@ -145,8 +145,8 @@ public class MetricStorageManager {
         return item;
     }
 
-    public double cost(long bb,long bt) {
-        return ((bb*bt)/(bb+bt))/1000;
+    public double cost(long bb,long bnt) {
+        return ((bb*bnt)/(bb+bnt))/1000;
     }
 
 }

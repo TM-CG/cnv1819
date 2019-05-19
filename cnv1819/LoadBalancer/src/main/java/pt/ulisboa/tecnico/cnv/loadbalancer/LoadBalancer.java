@@ -41,9 +41,11 @@ public class LoadBalancer {
 
     private Map<String, InstanceInfo> createInstanceMap() {
         List<Instance> instances = instanceManager.listWorkerInstances();
+        System.out.println("instances size: " + instances.size());
         HashMap<String, InstanceInfo> infoHashMap = new HashMap<>();
 
         for (Instance instance : instances) {
+            System.out.println("LB ADD INSTANCE: " + instance.getPublicIpAddress());
             infoHashMap.put(instance.getPublicIpAddress(), new InstanceInfo(instance));
         }
         return infoHashMap;
@@ -90,7 +92,8 @@ public class LoadBalancer {
     }
 
     public List<String> setInstanceForDelete() {
-        InstanceInfo toDelete = null;for (Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
+        InstanceInfo toDelete = null;
+        for (Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
             if(toDelete == null || entry.getValue().getLaunchTime().before(toDelete.getLaunchTime()))
                 toDelete = entry.getValue();
         }
@@ -102,10 +105,11 @@ public class LoadBalancer {
     }
 
     public InstanceInfo getInstanceWithLeastCost() {
-        double cost = 0;
+        double cost = -1;
         InstanceInfo instance = null;
         for(Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
-            if(entry.getValue().getTotalCost() < cost) {
+            if(entry.getValue().getTotalCost() < cost || cost == -1) {
+                System.out.println("COST: " + entry.getValue().getTotalCost()  + " cost: " + cost);
                 cost = entry.getValue().getTotalCost();
                 instance = entry.getValue();
             }

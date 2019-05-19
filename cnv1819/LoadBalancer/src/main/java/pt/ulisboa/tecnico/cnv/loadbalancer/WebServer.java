@@ -83,7 +83,9 @@ public class WebServer {
 
                 double cost = loadBalancer.requestMetricMss(Common.argumentsFromQuery(query));
                 InstanceInfo instanceInfo = loadBalancer.whichWorker();
+                System.out.println("instanceinfo: " + instanceInfo);
                 int jobId = instanceInfo.addJob(new Job(instanceInfo.getInstance(), cost));
+                System.out.println(instanceInfo.getTotalCost());
 
                 String workerIp = instanceInfo.getInstance().getPublicIpAddress();
 
