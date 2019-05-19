@@ -59,12 +59,14 @@ public class WebServer {
 
             try {
                 final String query = t.getRequestURI().getQuery();
-
-                Metrics metric = mss.getMetrics(query);
-                String response = metric.toStringForCost();
-                if(response == null) {
+                String response;
+                try{
+                    Metrics metric = mss.getMetrics(query);
+                    response = metric.toStringForCost();
+                }catch(NullPointerException e) {
                     response = "null";
                 }
+                
                 System.out.println("REQUEST METRIC Response: " + response);
                 t.sendResponseHeaders(200, response.length());
 
