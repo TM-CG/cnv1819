@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.InstanceStateChange;
 
 public class AutoScaleVerifier extends GenericTimeTask {
 
@@ -41,8 +42,9 @@ public class AutoScaleVerifier extends GenericTimeTask {
         }
         else if(average <= 40) {
             
-            InstanceInfo toDelete = loadBalancer.setInstanceForDelete();
+            
             if (loadBalancer.instanceInfoMap.size() > 1) {
+                InstanceInfo toDelete = loadBalancer.setInstanceForDelete();
                 if(toDelete != null ){
                     while(toDelete.isToDelete() && toDelete.getJobs().size() > 0){
                         try {
@@ -52,10 +54,12 @@ public class AutoScaleVerifier extends GenericTimeTask {
 
                     int stateCode;
                     List<InstanceStateChange> state;
+                    state = instanceManager.terminateInstances(loadBalancer.setInstanceForDelete());
                     do {
-                        state = instanceManager.terminateInstances(loadBalancer.setInstanceForDelete());
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) { e.printStackTrace(); }
                         stateCode = state.get(0).getCurrentState().getCode();
-                        Thread.sleep(1000);
                     } while (stateCode != 32 && stateCode != 48);
                     
                     loadBalancer.instanceInfoMap.remove(toDelete.getInstance().getPublicIpAddress());
