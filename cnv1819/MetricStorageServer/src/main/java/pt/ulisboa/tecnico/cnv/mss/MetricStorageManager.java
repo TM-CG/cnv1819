@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class MetricStorageManager {
     public static final String TBL_NAME = "metrics";
-
+    private final double DEFAULT_COST = 800000;
     private AmazonDynamoDB dynamoDB;
 
     public MetricStorageManager(AmazonDynamoDB dynamoDB) {
@@ -69,39 +69,54 @@ public class MetricStorageManager {
 
         if (scanResult.getItems().size() > 0) {
             Map<String, AttributeValue> metricLine = scanResult.getItems().get(0);
-            return Double.parseDouble(metricLine.get("c").getS());
+            return Double.parseDouble(metricLine.get("c").getN());
         } else {
             try {
                 System.out.println("entrei");
                 double searchArea = (Double.parseDouble(args.get("x1")) - Double.parseDouble(args.get("x0"))) * (Double.parseDouble(args.get("y1")) - Double.parseDouble(args.get("y0")));
                 String searchMethod = new String(args.get("s"));
-                int initX = Integer.parseInt(args.get("xS"));
-                int initY = Integer.parseInt(args.get("yS"));
+                double initX = Double.parseDouble(args.get("xS"));
+                double initY = Double.parseDouble(args.get("yS"));
                 System.out.println("SearchArea: " + searchArea + " SearchMethod: " + searchMethod + " initX: " + initX + " initY: " + initY);
+                System.out.println("DEBUG maxInitialPointX " + String.valueOf(initX+10) + "maxSearchArea " + String.valueOf(searchArea+2000));
 
                 Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
-                expressionAttributeValues.put(":maxH",  new AttributeValue(String.valueOf(Integer.parseInt(args.get("h"))+20)));
-                expressionAttributeValues.put(":minH",  new AttributeValue(String.valueOf(Integer.parseInt(args.get("h"))-20)));
+                expressionAttributeValues.put(":maxSearchArea",  new AttributeValue().withN(String.valueOf(searchArea+2000)));
+                expressionAttributeValues.put(":minSearchArea",  new AttributeValue().withN(String.valueOf(searchArea-2000)));
+                expressionAttributeValues.put(":maxInitialPointX", new AttributeValue().withN(String.valueOf(initX+10)));
+                expressionAttributeValues.put(":minInitialPointX", new AttributeValue().withN(String.valueOf(initX-10)));
+                expressionAttributeValues.put(":maxInitialPointY", new AttributeValue().withN(String.valueOf(initY+10)));
+                expressionAttributeValues.put(":minInitialPointY", new AttributeValue().withN(String.valueOf(initY-10)));
+                expressionAttributeValues.put(":searchA", new AttributeValue(searchMethod));
+
+                //.withFilterExpression("area < :maxSearchArea and area > :minSearchArea and a = :searchA and initX < :maxInitialPointX and initX > :minInitialPointX and initY < :maxInitialPointY and initY > :minInitialPointY")
+
 
                 ScanRequest sRequest = new ScanRequest()
                     .withTableName("metrics")
-                    .withFilterExpression("h < :maxH and h > :minH")
-                    .withProjectionExpression("area")
+                    .withFilterExpression("area < :maxSearchArea and area > :minSearchArea and a = :searchA and xS < :maxInitialPointX and xS > :minInitialPointX and yS < :maxInitialPointY and yS > :minInitialPointY")
+                    .withProjectionExpression("c")
                     .withExpressionAttributeValues(expressionAttributeValues);
                 
                 ScanResult result = dynamoDB.scan(sRequest);
                 System.out.println("elements matched in dynamodb: " + result.getCount());
+                double estimatedCost = 0;
                 for (Map<String, AttributeValue> item : result.getItems()) {
-                    System.out.println(item.get("area").getS());
+                    estimatedCost+=Double.parseDouble(item.get("c").getN());
+                    System.out.println(item.get("c").getN());
+                }
+                if(estimatedCost==0) {
+                    return DEFAULT_COST;
+                } else {
+                    estimatedCost /= result.getCount();
+                    System.out.println("Final cost: "+estimatedCost);
+                    return estimatedCost;
                 }
             } catch(Exception e) {
                 e.printStackTrace();
+                return DEFAULT_COST; 
             }
-
-
-            
         }
-        return 800000;
     }
     /**
      * Returns the table description
@@ -142,20 +157,20 @@ public class MetricStorageManager {
         Map<String, AttributeValue> item = new HashMap<>();
 
         item.put("id",  new AttributeValue(id));
-        item.put("bb",  new AttributeValue(String.valueOf(metric.basicBlocks())));
-        item.put("bnt", new AttributeValue(String.valueOf(metric.getBranches())));
-        item.put("w",   new AttributeValue(String.valueOf(metric.getWidth())));
-        item.put("h",   new AttributeValue(String.valueOf(metric.getHeight())));
-        item.put("x0",  new AttributeValue(String.valueOf(metric.getX0())));
-        item.put("y0",  new AttributeValue(String.valueOf(metric.getY0())));
-        item.put("x1",  new AttributeValue(String.valueOf(metric.getX1())));
-        item.put("y1",  new AttributeValue(String.valueOf(metric.getY1())));
-        item.put("xS",  new AttributeValue(String.valueOf(metric.getXS())));
-        item.put("yS",  new AttributeValue(String.valueOf(metric.getYS())));
+        item.put("bb",  new AttributeValue().withN(String.valueOf(metric.basicBlocks())));
+        item.put("bnt", new AttributeValue().withN(String.valueOf(metric.getBranches())));
+        item.put("w",   new AttributeValue().withN(String.valueOf(metric.getWidth())));
+        item.put("h",   new AttributeValue().withN(String.valueOf(metric.getHeight())));
+        item.put("x0",  new AttributeValue().withN(String.valueOf(metric.getX0())));
+        item.put("y0",  new AttributeValue().withN(String.valueOf(metric.getY0())));
+        item.put("x1",  new AttributeValue().withN(String.valueOf(metric.getX1())));
+        item.put("y1",  new AttributeValue().withN(String.valueOf(metric.getY1())));
+        item.put("xS",  new AttributeValue().withN(String.valueOf(metric.getXS())));
+        item.put("yS",  new AttributeValue().withN(String.valueOf(metric.getYS())));
         item.put("a",   new AttributeValue(metric.getAlgorithm()));
         item.put("i",   new AttributeValue(metric.getMap()));
-        item.put("c",   new AttributeValue(String.valueOf(cost(metric.basicBlocks(), metric.getBranches()))));
-        item.put("area", new AttributeValue(String.valueOf((metric.getX1() - metric.getX0()) * (metric.getY1() - metric.getY0()))));
+        item.put("c",   new AttributeValue().withN(String.valueOf(cost(metric.basicBlocks(), metric.getBranches()))));
+        item.put("area", new AttributeValue().withN(String.valueOf((metric.getX1() - metric.getX0()) * (metric.getY1() - metric.getY0()))));
 
         return item;
     }

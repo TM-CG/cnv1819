@@ -63,7 +63,8 @@ public class WebServer {
                 try{
                     response = String.valueOf(mss.getMetrics(query));
                 }catch(NullPointerException e) {
-                    response = "null";
+                    response = "null\n" + e.getMessage();
+                    e.printStackTrace();
                 }
                 
                 System.out.println("REQUEST METRIC Response: " + response);
