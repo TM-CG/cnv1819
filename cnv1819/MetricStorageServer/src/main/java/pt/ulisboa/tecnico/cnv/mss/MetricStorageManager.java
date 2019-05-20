@@ -4,14 +4,13 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
 import pt.ulisboa.tecnico.cnv.common.Common;
+import pt.ulisboa.tecnico.cnv.common.StaticConsts;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MetricStorageManager {
-    public static final String TBL_NAME = "metrics";
-    private final double DEFAULT_COST = 800000;
     private AmazonDynamoDB dynamoDB;
 
     public MetricStorageManager(AmazonDynamoDB dynamoDB) {
@@ -19,8 +18,8 @@ public class MetricStorageManager {
         boolean f = true;
         while (f) {
             try {
-                createTable(TBL_NAME);
-                System.out.println("Table " + TBL_NAME + " created.");
+                createTable(StaticConsts.TBL_NAME);
+                System.out.println("Table " + StaticConsts.TBL_NAME + " created.");
                 f = false;
             } catch (InterruptedException e) {
                 System.out.println("Could not create the table. Will try again.");
@@ -49,7 +48,6 @@ public class MetricStorageManager {
     }
 
     public double getMetrics(String query) {
-        /**duvida -> devo retornar exatamente que cena zés? */
         HashMap<String, Condition> scanFilter = new HashMap<>();
 
         Map<String, String> args = Common.argumentsFromQuery(query);
@@ -64,7 +62,7 @@ public class MetricStorageManager {
                 .withAttributeValueList(new AttributeValue(id));
         scanFilter.put("id", condition);
 
-        ScanRequest scanRequest = new ScanRequest(TBL_NAME).withScanFilter(scanFilter);
+        ScanRequest scanRequest = new ScanRequest(StaticConsts.TBL_NAME).withScanFilter(scanFilter);
         ScanResult scanResult = dynamoDB.scan(scanRequest);        
 
         if (scanResult.getItems().size() > 0) {
@@ -74,11 +72,11 @@ public class MetricStorageManager {
             try {
                 System.out.println("entrei");
                 double searchArea = (Double.parseDouble(args.get("x1")) - Double.parseDouble(args.get("x0"))) * (Double.parseDouble(args.get("y1")) - Double.parseDouble(args.get("y0")));
-                String searchMethod = new String(args.get("s"));
+                String searchMethod = args.get("s");
                 double initX = Double.parseDouble(args.get("xS"));
                 double initY = Double.parseDouble(args.get("yS"));
                 System.out.println("SearchArea: " + searchArea + " SearchMethod: " + searchMethod + " initX: " + initX + " initY: " + initY);
-                System.out.println("DEBUG maxInitialPointX " + String.valueOf(initX+10) + "maxSearchArea " + String.valueOf(searchArea+2000));
+                System.out.println("DEBUG maxInitialPointX " + (initX + 10) + "maxSearchArea " +(searchArea+2000) );
 
                 Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
                 expressionAttributeValues.put(":maxSearchArea",  new AttributeValue().withN(String.valueOf(searchArea+2000)));
@@ -106,7 +104,7 @@ public class MetricStorageManager {
                     System.out.println(item.get("c").getN());
                 }
                 if(estimatedCost==0) {
-                    return DEFAULT_COST;
+                    return StaticConsts.DEFAULT_COST;
                 } else {
                     estimatedCost /= result.getCount();
                     System.out.println("Final cost: "+estimatedCost);
@@ -114,7 +112,7 @@ public class MetricStorageManager {
                 }
             } catch(Exception e) {
                 e.printStackTrace();
-                return DEFAULT_COST; 
+                return StaticConsts.DEFAULT_COST;
             }
         }
     }

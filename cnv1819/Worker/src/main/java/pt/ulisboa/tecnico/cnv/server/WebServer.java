@@ -27,8 +27,6 @@ import java.lang.Thread;
 
 public class WebServer {
 
-	private static String MSS_ADDRESS = "http://35.156.23.222:8002";
-
 	public static void main(final String[] args) throws Exception {
 
 
@@ -57,7 +55,6 @@ public class WebServer {
 				// Break it down into String[].
 				final String[] params = query.split("&");
 
-				//TODO ADD PARAM TO METRICS
 				Metrics metrics = MetricHolder.metricsMap.get(Thread.currentThread().getId());
 				if(metrics == null){
 					//creates a new Metrics object from the query

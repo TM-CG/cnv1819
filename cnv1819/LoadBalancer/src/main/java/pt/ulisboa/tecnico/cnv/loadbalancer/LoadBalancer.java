@@ -6,20 +6,15 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
-import pt.ulisboa.tecnico.cnv.common.Common;
+import pt.ulisboa.tecnico.cnv.common.StaticConsts;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.AutoScaleVerifier;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.TestTimer;
-import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 import java.util.*;
 import static pt.ulisboa.tecnico.cnv.common.StaticConsts.*;
 
 public class LoadBalancer {
-
-
-
-    protected static int jobCounter  = 0;
 
     private AmazonEC2 ec2;
     private AmazonCloudWatch cloudWatch;
@@ -98,10 +93,12 @@ public class LoadBalancer {
     }
 
     public InstanceInfo getInstanceWithLeastCost() {
+
         double cost = -1;
         InstanceInfo instance = null;
         for(Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
-            if((entry.getValue().getTotalCost() < cost || cost == -1) && (entry.getValue().isToDelete() == false)) {
+            if((entry.getValue().getTotalCost() < cost || cost == -1) && (entry.getValue().isToDelete() == false) &&
+            entry.getValue().getTotalCost() < StaticConsts.MAX_COST) {
                 System.out.println("COST: " + entry.getValue().getTotalCost()  + " cost: " + cost);
                 cost = entry.getValue().getTotalCost();
                 instance = entry.getValue();

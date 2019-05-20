@@ -47,7 +47,7 @@ public class HttpRequest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null; //TODO
+        return null;
     }
 
     private static HttpAnswer sendGet(HttpURLConnection con) {
