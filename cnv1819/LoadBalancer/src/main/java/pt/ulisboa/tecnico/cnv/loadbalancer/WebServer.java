@@ -81,7 +81,6 @@ public class WebServer {
                 //decide the worker that should do the work
 
                 double cost = loadBalancer.requestMetricMss(Common.argumentsFromQuery(query));
-                System.out.println("CUUUUSTO: " + cost);
             
                 HttpAnswer response = null;
                 String workerIp = null;
