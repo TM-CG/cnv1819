@@ -1,15 +1,14 @@
 package pt.ulisboa.tecnico.cnv.common;
 
 public class StaticConsts {
-//ami-098ef58d8c6deb43a
-    public static String WORKER_AMI = "ami-053c12267c18aac59";
+    public static String WORKER_AMI = "ami-019047a478e3fbd75";
 
     public static String MSS_AMI = "";
     public static String MSS_IP = "35.158.0.235";
     public static String MSS_PORT = "8002";
     public static final String INSTANCE_TYPE = "t2.micro";
-    public static final String SECURITY_GROUP = "cnv-project";
-    public static final String KEY_NAME = "cnv-project";
+    public static final String SECURITY_GROUP = "CNV-Project";
+    public static final String KEY_NAME = "cnv-vitor";
     public static final int MAX_INSTANCES = 4;
     public static final double MAX_COST = 1000000;
     public static final double DEFAULT_COST = 800000;

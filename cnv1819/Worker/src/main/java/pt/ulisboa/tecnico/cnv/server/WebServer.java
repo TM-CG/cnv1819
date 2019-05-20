@@ -134,6 +134,7 @@ public class WebServer {
 				System.out.println("composto " + "http://" + t.getRemoteAddress().getAddress().toString() + ":8002"  + "/putmetric");
 				System.out.println("args " + Common.argumentsFromQuery(query, metrics));
 				HttpRequest.sendHttpRequest("http:/" + t.getRemoteAddress().getAddress().toString() + ":8002"  + "/putmetric", Common.argumentsFromQuery(query, metrics));
+				MetricHolder.metricsMap.remove(Thread.currentThread().getId());
 
 			} catch (IOException e) {
 				System.err.println("IOException! Returning thread");

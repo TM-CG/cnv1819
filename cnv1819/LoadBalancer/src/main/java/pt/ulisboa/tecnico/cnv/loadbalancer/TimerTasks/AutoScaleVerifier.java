@@ -86,6 +86,10 @@ public class AutoScaleVerifier extends GenericTimeTask {
                 } 
               }
             }
+            else {
+                upCounter = 0;
+                downCounter = 0;
+            }
           
         }
     }
