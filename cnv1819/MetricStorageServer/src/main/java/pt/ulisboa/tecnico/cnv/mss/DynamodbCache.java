@@ -13,7 +13,7 @@ public class DynamodbCache {
 
     private DynamodbCache() {
         index = 0;
-        size = 2;
+        size = 20;
         entry = Collections.synchronizedList(new ArrayList<PairContainer>(size)); 
     }
 
@@ -29,8 +29,7 @@ public class DynamodbCache {
     }
 
     private void incrementIndex() {
-        index = index%(size);
-        index++; 
+        index = (index+1)%(size);
     }
 
     public boolean containsElement(String s) {
@@ -51,12 +50,26 @@ public class DynamodbCache {
     public void addElement(PairContainer p) {
 
         if(entry.indexOf(p)==-1) {
-            entry.add(this.index,p);
+            try {
+                entry.set(this.index, p);
+            }
+            catch (Exception e) {
+                entry.add(this.index,p);
+            }
+            System.out.println("Added element to cache on position " + this.index);
             incrementIndex();
-            System.out.println("Added element to cache!");
         }
         else {
             System.out.println("Element already in cache!");
         }
+    }
+
+    public void doPrint() {
+        System.out.println("==========");
+        for(PairContainer p : entry){
+            System.out.println("ID: " + p.getId() + " COST: " + p.getCost());
+        }
+        System.out.println("==========");
+
     }
 }

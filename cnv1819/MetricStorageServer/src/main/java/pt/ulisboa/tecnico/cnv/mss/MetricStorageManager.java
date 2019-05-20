@@ -52,6 +52,7 @@ public class MetricStorageManager {
 
     public double getMetrics(String query) {
         DynamodbCache cacheInstance = DynamodbCache.getInstance();
+        cacheInstance.doPrint();
         HashMap<String, Condition> scanFilter = new HashMap<>();
 
         Map<String, String> args = Common.argumentsFromQuery(query);
@@ -82,9 +83,10 @@ public class MetricStorageManager {
             try {
                 double searchArea = (Double.parseDouble(args.get("x1")) - Double.parseDouble(args.get("x0"))) * (Double.parseDouble(args.get("y1")) - Double.parseDouble(args.get("y0")));
                 String searchMethod = args.get("s");
+                String image = args.get("i");
                 double initX = Double.parseDouble(args.get("xS"));
                 double initY = Double.parseDouble(args.get("yS"));
-                System.out.println("SearchArea: " + searchArea + " SearchMethod: " + searchMethod + " initX: " + initX + " initY: " + initY);
+                System.out.println("SearchArea: " + searchArea + " SearchMethod: " + searchMethod + " initX: " + initX + " initY: " + initY + " image: " + image);
                 System.out.println("DEBUG maxInitialPointX " + (initX + 10) + "maxSearchArea " +(searchArea+2000) );
 
                 Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
@@ -95,13 +97,14 @@ public class MetricStorageManager {
                 expressionAttributeValues.put(":maxInitialPointY", new AttributeValue().withN(String.valueOf(initY+10)));
                 expressionAttributeValues.put(":minInitialPointY", new AttributeValue().withN(String.valueOf(initY-10)));
                 expressionAttributeValues.put(":searchA", new AttributeValue(searchMethod));
+                expressionAttributeValues.put(":img", new AttributeValue(image));
 
                 //.withFilterExpression("area < :maxSearchArea and area > :minSearchArea and a = :searchA and initX < :maxInitialPointX and initX > :minInitialPointX and initY < :maxInitialPointY and initY > :minInitialPointY")
 
 
                 ScanRequest sRequest = new ScanRequest()
                     .withTableName("metrics")
-                    .withFilterExpression("area < :maxSearchArea and area > :minSearchArea and a = :searchA and xS < :maxInitialPointX and xS > :minInitialPointX and yS < :maxInitialPointY and yS > :minInitialPointY")
+                    .withFilterExpression("area < :maxSearchArea and area > :minSearchArea and a = :searchA and xS < :maxInitialPointX and xS > :minInitialPointX and yS < :maxInitialPointY and yS > :minInitialPointY and i = :img")
                     .withProjectionExpression("c")
                     .withExpressionAttributeValues(expressionAttributeValues);
                 
