@@ -11,6 +11,7 @@ import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.AutoScaleVerifier;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.TestTimer;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.Terminator;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.Starter;
+import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.JobPercentageTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +33,7 @@ public class LoadBalancer {
     private TestTimer testTimer;
     private Terminator terminator;
     private Starter starter;
+    private JobPercentageTask jobProgress;
 
     public LoadBalancer(AmazonEC2 ec2) {
         this.ec2 = ec2;
@@ -41,6 +43,7 @@ public class LoadBalancer {
         this.starter = new Starter(this, this.instanceManager, 10);
         this.terminator = new Terminator(this, this.instanceManager, 25);
         this.testTimer = new TestTimer(this, 10);
+        this.jobProgress = new JobPercentageTask(this, 15);
 
     }
 
@@ -80,7 +83,6 @@ public class LoadBalancer {
     }
 
     public InstanceInfo whichWorker() {
-        getJobProgress();
         InstanceInfo instance = getInstanceWithLeastCost();
         while (instance == null) {
             instance = getInstanceWithLeastCost();
@@ -103,8 +105,10 @@ public class LoadBalancer {
             String[] lines = response.split("\n");
             for(String s : lines){
                 String[] params  = s.split(" ");
-                Job job = entry.getValue().getJobs().get(Integer.valueOf(params[0]));
-                job.setActualPercentage(Double.valueOf(params[1]));
+                if (params.length > 1) {
+                    Job job = entry.getValue().getJobs().get(Integer.valueOf(params[0]));
+                    job.setActualPercentage(Double.valueOf(params[1]));
+                }
             }
         }
     }

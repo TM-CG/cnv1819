@@ -4,7 +4,7 @@ import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceManager;
 import pt.ulisboa.tecnico.cnv.loadbalancer.LoadBalancer;
 import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceInfo;
 import static pt.ulisboa.tecnico.cnv.common.StaticConsts.MAX_INSTANCES;
-
+import java.lang.Math;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +38,7 @@ public class AutoScaleVerifier extends GenericTimeTask {
             instances = instanceManager.launchInstance(1);
             System.out.println("Houston: We have left off");
         }
-        else if (numberOfInstances > 0 && numberOfInstances < MAX_INSTANCES && loadBalancer.toStart.size() == 0){
+        else if (numberOfInstances > 0  && loadBalancer.toStart.size() == 0){
             for(Map.Entry<String, InstanceInfo> entry : loadBalancer.getInstanceSet()){
                 sum+= entry.getValue().getTotalCost();
             }
@@ -55,14 +55,16 @@ public class AutoScaleVerifier extends GenericTimeTask {
 
             if (average > 600000) {
                 downCounter = 0;
-                upCounter++;
+                int adder = (int) (average/600000);
+                upCounter += adder;
                 if(upCounter >= 3){
                     synchronized(loadBalancer.toDeleteLock) {
                         if(loadBalancer.toDelete.size() > 0){
                             loadBalancer.toDelete.get(0).setToDelete(false);
                         }
                         else{
-                            instances = instanceManager.launchInstance(1);
+                            if(numberOfInstances < MAX_INSTANCES)
+                                instances = instanceManager.launchInstance(1);
                           
                         }
                     }
