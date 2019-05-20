@@ -84,7 +84,7 @@ public class LoadBalancer {
 
     }
 
-    public InstanceInfo setInstanceForDelete() {
+    public void setInstanceForDelete() {
         InstanceInfo toDelete = null;
         double cost = -1;
         for (Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
@@ -94,8 +94,9 @@ public class LoadBalancer {
             }
         }
         toDelete.setToDelete(true);
-        return toDelete;
-
+        synchronized(toDeleteLock){
+            this.toDelete.add(toDelete);
+        }
     }
 
     public InstanceInfo getInstanceWithLeastCost() {

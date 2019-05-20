@@ -40,10 +40,8 @@ public class HttpRequest {
         }
         URL obj;
         try {
-            System.out.println(newUrl.toString());
             obj = new URL(newUrl.toString());
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            System.out.println(con.getContentLength());
 
             return sendGet(con);
         } catch (IOException e) {

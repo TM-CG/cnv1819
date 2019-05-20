@@ -31,21 +31,6 @@ public class InstanceManager {
 
             RunInstancesResult runInstancesResult = ec2.runInstances(runInstancesRequest);
 
-            String id = runInstancesResult.getReservation().getInstances().get(0).getInstanceId();
-            DescribeInstancesRequest describeInstanceRequest = new DescribeInstancesRequest().withInstanceIds(id);
-            DescribeInstancesResult describeInstanceResult = ec2.describeInstances(describeInstanceRequest);
-            InstanceState state;
-
-            do {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                state = describeInstanceResult.getReservations().get(0).getInstances().get(0).getState();
-            } while (state.getCode() != 16);
-            
-            System.out.println(runInstancesResult);
             return runInstancesResult.getReservation().getInstances();
         }
         return null;

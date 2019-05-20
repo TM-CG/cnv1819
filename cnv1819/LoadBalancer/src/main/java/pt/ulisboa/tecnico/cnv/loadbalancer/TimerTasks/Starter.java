@@ -30,8 +30,6 @@ public class Starter extends GenericTimeTask {
         List<Instance> instances = instanceManager.listWorkerInstances();
         List<InstanceInfo> tmpInstances = new ArrayList<>();
 
-        System.out.println("instances size: " + instances.size());
-
         for (Instance instance : instances) {
             if (!loadBalancer.instanceInfoMap.containsKey(instance.getPublicIpAddress()) && (!loadBalancer.toStart.containsKey(instance.getPublicIpAddress()))) {
                 System.out.println("STARTER ADD INSTANCE: " + instance.getPublicIpAddress());
@@ -40,13 +38,10 @@ public class Starter extends GenericTimeTask {
         }
         for (Map.Entry<String, InstanceInfo> entry : loadBalancer.toStart.entrySet()){
             HttpAnswer answer = HttpRequest.sendGetPing("http://" + entry.getKey() + ":8000/ping");
-            //System.out.println("http://" + entry.getKey() + ":8000/ping");
 
 
             if (answer != null) {
                 String response = new String(answer.getResponse());
-                System.out.println("Response STARTER: " + response);
-
                 if(response.equals("Pong!")){
                     tmpInstances.add(entry.getValue());
                     
