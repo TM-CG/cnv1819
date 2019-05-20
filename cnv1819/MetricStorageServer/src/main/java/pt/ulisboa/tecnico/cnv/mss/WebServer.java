@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.Executors;
+
+import pt.ulisboa.tecnico.cnv.common.StaticConsts;
 import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 
 public class WebServer {
@@ -89,7 +91,7 @@ public class WebServer {
 
                 Map<String, String> arguments = Common.argumentsFromQuery(query);
                 Metrics metric  = Common.metricFromArguments(arguments);
-                mss.addMetricObject(MetricStorageManager.TBL_NAME, metric.toStringForId(), metric);
+                mss.addMetricObject(StaticConsts.TBL_NAME, metric.toStringForId(), metric);
 
                 String response = "METRIC INSERTED IN DYNAMODB";
                 t.sendResponseHeaders(200, response.length());
