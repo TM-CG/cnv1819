@@ -12,9 +12,12 @@ import java.util.Map;
 
 public class MetricStorageManager {
     private AmazonDynamoDB dynamoDB;
+    DynamodbCache cacheInstance;
+
 
     public MetricStorageManager(AmazonDynamoDB dynamoDB) {
         this.dynamoDB = dynamoDB;
+        this.cacheInstance = DynamodbCache.getInstance();
         boolean f = true;
         while (f) {
             try {
@@ -48,6 +51,8 @@ public class MetricStorageManager {
     }
 
     public double getMetrics(String query) {
+        DynamodbCache cacheInstance = DynamodbCache.getInstance();
+        cacheInstance.doPrint();
         HashMap<String, Condition> scanFilter = new HashMap<>();
 
         Map<String, String> args = Common.argumentsFromQuery(query);
@@ -57,6 +62,8 @@ public class MetricStorageManager {
 
         System.out.println("ID " + id);
 
+        
+
         Condition condition = new Condition()
                 .withComparisonOperator(ComparisonOperator.EQ.toString())
                 .withAttributeValueList(new AttributeValue(id));
@@ -65,17 +72,21 @@ public class MetricStorageManager {
         ScanRequest scanRequest = new ScanRequest(StaticConsts.TBL_NAME).withScanFilter(scanFilter);
         ScanResult scanResult = dynamoDB.scan(scanRequest);        
 
-        if (scanResult.getItems().size() > 0) {
+        if(cacheInstance.containsElement(id)) {
+            System.out.println("Cache hit!");
+            return cacheInstance.getPair(id).getCost();
+        }
+        else if (scanResult.getItems().size() > 0) {
             Map<String, AttributeValue> metricLine = scanResult.getItems().get(0);
             return Double.parseDouble(metricLine.get("c").getN());
         } else {
             try {
-                System.out.println("entrei");
                 double searchArea = (Double.parseDouble(args.get("x1")) - Double.parseDouble(args.get("x0"))) * (Double.parseDouble(args.get("y1")) - Double.parseDouble(args.get("y0")));
                 String searchMethod = args.get("s");
+                String image = args.get("i");
                 double initX = Double.parseDouble(args.get("xS"));
                 double initY = Double.parseDouble(args.get("yS"));
-                System.out.println("SearchArea: " + searchArea + " SearchMethod: " + searchMethod + " initX: " + initX + " initY: " + initY);
+                System.out.println("SearchArea: " + searchArea + " SearchMethod: " + searchMethod + " initX: " + initX + " initY: " + initY + " image: " + image);
                 System.out.println("DEBUG maxInitialPointX " + (initX + 10) + "maxSearchArea " +(searchArea+2000) );
 
                 Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
@@ -86,13 +97,14 @@ public class MetricStorageManager {
                 expressionAttributeValues.put(":maxInitialPointY", new AttributeValue().withN(String.valueOf(initY+10)));
                 expressionAttributeValues.put(":minInitialPointY", new AttributeValue().withN(String.valueOf(initY-10)));
                 expressionAttributeValues.put(":searchA", new AttributeValue(searchMethod));
+                expressionAttributeValues.put(":img", new AttributeValue(image));
 
                 //.withFilterExpression("area < :maxSearchArea and area > :minSearchArea and a = :searchA and initX < :maxInitialPointX and initX > :minInitialPointX and initY < :maxInitialPointY and initY > :minInitialPointY")
 
 
                 ScanRequest sRequest = new ScanRequest()
                     .withTableName("metrics")
-                    .withFilterExpression("area < :maxSearchArea and area > :minSearchArea and a = :searchA and xS < :maxInitialPointX and xS > :minInitialPointX and yS < :maxInitialPointY and yS > :minInitialPointY")
+                    .withFilterExpression("area < :maxSearchArea and area > :minSearchArea and a = :searchA and xS < :maxInitialPointX and xS > :minInitialPointX and yS < :maxInitialPointY and yS > :minInitialPointY and i = :img")
                     .withProjectionExpression("c")
                     .withExpressionAttributeValues(expressionAttributeValues);
                 
@@ -152,8 +164,10 @@ public class MetricStorageManager {
     }
 
     private Map<String, AttributeValue> newMetric(String id, Metrics metric) {
+        System.out.println("entrei");
         Map<String, AttributeValue> item = new HashMap<>();
-
+        double cost = cost(metric.basicBlocks(), metric.getBranches());
+        System.out.println("DEBUG: "+cost);
         item.put("id",  new AttributeValue(id));
         item.put("bb",  new AttributeValue().withN(String.valueOf(metric.basicBlocks())));
         item.put("bnt", new AttributeValue().withN(String.valueOf(metric.getBranches())));
@@ -167,8 +181,10 @@ public class MetricStorageManager {
         item.put("yS",  new AttributeValue().withN(String.valueOf(metric.getYS())));
         item.put("a",   new AttributeValue(metric.getAlgorithm()));
         item.put("i",   new AttributeValue(metric.getMap()));
-        item.put("c",   new AttributeValue().withN(String.valueOf(cost(metric.basicBlocks(), metric.getBranches()))));
+        item.put("c",   new AttributeValue().withN(String.valueOf(cost)));
         item.put("area", new AttributeValue().withN(String.valueOf((metric.getX1() - metric.getX0()) * (metric.getY1() - metric.getY0()))));
+
+        cacheInstance.addElement(new PairContainer(id, cost));
 
         return item;
     }
