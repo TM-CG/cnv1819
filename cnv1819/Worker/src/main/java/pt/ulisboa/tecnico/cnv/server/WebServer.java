@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cnv.server;
 
 import java.awt.image.BufferedImage;
+import java.util.Map;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class WebServer {
 
 		server.createContext("/climb", new MyHandler());
 		server.createContext("/ping", new PingHandler());
+		server.createContext("/progress", new ProgressHandler());
 
 		// be aware! infinite pool of threads!
 		server.setExecutor(Executors.newCachedThreadPool());
@@ -55,19 +57,17 @@ public class WebServer {
 				// Break it down into String[].
 				final String[] params = query.split("&");
 
-				Metrics metrics = MetricHolder.metricsMap.get(Thread.currentThread().getId());
-				if(metrics == null){
-					//creates a new Metrics object from the query
-					metrics = Metrics.parseFromURL(query);
-					MetricHolder.metricsMap.put(Thread.currentThread().getId(), metrics);
-				}
-
+				Metrics metrics = Metrics.parseFromURL(query);
+				MetricHolder.metricsMap.put(Thread.currentThread().getId(), metrics);
+				
 				// Store as if it was a direct call to SolverMain.
 				final ArrayList<String> newArgs = new ArrayList<>();
 				for (final String p : params) {
 					final String[] splitParam = p.split("=");
-					newArgs.add("-" + splitParam[0]);
-					newArgs.add(splitParam[1]);
+					if(!splitParam[0].equals("c") && !splitParam[0].equals("id")){
+						newArgs.add("-" + splitParam[0]);
+						newArgs.add(splitParam[1]);
+					}
 				}
 
 				newArgs.add("-d");
@@ -155,5 +155,37 @@ public class WebServer {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private static class ProgressHandler implements HttpHandler {
+		@Override
+		public void handle(HttpExchange t) {
+			try {
+				final String query = t.getRequestURI().getQuery();
+
+				StringBuilder creator = new StringBuilder();
+				for (Map.Entry<Long, Metrics> entry : MetricHolder.metricsMap.entrySet()) {
+					long branches = entry.getValue().getBranches();
+					long basicBlocks = entry.getValue().getBasicBlocks();
+					double actualCost = (((basicBlocks * branches)/(branches+basicBlocks))/1000);
+					double progress = (actualCost / entry.getValue().getCost()) * 100;
+					creator.append(entry.getValue().getId());
+					creator.append(" ");
+					creator.append(String.format("%.2f", progress));
+					creator.append("\n");
+				}
+
+				String response = creator.toString();
+
+				t.sendResponseHeaders(200, response.length());
+				OutputStream os = t.getResponseBody();
+				os.write(response.getBytes());
+				os.close();
+
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	
 	}
 }

@@ -8,6 +8,8 @@ public class Metrics implements Serializable{
 
     static final long serialVersionUID = 3;
 
+    private int id;
+
     /** The number of basic blocks */
     private long basicBlocks;
     /** The number of branches not taken */
@@ -135,6 +137,14 @@ public class Metrics implements Serializable{
         this.basicBlocks = basicBlocks;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
     public void insertArgs(int width, int height, int x0, int x1, int y0, int y1, int xS, int yS, String search, String name){
         this.width = width;
         this.height = height;
@@ -182,6 +192,8 @@ public class Metrics implements Serializable{
             case "yS": this.yS     = Integer.parseInt(value); break;
             case "s" : this.search = value; break;
             case "i" : this.map    = value; break;
+            case "c" : this.cost   = Double.parseDouble(value); break;
+            case "id": this.id     = Integer.parseInt(value); break;
         }
     }
 

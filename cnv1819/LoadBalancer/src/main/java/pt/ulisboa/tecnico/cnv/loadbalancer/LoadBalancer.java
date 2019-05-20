@@ -93,6 +93,20 @@ public class LoadBalancer {
 
     }
 
+    public void getJobProgress() {
+
+        for (Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
+            HttpAnswer answer = HttpRequest.sendGetPing("http://" + entry.getValue().getInstance().getPublicIpAddress() + ":8000/progress");
+            String response = new String(answer.getResponse());
+            String[] lines = response.split("\n");
+            for(String s : lines){
+                String[] params  = s.split(" ");
+                Job job = entry.getValue().getJobs().get(Integer.valueOf(params[0]));
+                job.setActualPercentage(Double.valueOf(params[1]));
+            }
+        }
+    }
+
     public void setInstanceForDelete() {
         InstanceInfo toDelete = null;
         double cost = -1;

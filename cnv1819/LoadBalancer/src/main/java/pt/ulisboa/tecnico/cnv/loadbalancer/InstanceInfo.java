@@ -71,8 +71,6 @@ public class InstanceInfo {
         synchronized (jobLocker) {
             totalCost -= jobs.get(i).getCost();
             jobs.remove(i);
-            jobCounter = jobCounter--;
-
         }
     }
 

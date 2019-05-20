@@ -1,8 +1,8 @@
 package pt.ulisboa.tecnico.cnv.common;
 
 public class StaticConsts {
-
-    public static String WORKER_AMI = "ami-098ef58d8c6deb43a";
+//ami-098ef58d8c6deb43a
+    public static String WORKER_AMI = "ami-053c12267c18aac59";
 
     public static String MSS_AMI = "";
     public static String MSS_IP = "35.158.0.235";

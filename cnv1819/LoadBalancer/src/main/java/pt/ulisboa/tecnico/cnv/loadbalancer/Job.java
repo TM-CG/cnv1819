@@ -23,12 +23,31 @@ public class Job {
 
     private double cost;
 
-
+    private double actualPercentage;
+    
     Instance instance;
 
+    private int id;
 
     public Job(Instance instance, double cost) {
         this.instance = instance;
         this.cost = cost;
     }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public double getActualPercentage() {
+        return this.actualPercentage;
+    }
+
+    public void setActualPercentage(double percentage) {
+        this.actualPercentage = percentage;
+    }
+
 }

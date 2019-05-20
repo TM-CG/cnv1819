@@ -76,13 +76,20 @@ public class WebServer {
         public void handle(final HttpExchange t) {
             try {
 
-                final String query = t.getRequestURI().getQuery();
+                String query = t.getRequestURI().getQuery();
                 //decide the worker that should do the work
 
                 double cost = loadBalancer.requestMetricMss(Common.argumentsFromQuery(query));
                 InstanceInfo instanceInfo = loadBalancer.whichWorker();
                 System.out.println("instanceinfo: " + instanceInfo);
-                int jobId = instanceInfo.addJob(new Job(instanceInfo.getInstance(), cost));
+
+                Job job = new Job(instanceInfo.getInstance(), cost);
+                int jobId = instanceInfo.addJob(job);
+                
+                job.setId(jobId);
+
+                query += "&c=" + cost + "&id=" + jobId;
+
                 System.out.println(instanceInfo.getTotalCost());
 
                 String workerIp = instanceInfo.getInstance().getPublicIpAddress();
