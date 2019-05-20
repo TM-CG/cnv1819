@@ -39,7 +39,6 @@ public class AutoScaleVerifier extends GenericTimeTask {
             System.out.println("Houston: We have left off");
         }
         else if (numberOfInstances > 0 && numberOfInstances < MAX_INSTANCES && loadBalancer.toStart.size() == 0){
-            System.out.println("More than 0 instances");
             for(Map.Entry<String, InstanceInfo> entry : loadBalancer.getInstanceSet()){
                 sum+= entry.getValue().getTotalCost();
             }
@@ -52,25 +51,21 @@ public class AutoScaleVerifier extends GenericTimeTask {
                 average = sum;
             }
 
-            System.out.println("average: " + average + "upcounter: " + upCounter + "downCounter: " + downCounter);
+            System.out.println("Average: " + average + "\nUpCounter: " + upCounter + "\nDownCounter: " + downCounter);
 
             if (average > 600000) {
                 downCounter = 0;
                 upCounter++;
                 if(upCounter >= 3){
-                    System.out.println("Quero o lock");
                     synchronized(loadBalancer.toDeleteLock) {
-                        System.out.println("tenho o lock");
                         if(loadBalancer.toDelete.size() > 0){
                             loadBalancer.toDelete.get(0).setToDelete(false);
                         }
                         else{
                             instances = instanceManager.launchInstance(1);
-                            System.out.println("Instances: " + instances.size());
                           
                         }
                     }
-                    System.out.println("Larguei o lock");
                     upCounter = 0;
                 }
                

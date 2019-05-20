@@ -80,22 +80,48 @@ public class WebServer {
                 //decide the worker that should do the work
 
                 double cost = loadBalancer.requestMetricMss(Common.argumentsFromQuery(query));
-                InstanceInfo instanceInfo = loadBalancer.whichWorker();
-                System.out.println("instanceinfo: " + instanceInfo);
+            
+                HttpAnswer response = null;
+                String workerIp = null;
+                InstanceInfo instanceInfo = null;
+                int jobId = -1;
 
-                Job job = new Job(instanceInfo.getInstance(), cost);
-                int jobId = instanceInfo.addJob(job);
+                while (response == null ){
+                    try{
+                        String queryForWorker = query;
+                        instanceInfo = loadBalancer.whichWorker();
+                        System.out.println("instanceinfo: " + instanceInfo);
+                       
+                        Job job = new Job(instanceInfo.getInstance(), cost);
+                        jobId = instanceInfo.addJob(job);
+                        job.setId(jobId);
+
+                        queryForWorker += "&c=" + cost + "&id=" + jobId;
+                        System.out.println(instanceInfo.getTotalCost());
+                        
+                        workerIp = instanceInfo.getInstance().getPublicIpAddress();
+
+                        System.out.println(">Job sent to :\t" + workerIp);
+                        response = HttpRequest.redirectURL("http://" + workerIp + ":8000/climb?", queryForWorker);
+                    } catch(Exception e) {
+                        System.out.printf("Worker at %s probably crashed!", workerIp);
+                        loadBalancer.instanceInfoMap.remove(workerIp);
+
+                        //if webserver crahsed and the instance is running
+                        if (instanceInfo.getInstance().getState().getCode() == 16) {
+                            synchronized(loadBalancer.toDeleteLock) {
+                                instanceInfo.setToDelete(true);
+                                List<InstanceStateChange> stateChange;
+                                do {
+                                   stateChange = loadBalancer.instanceManager.terminateInstances(instanceInfo);
+                                } while (stateChange == null);
+                                loadBalancer.instanceInfoMap.remove(instanceInfo.getInstance().getPublicIpAddress());
+                            }
+                        }
+                        
+                    }
+                }
                 
-                job.setId(jobId);
-
-                query += "&c=" + cost + "&id=" + jobId;
-
-                System.out.println(instanceInfo.getTotalCost());
-
-                String workerIp = instanceInfo.getInstance().getPublicIpAddress();
-
-                System.out.println(">Job sent to :\t" + workerIp);
-                HttpAnswer response = HttpRequest.redirectURL("http://" + workerIp + ":8000/climb?", query);
                 instanceInfo.removeJob(jobId);
 
                 // Send response to browser.

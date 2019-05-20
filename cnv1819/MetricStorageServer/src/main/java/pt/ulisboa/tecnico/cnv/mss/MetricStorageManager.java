@@ -193,4 +193,19 @@ public class MetricStorageManager {
         return ((bb*bnt)/(bb+bnt))/1000;
     }
 
+}        item.put("yS",  new AttributeValue().withN(String.valueOf(metric.getYS())));
+        item.put("a",   new AttributeValue(metric.getAlgorithm()));
+        item.put("i",   new AttributeValue(metric.getMap()));
+        item.put("c",   new AttributeValue().withN(String.valueOf(cost)));
+        item.put("area", new AttributeValue().withN(String.valueOf((metric.getX1() - metric.getX0()) * (metric.getY1() - metric.getY0()))));
+
+        cacheInstance.addElement(new PairContainer(id, cost));
+
+        return item;
+    }
+
+    public double cost(long bb,long bnt) {
+        return ((bb*bnt)/(bb+bnt))/1000;
+    }
+
 }

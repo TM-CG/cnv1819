@@ -10,18 +10,12 @@ public class HttpRequest {
 
     private static final String USER_AGENT = "Mozilla/5.0";
 
-    public static HttpAnswer redirectURL(String host, String url) {
+    public static HttpAnswer redirectURL(String host, String url) throws IOException {
         url = host + url;
-        try{
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-            return sendGet(con);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new HttpAnswer(400, null);
+        return sendGet(con);
     }
 
     public static HttpAnswer sendHttpRequest(String url, Map<String, String> arguments) {
@@ -50,26 +44,23 @@ public class HttpRequest {
         return null;
     }
 
-    private static HttpAnswer sendGet(HttpURLConnection con) {
-        try{
-            con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent", USER_AGENT);
+    private static HttpAnswer sendGet(HttpURLConnection con) throws IOException {
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", USER_AGENT);
 
-            ByteArrayOutputStream os = new ByteArrayOutputStream(con.getContentLength());
-            int responseCode = con.getResponseCode();
-            InputStream in = con.getInputStream();
+        ByteArrayOutputStream os = new ByteArrayOutputStream(con.getContentLength());
+        int responseCode = con.getResponseCode();
+        InputStream in = con.getInputStream();
 
-            byte[] bytes = new byte[2048];
-            int length;
-            while ((length = in.read(bytes)) != -1) {
-                os.write(bytes, 0, length);
-            }
-            in.close();
-
-            return new HttpAnswer(responseCode, os.toByteArray());
-        }catch (IOException e){
-            return new HttpAnswer(400, null);
+        byte[] bytes = new byte[2048];
+        int length;
+        while ((length = in.read(bytes)) != -1) {
+            os.write(bytes, 0, length);
         }
+        in.close();
+
+        return new HttpAnswer(responseCode, os.toByteArray());
+        
     }
 
     public static HttpAnswer sendGetPing(String url) {

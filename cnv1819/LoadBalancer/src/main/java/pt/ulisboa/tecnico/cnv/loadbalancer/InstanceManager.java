@@ -18,36 +18,52 @@ public class InstanceManager {
     }
 
     public List<Instance> launchInstance(int numberOfInstances){
+        try {
+            if( numberOfInstances > 0) {
+                RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
 
-        if( numberOfInstances > 0) {
-            RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
+                runInstancesRequest.withImageId(StaticConsts.WORKER_AMI)
+                        .withInstanceType(StaticConsts.INSTANCE_TYPE)
+                        .withMinCount(numberOfInstances)
+                        .withMaxCount(numberOfInstances)
+                        .withKeyName(StaticConsts.KEY_NAME)
+                        .withSecurityGroups(StaticConsts.SECURITY_GROUP);
 
-            runInstancesRequest.withImageId(StaticConsts.WORKER_AMI)
-                    .withInstanceType(StaticConsts.INSTANCE_TYPE)
-                    .withMinCount(numberOfInstances)
-                    .withMaxCount(numberOfInstances)
-                    .withKeyName(StaticConsts.KEY_NAME)
-                    .withSecurityGroups(StaticConsts.SECURITY_GROUP);
+                RunInstancesResult runInstancesResult = ec2.runInstances(runInstancesRequest);
 
-            RunInstancesResult runInstancesResult = ec2.runInstances(runInstancesRequest);
+                return runInstancesResult.getReservation().getInstances();
+            }
 
-            return runInstancesResult.getReservation().getInstances();
+            return null;
+        } catch (AmazonEC2Exception ase) {
+            System.out.println("Caught Exception: " + ase.getMessage());
+            System.out.println("Response Status Code: " + ase.getStatusCode());
+            System.out.println("Error Code: " + ase.getErrorCode());
+            System.out.println("Request ID: " + ase.getRequestId());
+            return null;
         }
-        return null;
     }
 
     public List<InstanceStateChange> terminateInstances(InstanceInfo instance){
+        try {
+            if(instance != null) {
+                List<String> instancesToTerminate = new ArrayList<>();
+                instancesToTerminate.add(instance.getInstance().getInstanceId());
+                TerminateInstancesRequest terminateInstancesRequest = new TerminateInstancesRequest();
+                terminateInstancesRequest.setInstanceIds(instancesToTerminate);
 
-        if(instance != null) {
-            List<String> instancesToTerminate = new ArrayList<>();
-            instancesToTerminate.add(instance.getInstance().getInstanceId());
-            TerminateInstancesRequest terminateInstancesRequest = new TerminateInstancesRequest();
-            terminateInstancesRequest.setInstanceIds(instancesToTerminate);
-
-            TerminateInstancesResult result = ec2.terminateInstances(terminateInstancesRequest);
-            return result.getTerminatingInstances();
+                TerminateInstancesResult result = ec2.terminateInstances(terminateInstancesRequest);
+                return result.getTerminatingInstances();
+            }
+            return null;
+        } catch (AmazonEC2Exception ase) {
+            System.out.println("Caught Exception: " + ase.getMessage());
+            System.out.println("Response Status Code: " + ase.getStatusCode());
+            System.out.println("Error Code: " + ase.getErrorCode());
+            System.out.println("Request ID: " + ase.getRequestId());
+            return null;
         }
-        return null;
+        
 
     }
 
