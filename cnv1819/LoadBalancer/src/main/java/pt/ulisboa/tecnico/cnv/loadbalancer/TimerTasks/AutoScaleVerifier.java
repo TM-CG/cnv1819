@@ -33,7 +33,7 @@ public class AutoScaleVerifier extends GenericTimeTask {
 
         System.out.println("Checking");
 
-        if (numberOfInstances == 0) {
+        if (numberOfInstances == 0 && loadBalancer.toStart.size() == 0) {
             System.out.println("Houston: I'm about to launch!");
             instances = instanceManager.launchInstance(1);
             System.out.println("Houston: We have left off");
@@ -43,7 +43,15 @@ public class AutoScaleVerifier extends GenericTimeTask {
             for(Map.Entry<String, InstanceInfo> entry : loadBalancer.getInstanceSet()){
                 sum+= entry.getValue().getTotalCost();
             }
-            double average = sum / numberOfInstances;
+
+            double average;
+
+            if (numberOfInstances > 1) {
+                average = sum / (numberOfInstances - 1);
+            } else {
+                average = sum;
+            }
+            
             System.out.println("average: " + average + "upcounter: " + upCounter + "downCounter: " + downCounter);
 
             if (average > 600000) {
