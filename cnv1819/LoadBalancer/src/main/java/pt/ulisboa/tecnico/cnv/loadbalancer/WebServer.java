@@ -17,6 +17,7 @@ import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
+import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -80,6 +81,7 @@ public class WebServer {
                 //decide the worker that should do the work
 
                 double cost = loadBalancer.requestMetricMss(Common.argumentsFromQuery(query));
+                System.out.println("CUUUUSTO: " + cost);
             
                 HttpAnswer response = null;
                 String workerIp = null;

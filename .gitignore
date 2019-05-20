@@ -11,3 +11,4 @@ Logs/
 .DS_Store
 .vscode/
 com/
+Library/src/main/java/pt/ulisboa/tecnico/cnv/common/StaticConsts.java

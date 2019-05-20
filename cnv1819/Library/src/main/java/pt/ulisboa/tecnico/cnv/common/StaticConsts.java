@@ -1,10 +1,10 @@
 package pt.ulisboa.tecnico.cnv.common;
 
 public class StaticConsts {
-    public static String WORKER_AMI = "ami-019047a478e3fbd75";
+    public static String WORKER_AMI = "ami-0e277550d07d6d00e";
 
     public static String MSS_AMI = "";
-    public static String MSS_IP = "35.158.0.235";
+    public static String MSS_IP = "18.197.149.63";
     public static String MSS_PORT = "8002";
     public static final String INSTANCE_TYPE = "t2.micro";
     public static final String SECURITY_GROUP = "CNV-Project";

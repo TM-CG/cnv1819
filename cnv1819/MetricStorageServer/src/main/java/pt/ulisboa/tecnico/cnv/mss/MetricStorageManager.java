@@ -112,7 +112,7 @@ public class MetricStorageManager {
                 System.out.println("elements matched in dynamodb: " + result.getCount());
                 double estimatedCost = 0;
                 for (Map<String, AttributeValue> item : result.getItems()) {
-                    estimatedCost+=Double.parseDouble(item.get("c").getN());
+                    estimatedCost+= Double.parseDouble(item.get("c").getN());
                     System.out.println(item.get("c").getN());
                 }
                 if(estimatedCost==0) {
@@ -149,8 +149,10 @@ public class MetricStorageManager {
 
     public PutItemResult addMetricObject(String tableName, String id, Metrics metric) {
         // Add an item
+        double cost = cost(metric.basicBlocks(), metric.getBranches());
         Map<String, AttributeValue> item = newMetric(id, metric);
         PutItemRequest putItemRequest = new PutItemRequest(tableName, item);
+        cacheInstance.addElement(new PairContainer(id, cost));
         return dynamoDB.putItem(putItemRequest);
 
     }
@@ -184,28 +186,10 @@ public class MetricStorageManager {
         item.put("c",   new AttributeValue().withN(String.valueOf(cost)));
         item.put("area", new AttributeValue().withN(String.valueOf((metric.getX1() - metric.getX0()) * (metric.getY1() - metric.getY0()))));
 
-        cacheInstance.addElement(new PairContainer(id, cost));
-
         return item;
     }
 
     public double cost(long bb,long bnt) {
         return ((bb*bnt)/(bb+bnt))/1000;
     }
-
-}        item.put("yS",  new AttributeValue().withN(String.valueOf(metric.getYS())));
-        item.put("a",   new AttributeValue(metric.getAlgorithm()));
-        item.put("i",   new AttributeValue(metric.getMap()));
-        item.put("c",   new AttributeValue().withN(String.valueOf(cost)));
-        item.put("area", new AttributeValue().withN(String.valueOf((metric.getX1() - metric.getX0()) * (metric.getY1() - metric.getY0()))));
-
-        cacheInstance.addElement(new PairContainer(id, cost));
-
-        return item;
-    }
-
-    public double cost(long bb,long bnt) {
-        return ((bb*bnt)/(bb+bnt))/1000;
-    }
-
 }
