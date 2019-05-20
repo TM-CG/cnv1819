@@ -5,6 +5,13 @@ import pt.ulisboa.tecnico.cnv.loadbalancer.LoadBalancer;
 import pt.ulisboa.tecnico.cnv.loadbalancer.InstanceInfo;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.net.MalformedURLException;
+import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
+import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
+
 import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.Instance;
 
@@ -21,14 +28,39 @@ public class Starter extends GenericTimeTask {
     @Override
     public void run() {
         List<Instance> instances = instanceManager.listWorkerInstances();
+        List<InstanceInfo> tmpInstances = new ArrayList<>();
 
         System.out.println("instances size: " + instances.size());
 
         for (Instance instance : instances) {
-            if (!loadBalancer.instanceInfoMap.containsKey(instance.getPublicIpAddress())) {
+            if (!loadBalancer.instanceInfoMap.containsKey(instance.getPublicIpAddress()) && (!loadBalancer.toStart.containsKey(instance.getPublicIpAddress()))) {
                 System.out.println("STARTER ADD INSTANCE: " + instance.getPublicIpAddress());
-                loadBalancer.instanceInfoMap.put(instance.getPublicIpAddress(), new InstanceInfo(instance));
+                loadBalancer.toStart.put(instance.getPublicIpAddress(), new InstanceInfo(instance));
             }
+        }
+        for (Map.Entry<String, InstanceInfo> entry : loadBalancer.toStart.entrySet()){
+            HttpAnswer answer = HttpRequest.sendGetPing("http://" + entry.getKey() + ":8000/ping");
+            //System.out.println("http://" + entry.getKey() + ":8000/ping");
+
+
+            if (answer != null) {
+                String response = new String(answer.getResponse());
+                System.out.println("Response STARTER: " + response);
+
+                if(response.equals("Pong!")){
+                    tmpInstances.add(entry.getValue());
+                    
+                }
+            }
+            else {
+                System.out.printf("Worker at %s not yet ready!", entry.getKey());
+            }
+           
+        }
+
+        for (InstanceInfo instanceInfo : tmpInstances) {
+            loadBalancer.instanceInfoMap.put(instanceInfo.getInstance().getPublicIpAddress(), instanceInfo);
+            loadBalancer.toStart.remove(instanceInfo.getInstance().getPublicIpAddress());
         }
     }
 }
