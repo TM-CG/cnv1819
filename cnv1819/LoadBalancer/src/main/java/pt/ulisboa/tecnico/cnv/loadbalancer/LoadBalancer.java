@@ -10,38 +10,44 @@ import pt.ulisboa.tecnico.cnv.common.StaticConsts;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.AutoScaleVerifier;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.TestTimer;
+import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.Terminator;
+import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.Starter;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import static pt.ulisboa.tecnico.cnv.common.StaticConsts.*;
 
 public class LoadBalancer {
 
     private AmazonEC2 ec2;
-    private AmazonCloudWatch cloudWatch;
     public InstanceManager instanceManager;
-    public Map<String, InstanceInfo> instanceInfoMap;
 
+    private Object lock = new Object();
+    public ConcurrentHashMap<String, InstanceInfo> instanceInfoMap;
+
+    public Object toDeleteLock = new Object();
     public ArrayList<InstanceInfo> toDelete = new ArrayList<>();
-    private GetMetricsCloudWatch getMetricsCloudWatchTask;
 
     private AutoScaleVerifier autoScale;
     private TestTimer testTimer;
+    private Terminator terminator;
+    private Starter starter;
 
-    public LoadBalancer(AmazonEC2 ec2, AmazonCloudWatch cloudWatch) {
+    public LoadBalancer(AmazonEC2 ec2) {
         this.ec2 = ec2;
-        this.cloudWatch = cloudWatch;
         this.instanceManager = new InstanceManager(this.ec2);
         this.instanceInfoMap = createInstanceMap();
-        getMetricsCloudWatchTask = new GetMetricsCloudWatch(this, cloudWatch,30);
-        this.autoScale = new AutoScaleVerifier(this, this.instanceManager, 60);
+        this.autoScale = new AutoScaleVerifier(this, this.instanceManager, 30);
+        this.starter = new Starter(this, this.instanceManager, 10);
+        this.terminator = new Terminator(this, this.instanceManager, 25);
         this.testTimer = new TestTimer(this, 10);
 
     }
 
-    private Map<String, InstanceInfo> createInstanceMap() {
+    private ConcurrentHashMap<String, InstanceInfo> createInstanceMap() {
         List<Instance> instances = instanceManager.listWorkerInstances();
         System.out.println("instances size: " + instances.size());
-        HashMap<String, InstanceInfo> infoHashMap = new HashMap<>();
+        ConcurrentHashMap<String, InstanceInfo> infoHashMap = new ConcurrentHashMap<>();
 
         for (Instance instance : instances) {
             System.out.println("LB ADD INSTANCE: " + instance.getPublicIpAddress());
@@ -87,7 +93,7 @@ public class LoadBalancer {
                 cost = entry.getValue().getTotalCost();
             }
         }
-        toDelete.setToDelete();
+        toDelete.setToDelete(true);
         return toDelete;
 
     }
@@ -96,14 +102,17 @@ public class LoadBalancer {
 
         double cost = -1;
         InstanceInfo instance = null;
-        for(Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
-            if((entry.getValue().getTotalCost() < cost || cost == -1) && (entry.getValue().isToDelete() == false) &&
-            entry.getValue().getTotalCost() < StaticConsts.MAX_COST) {
-                System.out.println("COST: " + entry.getValue().getTotalCost()  + " cost: " + cost);
-                cost = entry.getValue().getTotalCost();
-                instance = entry.getValue();
+        synchronized(lock){
+            for(Map.Entry<String, InstanceInfo> entry : instanceInfoMap.entrySet()) {
+                if((entry.getValue().getTotalCost() < cost || cost == -1) && (entry.getValue().isToDelete() == false) &&
+                entry.getValue().getTotalCost() < StaticConsts.MAX_COST) {
+                    System.out.println("COST: " + entry.getValue().getTotalCost()  + " cost: " + cost);
+                    cost = entry.getValue().getTotalCost();
+                    instance = entry.getValue();
+                }
             }
         }
+       
         return instance;
     }
 }

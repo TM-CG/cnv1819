@@ -15,57 +15,64 @@ public class AutoScaleVerifier extends GenericTimeTask {
 
     private InstanceManager instanceManager;
 
+    private int upCounter;
+    private int downCounter;
+
     public AutoScaleVerifier(LoadBalancer loadBalancer, InstanceManager instanceManager, int seconds) {
         super(loadBalancer, seconds, 30);
         this.instanceManager = instanceManager;
-
+        upCounter = 0;
+        downCounter = 0;
     }
 
     @Override
     public void run() {
-
         int numberOfInstances = loadBalancer.getInstanceSet().size();
-        Double sum = 0.0;
-        for(Map.Entry<String, InstanceInfo> entry : loadBalancer.instanceInfoMap.entrySet()){
-            sum+= entry.getValue().getCpuUtilization();
+        double sum = 0.0;
+        List<Instance> instances;
+
+        if (numberOfInstances == 0) {
+            instances = instanceManager.launchInstance(1);
+            /*for (Instance instance : instances) 
+                loadBalancer.instanceInfoMap.put(instance.getPublicIpAddress(), new InstanceInfo(instance));*/
         }
-        Double average = sum / numberOfInstances;
-        System.out.println("AutoScale check");
-        if(average >= 60.0){
-            System.out.println("Average >= 60");
-            if (numberOfInstances < MAX_INSTANCES) {
-                List<Instance> instances = instanceManager.launchInstance(1);
-                for (Instance instance : instances) {
-                    loadBalancer.instanceInfoMap.put(instance.getPublicIpAddress(), new InstanceInfo(instance));
-                }
+        else if (numberOfInstances > 0 && numberOfInstances < MAX_INSTANCES){
+            for(Map.Entry<String, InstanceInfo> entry : loadBalancer.getInstanceSet()){
+                sum+= entry.getValue().getTotalCost();
             }
-        }
-        else if(average <= 40) {
-            
-            
-            if (loadBalancer.instanceInfoMap.size() > 1) {
-                InstanceInfo toDelete = loadBalancer.setInstanceForDelete();
-                if(toDelete != null ){
-                    while(toDelete.isToDelete() && toDelete.getJobs().size() > 0){
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) { e.printStackTrace(); }
+            double average = sum / numberOfInstances;
+
+            if (average > 600000) {
+                downCounter = 0;
+                upCounter++;
+                if(upCounter >= 3){
+                    synchronized(loadBalancer.toDeleteLock) {
+                        if(loadBalancer.toDelete.size() > 0){
+                            loadBalancer.toDelete.get(0).setToDelete(false);
+                        }
+                        else{
+                            instances = instanceManager.launchInstance(1);
+                            System.out.println("Instances: " + instances.size());
+                            /*for (Instance instance : instances) {
+                                loadBalancer.instanceInfoMap.put(instance.getPublicIpAddress(), new InstanceInfo(instance));           
+                                System.out.println("Adicionei ao hashmap");
+                            }*/
+                        }
                     }
-
-                    int stateCode;
-                    List<InstanceStateChange> state;
-                    state = instanceManager.terminateInstances(loadBalancer.setInstanceForDelete());
-                    do {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) { e.printStackTrace(); }
-                        stateCode = state.get(0).getCurrentState().getCode();
-                    } while (stateCode != 32 && stateCode != 48);
-                    
-                    loadBalancer.instanceInfoMap.remove(toDelete.getInstance().getPublicIpAddress());
+                    upCounter = 0;
                 }
+               
             }
-        }
+            else if (average <= 400000) { 
+              upCounter = 0;
+              downCounter++;
+              if(downCounter >= 5) {
+                  loadBalancer.setInstanceForDelete();
 
+                  downCounter = 0;
+              }
+            }
+          
+        }
     }
 }

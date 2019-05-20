@@ -31,7 +31,6 @@ import pt.ulisboa.tecnico.cnv.metrics.Metrics;
 public class WebServer {
     private static LoadBalancer loadBalancer;
     private static AmazonEC2 ec2;
-    private static AmazonCloudWatch cloudWatch;
 
     public static void main(String[] args) throws Exception {
 
@@ -68,9 +67,8 @@ public class WebServer {
                     e);
         }
         ec2 = AmazonEC2ClientBuilder.standard().withRegion("eu-central-1").withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
-        cloudWatch = AmazonCloudWatchClientBuilder.standard().withRegion("eu-central-1").withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
-
-        loadBalancer = new LoadBalancer(ec2, cloudWatch);
+       
+        loadBalancer = new LoadBalancer(ec2);
     }
 
     private static class RequestHandler implements HttpHandler {

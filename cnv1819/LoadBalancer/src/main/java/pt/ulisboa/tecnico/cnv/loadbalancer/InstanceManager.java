@@ -66,7 +66,7 @@ public class InstanceManager {
 
     }
 
-    protected List<Instance> listWorkerInstances(){
+    public List<Instance> listWorkerInstances(){
         List<Instance> workers = new ArrayList<>();
         List<Instance> instances = getInstancesFromReservation();
 

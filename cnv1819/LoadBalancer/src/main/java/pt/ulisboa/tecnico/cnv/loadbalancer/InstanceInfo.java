@@ -52,9 +52,9 @@ public class InstanceInfo {
         return this.setForDelete;
     }
 
-    public void setToDelete() {
+    public void setToDelete(boolean bool) {
         //guarantee that it does not receive extra jobs
-        this.setForDelete = true;
+        this.setForDelete = bool;
     }
 
     public int addJob(Job job) {
