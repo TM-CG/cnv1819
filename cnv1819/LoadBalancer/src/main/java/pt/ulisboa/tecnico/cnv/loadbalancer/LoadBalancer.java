@@ -7,7 +7,6 @@ import com.amazonaws.services.ec2.model.Instance;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpAnswer;
 import pt.ulisboa.tecnico.cnv.HTTPLib.HttpRequest;
 import pt.ulisboa.tecnico.cnv.common.StaticConsts;
-import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.GetMetricsCloudWatch;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.AutoScaleVerifier;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.TestTimer;
 import pt.ulisboa.tecnico.cnv.loadbalancer.TimerTasks.Terminator;
