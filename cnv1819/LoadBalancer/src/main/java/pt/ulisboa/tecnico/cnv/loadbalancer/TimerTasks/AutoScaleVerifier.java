@@ -47,11 +47,11 @@ public class AutoScaleVerifier extends GenericTimeTask {
             double average;
 
             if (numberOfInstances > 1) {
-                average = sum / (numberOfInstances - 1);
+                average = sum / (numberOfInstances - 0.5);
             } else {
                 average = sum;
             }
-            
+
             System.out.println("average: " + average + "upcounter: " + upCounter + "downCounter: " + downCounter);
 
             if (average > 600000) {
