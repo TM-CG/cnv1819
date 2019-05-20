@@ -161,6 +161,7 @@ public class MetricStorageManager {
     }
 
     private Map<String, AttributeValue> newMetric(String id, Metrics metric) {
+        System.out.println("entrei");
         Map<String, AttributeValue> item = new HashMap<>();
         double cost = cost(metric.basicBlocks(), metric.getBranches());
         System.out.println("DEBUG: "+cost);
