@@ -8,14 +8,6 @@ public class Metrics implements Serializable{
 
     static final long serialVersionUID = 3;
 
-    public long getBasicBlocks() {
-        return basicBlocks;
-    }
-
-    public long getBranches_notTaken() {
-        return branches_notTaken;
-    }
-
     /** The number of basic blocks */
     private long basicBlocks;
     /** The number of branches not taken */
@@ -45,6 +37,8 @@ public class Metrics implements Serializable{
 
     private double cost;
 
+    private double area;
+
     public Metrics(){
         basicBlocks = 0;
         branches_notTaken = 0;
@@ -57,7 +51,25 @@ public class Metrics implements Serializable{
         xS = 0;
         yS = 0;
         cost = 0.0;
+        area = 0.0;
     }
+
+    public long getBasicBlocks() {
+        return basicBlocks;
+    }
+
+    public double getArea() {
+        return area;
+    }
+
+    public void setArea(double area) {
+        this.area = area;
+    }
+
+    public long getBranches_notTaken() {
+        return branches_notTaken;
+    }
+
 
     public int getWidth() {
        return this.width;

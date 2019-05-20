@@ -67,22 +67,10 @@ public class LoadBalancer {
     }
 
     public double requestMetricMss(Map<String, String> arguments) {
-        double result;
-
         HttpAnswer answer = HttpRequest.sendHttpRequest("http://" + MSS_IP + ":" + MSS_PORT + "/requestmetric", arguments);
         String metricString = new String(answer.getResponse());
 
-        if(metricString.equals("null")){
-            //TODO Calculate default cost
-            result = 123456;
-        }
-        else{
-            Map<String, String> argumentsMap = Common.argumentsFromQuery(metricString);
-            Metrics metric = Common.metricFromArguments(argumentsMap);
-            result = metric.getCost();
-        }
-
-        return result;
+        return Double.valueOf(metricString);
     }
 
     public Set<Map.Entry<String, InstanceInfo>> getInstanceSet() {

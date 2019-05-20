@@ -51,6 +51,10 @@ public class Common {
             System.out.println("C: " + arguments.get("c"));
             metrics.setCost(Double.parseDouble(arguments.get("c")));
         }
+        if(arguments.containsKey("area")) {
+            System.out.println("area: " + arguments.get("area"));
+            metrics.setArea(Double.parseDouble(arguments.get("area")));
+        }
         return metrics;
     }
 }
