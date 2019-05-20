@@ -79,8 +79,17 @@ public class LoadBalancer {
     }
 
     public InstanceInfo whichWorker() {
-
-        return getInstanceWithLeastCost();
+        InstanceInfo instance = getInstanceWithLeastCost();
+        while (instance == null) {
+            instance = getInstanceWithLeastCost();
+            try {
+                Thread.sleep(5000);
+            } catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return instance;
 
     }
 
