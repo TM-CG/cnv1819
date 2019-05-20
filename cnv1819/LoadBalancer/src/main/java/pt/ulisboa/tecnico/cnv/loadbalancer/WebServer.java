@@ -101,10 +101,12 @@ public class WebServer {
                         System.out.println(instanceInfo.getTotalCost());
                         
                         workerIp = instanceInfo.getInstance().getPublicIpAddress();
+                        
 
                         System.out.println(">Job sent to :\t" + workerIp);
                         response = HttpRequest.redirectURL("http://" + workerIp + ":8000/climb?", queryForWorker);
                     } catch(Exception e) {
+                        if (workerIp == null) continue;
                         System.out.printf("Worker at %s probably crashed!", workerIp);
                         loadBalancer.instanceInfoMap.remove(workerIp);
 

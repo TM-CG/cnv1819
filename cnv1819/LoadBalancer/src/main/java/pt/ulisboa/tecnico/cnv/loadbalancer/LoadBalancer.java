@@ -80,6 +80,7 @@ public class LoadBalancer {
     }
 
     public InstanceInfo whichWorker() {
+        getJobProgress();
         InstanceInfo instance = getInstanceWithLeastCost();
         while (instance == null) {
             instance = getInstanceWithLeastCost();

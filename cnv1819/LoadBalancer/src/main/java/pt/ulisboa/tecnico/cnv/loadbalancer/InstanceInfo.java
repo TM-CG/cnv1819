@@ -18,19 +18,29 @@ public class InstanceInfo {
     private Instance instance;
     private Date launchTime;
     private boolean setForDelete;
+    
+    private double totalCost;
+    private ConcurrentHashMap<Integer, Job> jobs;
 
     private double cpuUtilization;
 
     public double getTotalCost() {
-        return totalCost;
+        double calculatedCost = totalCost;
+        for (Map.Entry<Integer, Job> entry : jobs.entrySet()){
+            double percentage = entry.getValue().getActualPercentage();
+            if(percentage < 100){
+                double cost = (entry.getValue().getActualPercentage()/100) * entry.getValue().getCost();
+                calculatedCost -= cost;
+            }
+        } 
+        return calculatedCost;
     }
 
     public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
 
-    private double totalCost;
-    private ConcurrentHashMap<Integer, Job> jobs;
+    
 
     public InstanceInfo(Instance instance) {
         this.instance = instance;
