@@ -26,6 +26,7 @@ public class LoadBalancer {
 
     public Object toDeleteLock = new Object();
     public ArrayList<InstanceInfo> toDelete = new ArrayList<>();
+    public ConcurrentHashMap<String, InstanceInfo> toStart = new ConcurrentHashMap<>();
 
     private AutoScaleVerifier autoScale;
     private TestTimer testTimer;

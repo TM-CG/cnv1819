@@ -40,8 +40,10 @@ public class HttpRequest {
         }
         URL obj;
         try {
+            System.out.println(newUrl.toString());
             obj = new URL(newUrl.toString());
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            System.out.println(con.getContentLength());
 
             return sendGet(con);
         } catch (IOException e) {
@@ -70,5 +72,29 @@ public class HttpRequest {
         }catch (IOException e){
             return new HttpAnswer(400, null);
         }
+    }
+
+    public static HttpAnswer sendGetPing(String url) {
+        URL obj;
+        
+        try {
+            obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {   
+                response.append(inputLine);
+            }
+            in.close();
+
+            return new HttpAnswer(200, response.toString().getBytes());
+        } catch (IOException e) {
+            return null;
+        }
+        
     }
 }
