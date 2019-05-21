@@ -85,21 +85,39 @@
    
 \SubSection{Manager}
 \subsubsection{Load Balancer}
+   The Load Balancer runs on a separate image (from Workers) and in the same image as the MSS.
+   By default, it runs on port 8001 and forwards the users' request to worker that, uppon complete the task
+   will respond to the LB and then the LB forwards the output to the user.
+   The LB has several Timer Tasks running, namely:
+   \begin{itemize}
+      \item \textbf{Auto Scaler:} whose goal is to scale up or down instance deppending on the global system load.
+      \item \textbf{Starter:} whose goal is to start instances and make sure that the LB only consider them available
+                              after the operating system and the Web Server are running 
+                              \footnote{Periodically send ping to the new worker to test liveliness.}.
+      \item \textbf{Terminator:} whose goal is to shutdown instances but only those that are marked for safe delete 
+                                 \footnote{An instance is considered safe for delete when has no currently jobs running.}.
+      \item \textbf{Test Timer:} is a debug timer just to display to the console output of all available instances 
+   \end{itemize}
+
+   
+
 \subsubsection{Auto Scaler}
-   We created an Auto Scaling Group on AWS that increases the number of instances by
+   \textbf{Firstly} we created an Auto Scaling Group on AWS that increases the number of instances by
    1 if the average CPU utilization is over 60 \% in a period of 5 minutes and
    decreases the number of instances by 1 (to a minimum of 1 instance) if the average CPU 
-   utilization of all instances is under 40\% for a period of 5 minutes. This allows
-   to scale up in a situation of continuous heavy load while not scaling down instantly
+   utilization of all instances is under 40\% for a period of 5 minutes. Nevertheless 
+   \textbf{we improved the AB in order to take account the cost} instead of CPU utilization.
+   This allows to scale up in a situation of continuous heavy load while not scaling down instantly
    if we get a slight pause of incoming requests. 
 
    We want to be careful shuting down instances as they take some time starting up and if 
    we get a temporary decrease and terminate them and then we might get back to a state
    where we can't deal with all requests that turns to a higher response time to those 
-   requests. To avoid this we wait to see if the decrease of requests (lower CPU usage)
-   is not temporary (hence the 5 minutes under 40\% CPU load). Also if for some reason
-   an instance becomes unhealthy (unresponsive or the Web Server crashed for some reason)
-   then the auto-scaler will terminate that instance and start another.
+   requests. 
+   %To avoid this we wait to see if the decrease of requests (lower CPU usage)
+   %is not temporary (hence the 5 minutes under 40\% CPU load). Also if for some reason
+   %an instance becomes unhealthy (unresponsive or the Web Server crashed for some reason)
+   %then the auto-scaler will terminate that instance and start another.
 \subsubsection{Metric Storage Manager}
 
 %------------------------------------------------------------------------- 
@@ -144,23 +162,29 @@
 %-------------------------------------------------------------------------
 \SubSection{Storing the metrics}
 \subsubsection{Real Cost Calculation}
+   In order to use the two metrics (Number of Branches Not Taken and Number of Basic Blocks) we designed a cost function
+   based on these two values.
+
+   $$ Cost(\#BB, \#BNT) = \frac{\frac{\#BB \times \#BNT}{\#BB + \#BNT}}{1000} (\%)$$
+
+
 \subsubsection{Cache}
-   We noticed some latency when performing multiple requests to dynamoDB, in order to
-   avoid some of this latency, a local cache was created in MSS. This cache as N entries (for 
-   testing proposes is set for N=20, in a real system the value must be reviewed), it implements 
+   We noticed some latency when performing multiple requests to DynamoDB, in order to
+   avoid some of this latency, a local cache was created in MSS. This cache as $N$ entries (for 
+   testing proposes is set for $N = 20$, in a real system the value must be reviewed), it implements 
    last recently used politic, so when request 21 arrives, request 1 is deleted from cache. With this cache
-   if a request arrives to MSS and it is in cache, we do not need to consult dynamoDB and the cost is instantly returned
+   if a request arrives to MSS and it is in cache, we do not need to consult DynamoDB and the cost is instantly returned
    to the Load Balancer. 
 
 \subsubsection{Cost Estimation}
-   When a new request arrives and we already have some information in dynamoDB, we will try to estimate the cost of the 
-   new one, based on the ones previously stored. To this we fetch from dynamo the closest ones. The following filters 
+   When a new request arrives and we already have some information in DynamoDB, we will try to estimate the cost of the 
+   new one, based on the ones previously stored. To this we fetch from DynamoDB the closest ones. The following filters 
    are applied to classify if a request in dynamo is close:
 	\begin{itemize}
 	\item Same search algorithm;
 	\item Same image;
-	\item The initial point must be the same with a margin of + or - 10;
-	\item search area must be the same with a margin of + or - 2000.
+	\item The initial point must be the same with a margin of $+$ or $- 10$;
+	\item search area must be the same with a margin of $+$ or $- 2000$.
    With all the requests matched we perform an average of their costs and now that is the estimated cost of the new 
    request.
 \end{itemize}
